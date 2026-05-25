@@ -18,23 +18,35 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
 
   if (questions.length === 0) {
     return (
-      <main className="min-h-screen bg-gray-950 text-white p-8">
-        <div className="max-w-2xl mx-auto text-center mt-20">
-          <Link href="/" className="text-gray-400 hover:text-white text-sm mb-8 inline-block">← Retour</Link>
-          <p className="text-gray-400 text-lg">Aucune question disponible pour ce module.</p>
-        </div>
-      </main>
+      <div className="max-w-xl mx-auto px-6 py-20 text-center">
+        <p className="text-4xl mb-4">📭</p>
+        <p className="text-slate-500">Aucune question disponible pour ce module.</p>
+        <Link href="/" className="mt-4 inline-block text-sm text-indigo-600 hover:underline">← Retour à l&apos;accueil</Link>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white p-8">
-      <div className="max-w-2xl mx-auto">
-        <Link href="/" className="text-gray-400 hover:text-white text-sm mb-6 inline-block">← Retour</Link>
-        <h1 className="text-2xl font-bold mb-1">{mod.title}</h1>
-        <p className="text-purple-400 text-sm mb-8">{questions.length} questions</p>
-        <QuizClient questions={questions} moduleSlug={slug} moduleTitle={mod.title} />
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      {/* Header */}
+      <div className="flex items-center gap-2 text-sm text-slate-400 mb-6">
+        <Link href="/" className="hover:text-indigo-600 transition-colors">Accueil</Link>
+        <span>/</span>
+        <Link href={`/module/${slug}`} className="hover:text-indigo-600 transition-colors">{mod.title}</Link>
+        <span>/</span>
+        <span className="text-slate-600 font-medium">Quiz</span>
       </div>
-    </main>
+
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-linear-to-r from-violet-600 to-purple-600 px-8 py-5">
+          <p className="text-violet-200 text-xs font-medium uppercase tracking-widest">Quiz</p>
+          <h1 className="text-xl font-bold text-white mt-0.5">{mod.title}</h1>
+          <p className="text-violet-200 text-xs mt-1">{questions.length} questions · 4 choix par question</p>
+        </div>
+        <div className="px-8 py-8">
+          <QuizClient questions={questions} moduleSlug={slug} moduleTitle={mod.title} />
+        </div>
+      </div>
+    </div>
   );
 }
