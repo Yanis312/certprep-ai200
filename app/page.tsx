@@ -1,65 +1,93 @@
-import Image from "next/image";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
-export default function Home() {
+export default async function Home() {
+  const modules = await prisma.module.findMany({
+    orderBy: [{ category: "asc" }, { order: "asc" }],
+    include: { progress: true },
+  });
+
+  const categories = [...new Set(modules.map((m) => m.category))];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen bg-gray-950 text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold mb-2">Révision Certifications</h1>
+        <p className="text-gray-400 mb-10">Cours · Quiz · Flashcards · Exercices</p>
+
+        {categories.map((cat) => (
+          <section key={cat} className="mb-10">
+            <h2 className="text-xl font-semibold text-blue-400 mb-4">{cat}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {modules
+                .filter((m) => m.category === cat)
+                .map((mod) => {
+                  const lastProgress = mod.progress[mod.progress.length - 1];
+                  const pct = lastProgress?.totalQ
+                    ? Math.round((lastProgress.score / lastProgress.totalQ) * 100)
+                    : 0;
+                  return (
+                    <Card key={mod.id} className="bg-gray-900 border-gray-800 hover:border-blue-500 transition-colors">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-white text-base">{mod.title}</CardTitle>
+                          {lastProgress?.completed && (
+                            <Badge className="bg-green-600 text-xs">Complété</Badge>
+                          )}
+                        </div>
+                        <CardDescription className="text-gray-400 text-sm">{mod.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {lastProgress?.totalQ ? (
+                          <div className="mb-3">
+                            <div className="flex justify-between text-xs text-gray-400 mb-1">
+                              <span>Dernier score</span>
+                              <span>{pct}%</span>
+                            </div>
+                            <Progress value={pct} className="h-1.5" />
+                          </div>
+                        ) : null}
+                        <div className="flex gap-2 mt-2 flex-wrap">
+                          <Link
+                            href={`/module/${mod.slug}`}
+                            className="text-xs bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md transition-colors"
+                          >
+                            Cours
+                          </Link>
+                          <Link
+                            href={`/quiz/${mod.slug}`}
+                            className="text-xs bg-purple-600 hover:bg-purple-700 px-3 py-1.5 rounded-md transition-colors"
+                          >
+                            Quiz
+                          </Link>
+                          <Link
+                            href={`/flashcards/${mod.slug}`}
+                            className="text-xs bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded-md transition-colors"
+                          >
+                            Flashcards
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+            </div>
+          </section>
+        ))}
+
+        {modules.length === 0 && (
+          <div className="text-center text-gray-500 mt-20">
+            <p className="text-lg">Aucun module disponible.</p>
+            <p className="text-sm mt-2">Lance le seed pour ajouter les modules :</p>
+            <code className="text-xs bg-gray-800 px-3 py-1.5 rounded mt-3 inline-block">
+              npx tsx prisma/seed.ts
+            </code>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
