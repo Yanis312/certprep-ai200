@@ -5,7 +5,7 @@ import Link from "next/link";
 
 type Card = { front: string; back: string };
 
-export default function FlashcardsClient({ cards, moduleSlug }: { cards: Card[]; moduleSlug: string }) {
+export default function FlashcardsClient({ cards, unitSlug, moduleSlug }: { cards: Card[]; unitSlug: string; moduleSlug: string }) {
   const [current, setCurrent] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [known, setKnown] = useState<Set<number>>(new Set());
@@ -38,11 +38,11 @@ export default function FlashcardsClient({ cards, moduleSlug }: { cards: Card[];
             className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
             🔄 Recommencer
           </button>
-          <Link href={`/quiz/${moduleSlug}`} className="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
+          <Link href={`/quiz/${unitSlug}`} className="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
             🧠 Faire le quiz
           </Link>
-          <Link href="/" className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
-            🏠 Accueil
+          <Link href={`/module/${moduleSlug}`} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
+            📋 Module
           </Link>
         </div>
       </div>

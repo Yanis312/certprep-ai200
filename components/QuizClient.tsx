@@ -5,7 +5,7 @@ import Link from "next/link";
 
 type Question = { id: string; question: string; options: string[]; correctAnswer: number; explanation: string };
 
-export default function QuizClient({ questions, moduleSlug, moduleTitle }: { questions: Question[]; moduleSlug: string; moduleTitle: string }) {
+export default function QuizClient({ questions, unitSlug, moduleSlug }: { questions: Question[]; unitSlug: string; moduleSlug: string }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<boolean[]>([]);
@@ -42,10 +42,10 @@ export default function QuizClient({ questions, moduleSlug, moduleTitle }: { que
             className="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
             🔄 Recommencer
           </button>
-          <Link href={`/module/${moduleSlug}`} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
+          <Link href={`/unit/${unitSlug}`} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
             📖 Revoir le cours
           </Link>
-          <Link href={`/flashcards/${moduleSlug}`} className="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
+          <Link href={`/flashcards/${unitSlug}`} className="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
             🃏 Flashcards
           </Link>
         </div>
