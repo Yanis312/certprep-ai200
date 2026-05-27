@@ -48,7 +48,7 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
           <p className="text-violet-200 text-xs mt-1">{questions.length} questions · 4 choix par question</p>
         </div>
         <div className="px-8 py-8">
-          <QuizClient questions={questions} unitSlug={slug} moduleSlug={unit.module.slug} />
+          <QuizClient questions={questions} unitSlug={slug} unitId={unit.id} moduleSlug={unit.module.slug} />
         </div>
       </div>
     </div>

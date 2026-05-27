@@ -14,12 +14,18 @@ export default function MarkdownRenderer({ content }: { content: string }) {
           ),
           h2: ({ children }) => (
             <h2 className="text-lg font-bold text-indigo-700 mt-7 mb-3 flex items-center gap-2">
-              <span className="w-1 h-5 bg-indigo-500 rounded-full inline-block" />
+              <span className="w-1 h-5 bg-indigo-500 rounded-full inline-block shrink-0" />
               {children}
             </h2>
           ),
           h3: ({ children }) => (
             <h3 className="text-base font-semibold text-slate-700 mt-5 mb-2">{children}</h3>
+          ),
+          h4: ({ children }) => (
+            <div className="mt-6 mb-3 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-center gap-2">
+              <span className="text-lg shrink-0">🎯</span>
+              <span className="font-semibold text-amber-800 text-sm">{children}</span>
+            </div>
           ),
           p: ({ children }) => (
             <p className="text-slate-600 leading-7 mb-4 text-sm">{children}</p>
@@ -50,7 +56,7 @@ export default function MarkdownRenderer({ content }: { content: string }) {
             <pre className="bg-slate-900 rounded-xl mb-4 overflow-x-auto shadow-md">{children}</pre>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-indigo-300 bg-indigo-50 pl-4 pr-3 py-3 rounded-r-lg italic text-slate-500 text-sm mb-4">{children}</blockquote>
+            <blockquote className="border-l-4 border-indigo-300 bg-indigo-50 pl-4 pr-3 py-3 rounded-r-xl text-slate-600 text-sm mb-4 leading-relaxed">{children}</blockquote>
           ),
           strong: ({ children }) => (
             <strong className="font-semibold text-slate-800">{children}</strong>

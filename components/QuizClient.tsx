@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { saveProgress } from "@/app/actions/progress";
 
 type Question = { id: string; question: string; options: string[]; correctAnswer: number; explanation: string };
 
-export default function QuizClient({ questions, unitSlug, moduleSlug }: { questions: Question[]; unitSlug: string; moduleSlug: string }) {
+export default function QuizClient({ questions, unitSlug, unitId, moduleSlug }: { questions: Question[]; unitSlug: string; unitId: string; moduleSlug: string }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<boolean[]>([]);
@@ -24,6 +25,12 @@ export default function QuizClient({ questions, unitSlug, moduleSlug }: { questi
     if (current + 1 >= questions.length) setFinished(true);
     else { setCurrent(current + 1); setSelected(null); }
   }
+
+  useEffect(() => {
+    if (finished) {
+      saveProgress(unitId, score, questions.length);
+    }
+  }, [finished]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   if (finished) {
     const pct = Math.round((score / questions.length) * 100);

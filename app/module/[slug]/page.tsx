@@ -46,14 +46,17 @@ export default async function ModulePage({ params }: { params: Promise<{ slug: s
               const qCount = unit._count.questions;
 
               return (
-                <div key={unit.id} className="border border-slate-100 rounded-2xl p-4 hover:border-indigo-100 hover:shadow-sm transition-all">
+                <div key={unit.id} className={`border rounded-2xl p-4 hover:shadow-sm transition-all ${unit.isLab ? "border-emerald-200 bg-emerald-50/50 hover:border-emerald-300" : "border-slate-100 hover:border-indigo-100"}`}>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${done ? "bg-emerald-100 text-emerald-600" : "bg-indigo-50 text-indigo-600"}`}>
-                        {done ? "✓" : unit.order}
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${done ? "bg-emerald-100 text-emerald-600" : unit.isLab ? "bg-emerald-100 text-emerald-700" : "bg-indigo-50 text-indigo-600"}`}>
+                        {done ? "✓" : unit.isLab ? "🔬" : unit.order}
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-800 text-sm">{unit.title}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-slate-800 text-sm">{unit.title}</p>
+                          {unit.isLab && <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-medium">Lab</span>}
+                        </div>
                         <p className="text-xs text-slate-400">{qCount} question{qCount > 1 ? "s" : ""}</p>
                       </div>
                     </div>
