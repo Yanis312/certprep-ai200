@@ -39,6 +39,9 @@ export default async function Home() {
           <p className="text-indigo-200 text-sm font-medium mb-1 uppercase tracking-widest">Espace de révision</p>
           <h1 className="text-3xl font-bold mb-2">CertPrep</h1>
           <p className="text-indigo-100 text-sm max-w-md">Cours condensés · Quiz par unité · Flashcards · Exercices pratiques</p>
+          <Link href="/vue-globale" className="inline-flex items-center gap-2 mt-4 bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors border border-white/20">
+            🗺️ Comprendre pourquoi tout est lié →
+          </Link>
         </div>
         <div className="relative z-10 flex gap-6 mt-6 pt-6 border-t border-white/20">
           <div>
