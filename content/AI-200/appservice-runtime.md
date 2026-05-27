@@ -1,41 +1,64 @@
 > **Dans cette unité on va parler de :**
-> - Overrider le CMD du Dockerfile avec une startup command
-> - Configurer le bon port avec `WEBSITES_PORT`
-> - Le stockage persistant avec `/home` et `WEBSITES_ENABLE_APP_SERVICE_STORAGE`
-> - Éliminer les cold starts avec Always-on
-> - Monitorer la santé du container avec les health checks
+> - Overrider le CMD du Dockerfile avec une startup command (et pourquoi ENTRYPOINT reste intact)
+> - Configurer le bon port avec `WEBSITES_PORT` — tableau par framework
+> - La différence entre filesystem éphémère (défaut) et `/home` persistant
+> - Les implications du stockage partagé `/home` lors du scale out
+> - Always-on et les cold starts — comment ça fonctionne vraiment
+> - Les health checks — intervalles, seuils, implémentation
 
 ---
 
 ## Startup commands
 
-Par défaut, App Service utilise le `CMD` défini dans ton Dockerfile. Tu peux l'overrider :
+Par défaut, App Service exécute le **CMD** défini dans ton Dockerfile. Tu peux l'overrider sans rebuilder l'image :
 
 ```bash
-# Overrider CMD (ENTRYPOINT reste inchangé)
+# Overrider CMD — ENTRYPOINT reste inchangé
 az webapp config set \
     --resource-group myResourceGroup \
     --name myDocumentProcessor \
     --startup-file "gunicorn --bind=0.0.0.0:8000 --workers=4 app:application"
+```
 
-# Avec shell (pour migrations avant démarrage)
+**La startup command remplace CMD. ENTRYPOINT est toujours respecté.**
+
+### Avec un shell (pour les scripts d'initialisation)
+```bash
 az webapp config set \
     --resource-group myResourceGroup \
     --name myDocumentProcessor \
     --startup-file "/bin/bash -c 'python migrate.py && gunicorn app:application'"
 ```
 
-**Cas d'usage courants :**
-- Passer des arguments runtime à l'application
-- Exécuter des migrations DB avant le démarrage
-- Démarrer plusieurs processus dans le container
-- Overrider les configs du framework
+### Cas d'usage courants
+| Scénario | Startup command |
+|----------|----------------|
+| Plus de workers Gunicorn | `gunicorn --bind=0.0.0.0:8000 --workers=4 app:application` |
+| Migrations DB avant démarrage | `/bin/bash -c 'python migrate.py && python app.py'` |
+| Config framework spécifique | `node server.js --port 8080 --env production` |
+
+---
+
+#### ⭐ STAR — Migration DB avant démarrage sans rebuild
+
+**Situation :** L'équipe déploie une nouvelle version de l'API avec des changements de schéma DB. Sans migration, l'app crash au démarrage car la DB est incompatible.
+
+**Tâche :** S'assurer que les migrations s'exécutent avant que l'app démarre, sans modifier le Dockerfile.
+
+**Action :**
+```bash
+az webapp config set \
+    --resource-group myRG --name myAPI \
+    --startup-file "/bin/bash -c 'python manage.py migrate && gunicorn app:application'"
+```
+
+**Résultat :** À chaque déploiement, les migrations s'exécutent d'abord. Si elles échouent, l'app ne démarre pas — ce qui est le bon comportement (mieux qu'une app qui crashe après démarrage).
 
 ---
 
 ## Configuration du port
 
-App Service route automatiquement le trafic vers le port **80 ou 8080**. Si ton container écoute sur un autre port, tu dois le déclarer :
+App Service route le trafic vers les ports **80 ou 8080** par défaut. Si ton container écoute ailleurs :
 
 ```bash
 az webapp config appsettings set \
@@ -44,83 +67,91 @@ az webapp config appsettings set \
     --settings WEBSITES_PORT=8000
 ```
 
-| Framework | Port par défaut | Setting nécessaire |
-|-----------|----------------|-------------------|
-| Node.js (Express) | 3000 | `WEBSITES_PORT=3000` |
-| Python (Gunicorn) | 8000 | `WEBSITES_PORT=8000` |
-| Java (Spring Boot) | 8080 | `WEBSITES_PORT=8080` |
+| Framework | Port par défaut | Setting requis |
+|-----------|----------------|---------------|
+| Node.js / Express | 3000 | `WEBSITES_PORT=3000` |
+| Python / Gunicorn | 8000 | `WEBSITES_PORT=8000` |
+| Java / Spring Boot | 8080 | `WEBSITES_PORT=8080` |
 | ASP.NET Core | 80 | Aucun |
+| Flask (dev) | 5000 | `WEBSITES_PORT=5000` |
 
-> **Important :** App Service gère le TLS en amont. Ton container reçoit du **HTTP** même si le client se connecte en HTTPS. Un seul port HTTP est supporté par container.
+**Points importants :**
+- App Service gère le TLS en amont → ton container reçoit du **HTTP** même si le client envoie du HTTPS
+- **Un seul port HTTP** est supporté par container custom
+- Le container doit binder sur **`0.0.0.0`** (pas `localhost`) pour recevoir les requêtes externes
 
 ---
 
 ## Stockage persistant
 
-Par défaut, tout ce qui est écrit dans le container est **ephémère** — perdu au redémarrage.
-
-Pour persister des données, active le montage `/home` :
+Par défaut, tout ce qu'un container écrit dans son filesystem est **perdu au redémarrage**. C'est le comportement standard des containers.
 
 ```bash
+# Activer le montage /home persistant
 az webapp config appsettings set \
     --resource-group myResourceGroup \
     --name myDocumentProcessor \
     --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
 ```
 
-**Avec ce setting :**
-- `/home` persiste entre les redémarrages
-- Toutes les instances d'une app scalée **partagent le même `/home`**
-- `/home/LogFiles/` stocke les logs du container et de l'application
+**Ce que ça change :**
 
-> **Pour de gros volumes ou des I/O élevés :** Monte Azure Storage comme volume supplémentaire — le quota de `/home` est partagé entre toutes les apps du plan.
+| | Sans storage (défaut) | Avec storage activé |
+|-|----------------------|-------------------|
+| Données au redémarrage | Perdues | Conservées dans `/home` |
+| Entre instances (scale out) | Isolées | **Partagées** — toutes les instances lisent/écrivent le même `/home` |
+| Logs | Perdus | Conservés dans `/home/LogFiles/` |
 
----
-
-#### ⭐ STAR — Stockage persistant pour un service de traitement
-
-**Situation :** Un service de traitement de documents écrit les résultats sur le disque. Après chaque redémarrage App Service, les fichiers traités disparaissent.
-
-**Tâche :** Persister les résultats de traitement entre les redémarrages sans changer le code.
-
-**Action :**
-```bash
-az webapp config appsettings set \
-    --resource-group myRG --name myDocService \
-    --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
-```
-L'application écrit dans `/home/output/` au lieu du filesystem local.
-
-**Résultat :** Les fichiers survivent aux redémarrages. Toutes les instances de l'app (si scale out) accèdent aux mêmes fichiers dans `/home`.
+> **Attention avec le scale out :** Si 5 instances écrivent simultanément dans `/home/output/`, il peut y avoir des conflits. Pour des workloads à haute concurrence, utilise Azure Blob Storage à la place.
 
 ---
 
-## Always-on
+#### ⭐ STAR — Stockage partagé vs Blob Storage
 
-Sans Always-on, App Service met l'app en veille après ~20 minutes d'inactivité. La prochaine requête déclenche un **cold start** (plusieurs secondes à minutes selon la taille de l'image).
+**Situation :** Un service de traitement de documents scalé à 10 instances écrit les résultats dans `/home/output/`. Des fichiers disparaissent et d'autres sont corrompus.
+
+**Tâche :** Identifier et corriger le problème de concurrence sur le stockage.
+
+**Action :** Migrer vers Azure Blob Storage avec des noms de fichiers uniques (UUID) au lieu du stockage `/home` partagé.
+
+**Résultat :** Chaque instance écrit dans son propre blob — zéro conflit. Le `/home` reste utilisé uniquement pour les logs. Les fichiers de résultats sont accessibles depuis une URL Blob.
+
+---
+
+## Always-on — Éliminer les cold starts
+
+### Ce qu'est un cold start
+Sans Always-on, App Service met l'app en veille après **~20 minutes d'inactivité**. Quand la prochaine requête arrive :
+1. App Service doit démarrer le container
+2. Puller l'image si les couches ne sont pas en cache
+3. Attendre que l'application soit prête
+4. Traiter la requête
+
+Ce délai peut être de quelques secondes à **plusieurs minutes** selon la taille de l'image et le temps de démarrage de l'app.
 
 ```bash
+# Activer Always-on — tier Basic minimum requis
 az webapp config set \
     --resource-group myResourceGroup \
     --name myDocumentProcessor \
     --always-on true
 ```
 
-App Service envoie des requêtes périodiques pour maintenir l'app active.
+App Service envoie des **pings périodiques** pour maintenir l'app active en permanence.
 
-> **Requis :** Tier **Basic ou supérieur** (pas disponible sur le tier Free/Shared).
-
-**À activer pour :**
-- Applications production où le temps de réponse compte
-- Apps avec long startup time
+**Quand activer Always-on :**
+- Apps production où le temps de réponse est critique
+- Services avec long startup time (chargement de modèles ML, connexions DB)
 - Containers avec grosses images
-- Services avec processus background ou connexions persistantes
+- Services qui maintiennent des connexions persistantes (WebSockets, queues)
+
+> **Requis :** Tier **Basic ou supérieur** — non disponible sur Free et Shared.
 
 ---
 
 ## Health checks
 
-App Service envoie des requêtes HTTP périodiques pour vérifier que le container est en bonne santé :
+App Service surveille activement la santé de chaque instance :
 
 ```bash
 az webapp config set \
@@ -129,30 +160,53 @@ az webapp config set \
     --generic-configurations '{"healthCheckPath": "/health"}'
 ```
 
-**Comportement :**
-- Ping toutes les **minutes**
+**Comment ça fonctionne :**
+- Ping HTTP vers `/health` toutes les **1 minute**
+- Réponse HTTP 200 = instance saine
 - Après **10 échecs consécutifs** → instance retirée du load balancer
-- Instance remplacée si elle reste unhealthy trop longtemps
+- Si l'instance reste unhealthy longtemps → App Service la remplace
 
-**Implémentation minimale (Flask) :**
-
+**Implémentation simple :**
 ```python
 @app.route('/health')
 def health_check():
     return {'status': 'healthy'}, 200
 ```
 
-**Implémentation complète (avec vérification des dépendances) :**
-
+**Implémentation avec vérification des dépendances :**
 ```python
 @app.route('/health')
 def health_check():
     try:
-        db.execute('SELECT 1')          # Vérifier la DB
-        storage.list_containers()       # Vérifier le stockage
+        db.execute('SELECT 1')           # DB accessible ?
+        storage.list_containers()        # Storage accessible ?
         return {'status': 'healthy'}, 200
     except Exception as e:
         return {'status': 'unhealthy', 'error': str(e)}, 503
 ```
 
-> **Attention :** Changer la config health check redémarre l'app — à faire prudemment en production.
+> **Attention :** Modifier la config health check **redémarre l'app**. À faire prudemment en production, de préférence pendant une fenêtre de maintenance.
+
+---
+
+#### ⭐ STAR — Health check qui détecte une vraie panne
+
+**Situation :** Une API d'inférence répond HTTP 200 à toutes les requêtes, mais retourne des erreurs 500 parce que sa connexion à Azure Cognitive Services est perdue.
+
+**Tâche :** Faire en sorte que App Service détecte que l'instance est "malade" même si le container tourne.
+
+**Action :** Implémenter un health check qui teste vraiment les dépendances :
+```python
+@app.route('/health')
+def health_check():
+    try:
+        # Tester la connexion au service d'inférence
+        response = requests.get(COGNITIVE_SERVICES_URL + '/status', timeout=2)
+        if response.status_code != 200:
+            return {'status': 'unhealthy', 'reason': 'cognitive services unreachable'}, 503
+        return {'status': 'healthy'}, 200
+    except Exception as e:
+        return {'status': 'unhealthy', 'error': str(e)}, 503
+```
+
+**Résultat :** App Service retire automatiquement les instances avec la connexion perdue. Le load balancer ne route que vers les instances saines. L'équipe est alertée sans intervention manuelle.

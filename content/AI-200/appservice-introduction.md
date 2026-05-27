@@ -1,167 +1,110 @@
 > **Dans cette unité on va parler de :**
-> - Ce qu'est Azure App Service pour containers et pourquoi l'utiliser
-> - Les sources d'images supportées (ACR, Docker Hub, GitHub Container Registry)
-> - Les deux méthodes d'authentification ACR : Managed Identity vs Admin credentials
-> - Déployer un container avec le portail Azure, la CLI, et VS Code
-> - Gérer les mises à jour d'images et le déploiement continu
+> - Ce qu'est Azure App Service et pourquoi l'utiliser pour des containers
+> - La différence entre PaaS et IaaS dans le contexte des containers
+> - Le scénario réel d'un service de traitement de documents
+> - Les problèmes que App Service résout (config par env, logging, scaling, cold starts)
+> - Les objectifs d'apprentissage du module
 
 ---
 
-## Azure App Service — C'est quoi ?
+## Le problème que App Service résout
 
-Azure App Service est une plateforme **PaaS (Platform as a Service)** pour héberger des applications web. Avec **Web App for Containers**, tu apportes ton image Docker et Azure gère tout le reste :
+Imagine que ton équipe a packagé un service de traitement de documents dans un container Docker. Le container tourne bien en local. Mais maintenant il faut le mettre en production. Voilà ce qui attend ton équipe sans App Service :
 
-- Provisionnement de l'infrastructure
-- Load balancing (répartition du trafic)
-- Scaling automatique
-- Patches et mises à jour de l'OS
+- **Provisionner des VMs** — choisir la taille, installer l'OS, configurer le réseau
+- **Installer Docker** sur chaque machine
+- **Configurer un load balancer** pour répartir le trafic
+- **Gérer le scaling** — surveiller la charge, ajouter/supprimer des instances manuellement
+- **Patcher l'OS** régulièrement pour la sécurité
+- **Configurer les logs** et les exporter vers un système centralisé
 
-**Tu ne gères pas de serveurs.** Tu t'occupes uniquement de ton code et de ton container.
+C'est des semaines de travail avant même de deployer ton container.
 
----
-
-## Sources d'images
-
-Quand tu crées une Web App for Containers, tu choisis d'où vient ton image :
-
-| Source | Quand l'utiliser |
-|--------|-----------------|
-| **Azure Container Registry (ACR)** | Recommandé pour la production — intégration native avec Entra ID, identité managée, scan d'images |
-| **Autres registries** (Docker Hub, GitHub Container Registry, registries privés) | Images publiques ou privées accessibles via HTTPS + Docker Registry HTTP API V2 |
+**Azure App Service élimine tout ça.** Tu fournis l'image Docker. Azure gère le reste.
 
 ---
 
-## Authentification ACR — 2 méthodes
+## App Service — Plateforme managée (PaaS)
 
-### Managed Identity (recommandée pour la production)
+App Service est une plateforme **PaaS (Platform as a Service)** :
 
-App Service s'authentifie auprès d'ACR via une **identité Azure**, sans credentials stockés.
+| | IaaS (VM) | PaaS (App Service) |
+|--|-----------|-------------------|
+| Tu gères | OS, runtime, app, data | App, data |
+| Azure gère | Hardware, réseau | Hardware, réseau, OS, runtime, scaling |
+| Flexibilité | Totale | Limitée mais suffisante pour la plupart des apps |
+| Complexité opérationnelle | Élevée | Faible |
 
-**System-assigned identity** — liée au cycle de vie de la web app :
-- Azure crée l'identité quand tu l'actives
-- Elle est supprimée avec la web app
-- Simple si une seule app accède au registry
+Avec **Web App for Containers**, tu apportes ton image Docker depuis n'importe quel registry (ACR, Docker Hub, GitHub Container Registry) et App Service :
+- Provisonne l'infrastructure
+- Gère le load balancing
+- Scale automatiquement selon la charge
+- Applique les patches de sécurité de l'OS
 
-**User-assigned identity** — existe indépendamment de la web app :
-- Tu la crées séparément comme ressource Azure
-- Tu peux l'assigner à plusieurs apps
-- Idéal si plusieurs apps partagent le même accès registry
+---
 
-L'identité doit avoir le rôle **AcrPull** sur le registry.
+## Le scénario du module — Service de traitement de documents
 
-### Admin credentials (pour le développement)
+Le module utilise ce scénario concret tout au long des unités :
 
-```bash
-# Activer l'admin user sur l'ACR
-az acr update --name myregistry --admin-enabled true
+**Le service :**
+- Accepte des documents uploadés
+- Extrait le texte et les métadonnées
+- Retourne des résultats structurés aux applications clientes
+- Packagé en container Docker pour la cohérence entre les environnements
+
+**Les 4 problèmes à résoudre :**
+
+**1. Configuration par environnement**
+Dev utilise des endpoints de stockage local et des logs verbeux. La prod se connecte à Azure Storage avec des clés API réelles. L'équipe veut **une seule image** qui s'adapte via des variables d'environnement — sans rebuild.
+
+**2. Observabilité**
+Quand un document échoue à être traité, l'équipe doit savoir si c'est :
+- Un échec de démarrage du container
+- Une variable d'environnement mal configurée
+- Une erreur applicative
+
+**3. Scaling automatique**
+Les uploads de documents explosent en heures ouvrables et chutent la nuit. L'équipe veut que la plateforme scale sans intervention manuelle.
+
+**4. Cold starts**
+Les utilisateurs remarquent les délais quand l'app reprend après une période d'inactivité, ou quand de nouvelles instances démarrent au scale-out.
+
+---
+
+#### ⭐ STAR — Une image, plusieurs environnements
+
+**Situation :** L'équipe buildait une image Docker différente pour dev, staging et prod. Chaque build prenait 15 minutes et les configurations hardcodées causaient des bugs quand une valeur était oubliée.
+
+**Tâche :** Déployer la même image dans tous les environnements sans rebuild, avec des configs différentes.
+
+**Action :** Externaliser toute la configuration dans des variables d'environnement. Sur App Service, injecter ces variables via les **App Settings** :
+```
+STORAGE_ACCOUNT_NAME=mystorageaccount  # prod
+LOG_LEVEL=INFO                          # prod
+STORAGE_ACCOUNT_NAME=devlocal          # dev
+LOG_LEVEL=DEBUG                         # dev
 ```
 
-Utilise le username et password de l'ACR. Plus simple à configurer mais stocke des credentials dans App Service — à éviter en production.
+**Résultat :** Une seule image buildée une fois, déployée dans tous les environnements. Les bugs de configuration entre envs ont été éliminés. Le temps de déploiement est passé de 15 minutes à moins de 1 minute.
 
 ---
 
-#### ⭐ STAR — Managed Identity vs Admin credentials
+## Ce que tu vas apprendre dans ce module
 
-**Situation :** Une équipe déploie une API d'inférence sur App Service avec accès à un ACR privé. L'équipe sécurité interdit les mots de passe stockés dans les configs.
-
-**Tâche :** Permettre à App Service de puller les images ACR sans stocker de credentials.
-
-**Action :** Activer une system-assigned managed identity sur la web app, puis lui assigner le rôle AcrPull sur l'ACR :
-```bash
-# Activer l'identité managée
-az webapp identity assign --resource-group myRG --name myApp
-
-# Assigner AcrPull à l'identité
-az role assignment create \
-    --assignee <identity-principal-id> \
-    --role AcrPull \
-    --scope /subscriptions/.../resourceGroups/myRG/providers/Microsoft.ContainerRegistry/registries/myACR
-```
-
-**Résultat :** App Service pulle les images automatiquement sans aucun mot de passe stocké. Si l'app est supprimée, l'identité disparaît avec elle — pas de cleanup manuel.
+| Unité | Contenu |
+|-------|---------|
+| **Unité 2** | Déployer un container depuis ACR ou Docker Hub, gérer l'authentification |
+| **Unité 3** | Startup commands, port config, stockage persistant, always-on, health checks |
+| **Unité 4** | App settings, connection strings, slot settings, Key Vault references |
+| **Unité 5** | Logs, log stream, Kudu, Azure Monitor, SSH, dépannage des problèmes courants |
+| **Lab** | Déployer le service de traitement de documents complet sur App Service |
 
 ---
 
-## Déployer avec la CLI
+## Prérequis importants
 
-```bash
-# Créer la web app avec une image ACR
-az webapp create \
-    --resource-group myResourceGroup \
-    --plan myAppServicePlan \
-    --name myDocumentProcessor \
-    --container-image-name myregistry.azurecr.io/docprocessor:v1
-
-# Image publique Docker Hub
-az webapp create \
-    --resource-group myResourceGroup \
-    --plan myAppServicePlan \
-    --name myWebApp \
-    --container-image-name nginx \
-    --docker-registry-server-url https://index.docker.io/v1/
-
-# Image privée Docker Hub
-az webapp create \
-    --resource-group myResourceGroup \
-    --plan myAppServicePlan \
-    --name myWebApp \
-    --container-image-name myusername/myapp:latest \
-    --docker-registry-server-url https://index.docker.io/v1/ \
-    --docker-registry-server-user myusername \
-    --docker-registry-server-password <password>
-```
-
----
-
-## Mettre à jour l'image
-
-```bash
-# Changer vers une nouvelle version (tag différent)
-az webapp config container set \
-    --resource-group myResourceGroup \
-    --name myDocumentProcessor \
-    --container-image-name myregistry.azurecr.io/docprocessor:v2
-```
-
-App Service redémarre automatiquement et pull la nouvelle image.
-
-> **Attention :** Si tu pushes une nouvelle image avec le **même tag** (ex: `latest`), App Service ne le détecte pas automatiquement. Il faut soit redémarrer manuellement, soit activer le déploiement continu.
-
----
-
-## Déploiement continu (CD)
-
-```bash
-# Activer le CD — retourne une webhook URL
-az webapp deployment container config \
-    --resource-group myResourceGroup \
-    --name myDocumentProcessor \
-    --enable-cd true
-```
-
-Configure ton registry (ACR) pour appeler cette webhook URL à chaque push. App Service redémarre alors automatiquement et pull la nouvelle image.
-
----
-
-## Comportement du pull d'images
-
-| Moment | Ce qui se passe |
-|--------|----------------|
-| **Premier déploiement** | Toutes les couches de l'image sont téléchargées |
-| **Redémarrage** | Seules les couches modifiées sont téléchargées (cache) |
-| **Scale out** | Chaque nouvelle instance pull l'image (peut être lent si image volumineuse) |
-| **Changement de tier** | Nouvelle infrastructure → pull complet possible |
-
----
-
-## Vérifier le déploiement
-
-```bash
-az webapp show \
-    --resource-group myResourceGroup \
-    --name myDocumentProcessor \
-    --query defaultHostName \
-    --output tsv
-```
-
-Ouvre l'URL retournée dans un navigateur ou avec `curl` pour vérifier que l'app répond.
+- **App Service Plan** — L'unité de facturation. Il définit la région, la capacité et le prix. Plusieurs apps peuvent partager un même plan.
+- **Always-on** — Disponible à partir du tier **Basic**. Sans ça, l'app se met en veille après ~20 minutes d'inactivité.
+- **Deployment slots** — Disponibles à partir du tier **Standard**. Permettent d'avoir staging + production en parallèle.
+- **Linux containers** — App Service for Containers fonctionne sur Linux. Un seul port HTTP exposé par container.

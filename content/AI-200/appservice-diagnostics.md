@@ -1,16 +1,16 @@
 > **Dans cette unité on va parler de :**
-> - Activer et lire les logs du container (stdout/stderr)
-> - Le log stream en temps réel avec `az webapp log tail`
-> - Kudu (SCM) — le portail de diagnostic avancé
-> - Les diagnostics Azure Monitor / Log Analytics
-> - SSH dans le container pour le troubleshooting interactif
-> - Les problèmes courants et leurs solutions
+> - Activer les logs container (stdout/stderr) et les types capturés
+> - Le log stream en temps réel — CLI et portail
+> - Kudu (SCM) — ce qu'il peut faire et sa vraie limitation
+> - Azure Monitor / Log Analytics — pour la rétention long terme et les alertes
+> - SSH dans le container — configuration Dockerfile requise, port 2222
+> - Les 4 problèmes courants et comment les diagnostiquer méthodiquement
 
 ---
 
 ## Logs du container
 
-App Service capture **stdout** et **stderr** de ton container. Pour les activer :
+App Service capture **stdout** et **stderr** de ton container. Par défaut, les logs ne sont pas persistés — il faut l'activer :
 
 ```bash
 az webapp log config \
@@ -19,20 +19,22 @@ az webapp log config \
     --docker-container-logging filesystem
 ```
 
-Les logs sont stockés dans `/home/LogFiles/` et accessibles via les outils de diagnostic.
+Les logs sont ensuite disponibles dans `/home/LogFiles/` et via les outils de diagnostic.
 
-**Ce qui est capturé :**
+**Types de logs capturés :**
 
-| Type | Description |
-|------|-------------|
-| Application output | Tout ce que ton app écrit sur stdout |
-| Error output | Exceptions et erreurs sur stderr |
-| Framework logs | Démarrage du serveur web, logs de requêtes |
-| Platform messages | Événements du cycle de vie du container (start, stop...) |
+| Type | Exemples |
+|------|---------|
+| **Application output** | `print()`, `logging.info()` → stdout |
+| **Error output** | Exceptions, tracebacks → stderr |
+| **Framework logs** | Démarrage de Gunicorn/Express, logs de requêtes |
+| **Platform messages** | "Container started", "Container stopped", events du cycle de vie |
+
+**Bonne pratique :** Configure ton app pour écrire sur stdout/stderr. Évite les fichiers de logs custom — ils ne sont pas capturés par défaut et sont perdus au redémarrage (sauf si `/home` persistant est activé).
 
 ---
 
-## Log stream (temps réel)
+## Log stream — Logs en temps réel
 
 ```bash
 # Streamer les logs en direct
@@ -41,39 +43,58 @@ az webapp log tail \
     --name myDocumentProcessor
 ```
 
-**Ctrl+C** pour arrêter. Dans le portail : **Monitoring > Log stream**.
+**Ctrl+C** pour arrêter.
 
-Pour une app scalée, le stream affiche les logs de **toutes les instances** avec un identifiant par instance.
+Dans le portail : **Monitoring → Log stream**
+
+**Pour une app scalée** : affiche les logs de **toutes les instances** avec un préfixe identifiant l'instance. Utile pour voir si une instance spécifique a un problème.
+
+**Cas d'usage :**
+- Débugger des problèmes de démarrage en temps réel
+- Surveiller le comportement de l'app pendant des tests de charge
+- Observer les erreurs pendant qu'un utilisateur reproduit un bug
 
 ---
 
-## Kudu — SCM (diagnostic avancé)
+## Kudu — Console de diagnostic avancée
 
-Accès :
+Kudu (aussi appelé SCM site) est un outil de gestion et diagnostic qui tourne **en parallèle** de ta web app.
 
+**Accès :**
 ```
 https://<app-name>.scm.azurewebsites.net
 ```
 
-**Fonctionnalités clés :**
+**Ce que Kudu peut faire :**
 
-| Feature | Utilité |
-|---------|---------|
-| **Environment** | Voir toutes les variables d'env injectées dans le container |
-| **Debug console** | Naviguer dans `/home` — logs, fichiers persistants |
-| **Diagnostic dump** | Télécharger un ZIP complet (logs + config + diagnostics) |
+| Feature | URL | Utilité |
+|---------|-----|---------|
+| **Environment** | `/Env` | Voir toutes les variables d'env injectées |
+| **Debug console** | `/DebugConsole` | Naviguer dans `/home` via un shell |
+| **Log files** | `/api/logs/docker` | Accéder directement aux fichiers de logs |
+| **Diagnostic dump** | `/api/dump` | Télécharger un ZIP complet pour analyse offline |
+| **Process explorer** | `/ProcessExplorer` | Voir les processus Kudu (pas du container) |
 
-> **Limite importante :** Kudu n'est PAS le même environnement que ton container. Tu ne peux pas voir le filesystem du container ni les processus qui tournent dedans. Pour ça, utilise SSH.
+### La limitation fondamentale de Kudu
+
+> **Kudu ne tourne PAS dans le même environnement que ton container.**
+
+Kudu est un site séparé. Il peut accéder à `/home` (stockage partagé) mais **pas au filesystem interne du container**. Tu ne peux pas :
+- Voir les fichiers dans `/app` du container
+- Inspecter les processus qui tournent dans le container
+- Exécuter des commandes dans le container
+
+**Pour ça, il faut SSH.**
 
 ---
 
 ## Azure Monitor / Log Analytics
 
-Pour de la rétention long terme et des analyses avancées :
+Pour la rétention long terme, les alertes et les requêtes avancées :
 
 ```bash
 resourceId=$(az webapp show -g myResourceGroup -n myDocumentProcessor --query id -o tsv)
-workspaceId=$(az monitor log-analytics workspace show -g myResourceGroup -n myWorkspace --query id -o tsv)
+workspaceId=$(az monitor log-analytics workspace show -g myRG -n myWorkspace --query id -o tsv)
 
 az monitor diagnostic-settings create \
     --resource "$resourceId" \
@@ -81,21 +102,21 @@ az monitor diagnostic-settings create \
     --workspace "$workspaceId" \
     --logs '[
         {"category":"AppServiceConsoleLogs","enabled":true},
-        {"category":"AppServiceHTTPLogs","enabled":true}
+        {"category":"AppServiceHTTPLogs","enabled":true},
+        {"category":"AppServicePlatformLogs","enabled":true}
     ]'
 ```
 
-**Catégories disponibles :**
+**Catégories de logs disponibles :**
 
 | Catégorie | Contenu |
 |-----------|---------|
 | `AppServiceConsoleLogs` | stdout et stderr du container |
-| `AppServiceHTTPLogs` | Requêtes et réponses HTTP |
+| `AppServiceHTTPLogs` | Requêtes HTTP : méthode, URL, status, durée |
 | `AppServicePlatformLogs` | Événements cycle de vie du container |
-| `AppServiceAppLogs` | Logs applicatifs (si configurés) |
+| `AppServiceAppLogs` | Logs applicatifs si configurés |
 
-**Exemple de query Kusto pour les erreurs récentes :**
-
+**Requête Kusto pour les erreurs récentes :**
 ```kusto
 AppServiceConsoleLogs
 | where Level == "Error"
@@ -108,116 +129,119 @@ AppServiceConsoleLogs
 
 ## SSH dans le container
 
-Pour le troubleshooting interactif — nécessite d'avoir configuré SSH dans ton image :
+SSH te donne un accès **interactif direct** à l'intérieur du container — la seule façon d'inspecter les fichiers et processus du container en temps réel.
 
-**Dockerfile :**
+### Configuration requise dans le Dockerfile
 
 ```dockerfile
+FROM python:3.11-slim
+
+# Installer et configurer SSH
 RUN apt-get update && apt-get install -y openssh-server \
-    && echo "root:Docker!" | chpasswd
+    && echo "root:Docker!" | chpasswd    # Mot de passe OBLIGATOIRE exact
 
-COPY sshd_config /etc/ssh/
+COPY sshd_config /etc/ssh/              # Config SSH custom
 
-EXPOSE 8000 2222
+EXPOSE 8000 2222                        # 8000 = app, 2222 = SSH (obligatoire)
 
 CMD ["/bin/bash", "-c", "service ssh start && gunicorn app:application"]
 ```
 
-- Le serveur SSH doit écouter sur le port **2222**
-- Le mot de passe root doit être **`Docker!`** (requis par App Service)
+**Points critiques :**
+- Port SSH = **2222** (exigé par App Service, pas 22)
+- Mot de passe root = **`Docker!`** (exigé exact par App Service)
+- SSH doit démarrer EN MÊME TEMPS que l'application (pas de process manager séparé requis)
 
-Accès SSH via le portail : **Development Tools > SSH**
+**Accès SSH :** Portail Azure → ta web app → **Development Tools → SSH**
 
 ---
 
-## Problèmes courants
+## Problèmes courants — Guide de diagnostic
 
-### Container ne démarre pas
+### 1. Container ne démarre pas
+**Symptômes :** URL retourne une erreur, logs montrent des échecs.
 
-**Symptômes :** L'URL retourne une erreur, les logs montrent des échecs au démarrage.
-
-**Diagnostic :**
+**Procédure :**
 ```bash
-az webapp log tail --resource-group myRG --name myApp
+# Étape 1 : activer les logs si pas encore fait
+az webapp log config --docker-container-logging filesystem -g myRG -n myApp
+
+# Étape 2 : voir ce qui se passe au démarrage
+az webapp log tail -g myRG -n myApp
+
+# Étape 3 : vérifier les variables d'env dans Kudu
+# https://myapp.scm.azurewebsites.net/Env
 ```
 
-**Causes fréquentes :**
-- Variables d'environnement manquantes que l'app requiert au démarrage
-- Mismatch entre `WEBSITES_PORT` et le port écouté par le container
-- Crash de l'application pendant l'initialisation (dépendances manquantes)
+**Causes les plus fréquentes :**
+- Variable d'environnement manquante que l'app requiert au démarrage
+- `WEBSITES_PORT` incorrect ou absent
+- Crash de l'app pendant l'initialisation (voir les logs pour le traceback)
+- Image non accessible (permissions ACR manquantes)
 
 ---
 
-### Réponses 404 après déploiement
+### 2. Réponses 404 après déploiement
 
-**Symptômes :** Le container démarre, mais les requêtes retournent 404.
+**Symptômes :** Container démarre, mais toutes les requêtes retournent 404.
 
-**Causes fréquentes :**
-- Application qui écoute sur `localhost` au lieu de `0.0.0.0`
-- `WEBSITES_PORT` incorrect
-- Routes de l'application mal configurées
+**Causes et solutions :**
+
+| Cause | Solution |
+|-------|---------|
+| App écoute sur `localhost` | Changer pour `0.0.0.0` dans le code |
+| `WEBSITES_PORT` incorrect | Mettre le bon port dans les app settings |
+| Routes mal configurées | Vérifier que l'app répond à `/` ou au chemin attendu |
 
 ---
 
-#### ⭐ STAR — Diagnostiquer une erreur de démarrage
+### 3. Variables d'environnement manquantes
 
-**Situation :** Une API déployée sur App Service renvoie une erreur 500 immédiatement après le déploiement. Aucun log visible dans le portail.
+**Symptômes :** `KeyError`, `None` là où une valeur est attendue, comportement inattendu.
 
-**Tâche :** Identifier si c'est une erreur de config (variable manquante) ou une erreur de code.
+**Diagnostic :**
+1. Portail Azure → Environment variables → vérifier que le setting existe
+2. Kudu `/Env` → vérifier que la variable est bien injectée dans le container
+3. Vérifier les typos dans le nom de la variable
+
+---
+
+### 4. Cold starts lents
+
+**Symptômes :** Première requête après idle prend 10-30 secondes ou plus.
+
+**Solutions par ordre d'efficacité :**
+
+| Solution | Effet | Prérequis |
+|---------|-------|-----------|
+| Activer **Always-on** | Élimine le cold start | Tier Basic |
+| Réduire la taille de l'image | Moins de données à pull | Multi-stage build |
+| Optimiser le startup | App prête plus vite | Diff initialisation lourde |
+| Pre-warming (tier Premium) | Instances chaudes prêtes | Tier Premium v3 |
+
+---
+
+#### ⭐ STAR — Diagnostic méthodique d'une panne
+
+**Situation :** L'API de traitement de documents retourne 500 en production depuis le dernier déploiement. Les utilisateurs ne peuvent plus uploader de documents.
+
+**Tâche :** Identifier la cause racine sans accès direct au serveur.
 
 **Action :**
 ```bash
-# 1. Activer les logs
-az webapp log config --resource-group myRG --name myAPI --docker-container-logging filesystem
+# 1. Voir les logs en temps réel
+az webapp log tail -g prod-rg -n doc-processor
 
-# 2. Streamer en temps réel
-az webapp log tail --resource-group myRG --name myAPI
+# Résultat : "Error: AZURE_STORAGE_CONNECTION_STRING environment variable not set"
 
-# 3. Vérifier les variables d'env dans Kudu
-# https://myapi.scm.azurewebsites.net/Env
+# 2. Vérifier les app settings
+az webapp config appsettings list -g prod-rg -n doc-processor --output table
+
+# Résultat : AZURE_STORAGE_CONNECTION_STRING absent de la liste !
+
+# 3. Ajouter le setting manquant
+az webapp config appsettings set -g prod-rg -n doc-processor \
+    --settings AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;..."
 ```
 
-**Résultat :** Les logs montrent `KeyError: 'STORAGE_CONNECTION_STRING'` — une variable d'environnement manquante. Ajout de l'app setting → container démarre correctement.
-
----
-
-### Variables d'environnement manquantes
-
-**Symptômes :** L'app log des erreurs sur des valeurs undefined.
-
-**Diagnostic :**
-- Vérifier dans le portail que les settings sont sauvegardés
-- Checker dans Kudu (`/Env`) que les variables sont injectées
-- Vérifier les typos dans les noms de variables
-
----
-
-### Cold starts lents
-
-**Symptômes :** Première requête après idle très lente.
-
-**Solutions :**
-1. Activer **Always-on** (tier Basic minimum)
-2. Réduire la taille de l'image (multi-stage build, base image slim)
-3. Optimiser le startup de l'application (différer l'initialisation lourde)
-
----
-
-## Récap des commandes de diagnostic
-
-```bash
-# Activer les logs
-az webapp log config --docker-container-logging filesystem ...
-
-# Stream en temps réel
-az webapp log tail ...
-
-# Télécharger les logs
-az webapp log download ...
-
-# Voir les settings actuels
-az webapp config appsettings list --output table ...
-
-# Redémarrer l'app
-az webapp restart ...
-```
+**Résultat :** La variable manquait depuis le dernier déploiement (erreur lors du transfert des settings d'environnement). 5 minutes de diagnostic → problème résolu → service restauré.
