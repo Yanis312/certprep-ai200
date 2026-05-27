@@ -98,6 +98,73 @@ const terms: Term[] = [
     example: "v1.0.0 → v1.0.1 (bug fix) → v1.1.0 (nouvelle feature) → v2.0.0 (changement qui casse la compatibilité).",
     tag: "Concept",
   },
+  // App Service
+  {
+    word: "PaaS",
+    definition: "Platform as a Service — tu fournis le code ou l'image, la plateforme gère tout le reste (OS, scaling, patches, infra). Opposé de IaaS où tu gères tout.",
+    example: "App Service = PaaS. Tu donnes ton image Docker, Azure s'occupe du reste. Une VM = IaaS, tu gères l'OS toi-même.",
+    tag: "Concept",
+  },
+  {
+    word: "App Service Plan",
+    definition: "L'unité de facturation et de capacité pour App Service. Définit la région, la puissance CPU/RAM et le tier (Free, Basic, Standard, Premium). Plusieurs apps peuvent partager un même plan.",
+    example: "Plan Standard S2 = 2 CPU, 3.5 GB RAM, 250 GB stockage. Tu peux y héberger 5 apps — elles partagent les ressources.",
+    tag: "Azure",
+  },
+  {
+    word: "Managed Identity",
+    definition: "Une identité Azure gérée automatiquement, sans mot de passe à stocker. Permet à un service Azure de s'authentifier auprès d'autres services Azure sans credentials.",
+    example: "App Service avec une managed identity peut puller des images ACR ou lire des secrets Key Vault — sans aucun username/password dans la config.",
+    tag: "Azure",
+  },
+  {
+    word: "Cold Start",
+    definition: "Le délai de démarrage quand une app était en veille et doit redémarrer (après ~20 min d'inactivité), ou quand de nouvelles instances démarrent au scale-out.",
+    example: "Ton API de ML met 3 minutes à charger son modèle. Sans Always-on, chaque période d'inactivité = 3 minutes d'attente pour le premier utilisateur.",
+    tag: "Concept",
+  },
+  {
+    word: "Always-on",
+    definition: "Fonctionnalité App Service qui envoie des pings périodiques pour maintenir l'app active en permanence. Élimine les cold starts. Requiert le tier Basic minimum.",
+    example: "Sans Always-on : app en veille après 20 min → cold start de 2 min. Avec Always-on : app toujours chaude → réponse immédiate.",
+    tag: "Azure",
+  },
+  {
+    word: "Deployment Slot",
+    definition: "Un environnement séparé (staging, dev...) dans le même App Service plan. Chaque slot a sa propre URL et config. Un 'swap' échange deux slots sans downtime.",
+    example: "Tu déploies en staging (myapp-staging.azurewebsites.net), tu testes, puis tu 'swappes' staging ↔ production en 1 clic. Zéro downtime.",
+    tag: "Azure",
+  },
+  {
+    word: "Slot Setting",
+    definition: "Un App Setting ou Connection String marqué pour rester attaché à un slot lors d'un swap — il ne suit pas le code swappé.",
+    example: "ENVIRONMENT=production est un slot setting. Après le swap, la prod garde ENVIRONMENT=production même si tout le code de staging est arrivé.",
+    tag: "Azure",
+  },
+  {
+    word: "Key Vault Reference",
+    definition: "Syntaxe spéciale dans un App Setting pour référencer un secret Azure Key Vault. App Service résout la valeur et l'injecte comme variable d'env — le code ne voit pas la référence.",
+    example: "API_KEY = @Microsoft.KeyVault(SecretUri=https://vault.azure.net/secrets/api-key). Ton code lit juste os.environ.get('API_KEY').",
+    tag: "Azure",
+  },
+  {
+    word: "Kudu (SCM)",
+    definition: "Console de diagnostic avancée pour App Service. Accès via <app>.scm.azurewebsites.net. Permet de voir les variables d'env, les fichiers /home, les logs. NE PEUT PAS accéder au filesystem interne du container.",
+    example: "Pour voir les variables injectées : https://monapp.scm.azurewebsites.net/Env. Pour SSH dans le container : utiliser le portail Azure.",
+    tag: "Azure",
+  },
+  {
+    word: "WEBSITES_PORT",
+    definition: "Variable d'environnement App Service qui indique sur quel port le container écoute. App Service route le trafic vers ce port. Par défaut : 80 ou 8080.",
+    example: "Ton Flask écoute sur 5000 → WEBSITES_PORT=5000. Sans ça, App Service essaie le port 80 et ne trouve rien → 404.",
+    tag: "Azure",
+  },
+  {
+    word: "AcrPull",
+    definition: "Rôle Azure RBAC minimal requis pour qu'un service puisse télécharger (pull) des images depuis Azure Container Registry. Ne permet ni le push ni l'administration.",
+    example: "Tu assignes AcrPull à la managed identity de ton App Service → il peut puller les images ACR sans credentials stockés.",
+    tag: "Azure",
+  },
 ];
 
 const tagColors: Record<string, string> = {
@@ -106,7 +173,7 @@ const tagColors: Record<string, string> = {
   Azure: "bg-indigo-100 text-indigo-700",
 };
 
-const tags = ["Tous", "Docker", "Concept", "Azure"];
+const tags = ["Tous", "Azure", "Docker", "Concept"];
 
 export default function Lexique() {
   const [open, setOpen] = useState<number | null>(null);
