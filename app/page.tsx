@@ -6,6 +6,7 @@ import Roadmap from "@/components/Roadmap";
 const categoryMeta: Record<string, { color: string; bg: string; border: string; icon: string; desc: string }> = {
   "AI-200": { color: "text-indigo-700", bg: "bg-indigo-50", border: "border-indigo-100", icon: "☁️", desc: "Azure AI Cloud Developer Associate" },
   "React": { color: "text-cyan-700", bg: "bg-cyan-50", border: "border-cyan-100", icon: "⚛️", desc: "Hooks, patterns et bonnes pratiques" },
+  "Interview": { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-100", icon: "💼", desc: "Révision entretien C# — Fondamentaux, Avancé, Cheat Sheet" },
 };
 
 export default async function Home() {

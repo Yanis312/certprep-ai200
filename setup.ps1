@@ -25,6 +25,9 @@ npx tsx prisma/add-appservice-module.ts
 npx tsx prisma/add-appservice-units.ts
 npx tsx prisma/update-lab-quiz.ts
 npx tsx prisma/add-microsoft-assessment.ts
+npx tsx prisma/redo-appservice-quiz.ts
+npx tsx prisma/add-appservice-lab-and-assessment.ts
+npx tsx prisma/seed-interview.ts
 
 Write-Host "`n======================================"
 Write-Host "  Setup termine !"
