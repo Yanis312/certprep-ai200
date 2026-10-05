@@ -1,0 +1,72 @@
+{
+  "slug": "react-revision",
+  "title": "React — Révision TypeScript",
+  "description": "Hooks, state management et patterns React essentiels",
+  "category": "React",
+  "order": 1,
+  "units": [
+    {
+      "slug": "react-hooks-fondamentaux",
+      "title": "Unité 1 — Les Hooks fondamentaux",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel hook utilises-tu pour stocker une valeur qui déclenche un re-render quand elle change ?",
+          "options": [
+            "useRef",
+            "useMemo",
+            "useState",
+            "useEffect"
+          ],
+          "correctAnswer": 2,
+          "explanation": "useState stocke une valeur dans le state. Quand elle change via le setter, React re-render le composant. Ex: const [count, setCount] = useState(0)"
+        },
+        {
+          "question": "Quel hook utilises-tu pour exécuter du code après le rendu (appels API, subscriptions) ?",
+          "options": [
+            "useState",
+            "useCallback",
+            "useMemo",
+            "useEffect"
+          ],
+          "correctAnswer": 3,
+          "explanation": "useEffect s'exécute après chaque rendu. Avec [], il s'exécute une fois au montage — idéal pour les appels API initiaux. La fonction de cleanup évite les fuites mémoire."
+        },
+        {
+          "question": "Quelle est la différence entre useRef et useState ?",
+          "options": [
+            "useRef est pour les chaînes, useState pour les nombres",
+            "useRef ne déclenche PAS de re-render quand sa valeur change, useState oui",
+            "useState est plus rapide que useRef",
+            "Il n'y a pas de différence pratique"
+          ],
+          "correctAnswer": 1,
+          "explanation": "useRef stocke une valeur mutable (.current) qui persiste entre les renders SANS déclencher un re-render. Utile pour accéder au DOM ou stocker des timers et anciens états."
+        },
+        {
+          "question": "Quand utilises-tu useMemo ?",
+          "options": [
+            "Pour mémoriser une fonction callback",
+            "Pour éviter de recalculer une valeur coûteuse à chaque render",
+            "Pour stocker un état persistant entre pages",
+            "Pour gérer les effets de bord"
+          ],
+          "correctAnswer": 1,
+          "explanation": "useMemo mémoïse le résultat d'un calcul. Il ne recalcule que si les dépendances changent. Ex: const sorted = useMemo(() => items.sort(), [items])"
+        },
+        {
+          "question": "useCallback sert à :",
+          "options": [
+            "Exécuter une fonction après le rendu",
+            "Mémoriser une fonction pour éviter qu'elle soit recréée à chaque render",
+            "Créer un état avec une fonction de mise à jour",
+            "Gérer les erreurs dans les composants"
+          ],
+          "correctAnswer": 1,
+          "explanation": "useCallback mémoïse une fonction. Sans useCallback, une nouvelle référence est créée à chaque render — problème si passée en prop à un composant enfant avec React.memo."
+        }
+      ]
+    }
+  ]
+}

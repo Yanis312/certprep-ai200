@@ -1,0 +1,475 @@
+{
+  "slug": "app-service-containers",
+  "title": "Deploy containers to Azure App Service",
+  "description": "Déployer et configurer des containers sur App Service — settings, diagnostics, scaling",
+  "category": "AI-200",
+  "order": 2,
+  "units": [
+    {
+      "slug": "appservice-introduction",
+      "title": "Unité 1 — Introduction à Azure App Service pour containers",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'Azure App Service dans le modèle PaaS — qu'est-ce que TU gères, et qu'est-ce qu'Azure gère ?",
+          "options": [
+            "Tu gères tout (OS, runtime, app) — Azure gère uniquement le hardware",
+            "Tu gères uniquement l'app et les données — Azure gère l'OS, le runtime, le scaling et les patches",
+            "Azure gère tout — tu n'as rien à configurer",
+            "Tu gères l'OS et l'app — Azure gère uniquement le hardware et le réseau"
+          ],
+          "correctAnswer": 1,
+          "explanation": "En PaaS, tu te concentres sur ton application et tes données. Azure gère l'infrastructure complète : OS, runtime, load balancing, scaling automatique et patches de sécurité. C'est la différence fondamentale avec une VM (IaaS) où tu gères tout sauf le hardware."
+        },
+        {
+          "question": "Dans le scénario du module, l'équipe veut utiliser la MÊME image Docker pour dev, staging et production avec des configs différentes. Comment App Service permet ça ?",
+          "options": [
+            "En buildant une image différente par environnement automatiquement",
+            "En modifiant le Dockerfile à chaque déploiement",
+            "Via les App Settings qui injectent des variables d'environnement différentes par environnement au démarrage du container",
+            "En utilisant des branches Git différentes par environnement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le principe de l'image immuable : on build une seule fois. La configuration (endpoints, clés API, niveau de logs) est externalisée dans des App Settings. App Service injecte ces valeurs comme variables d'environnement au démarrage — l'image est identique partout, seule la config change."
+        },
+        {
+          "question": "À partir de quel tier App Service la fonctionnalité Always-on est-elle disponible ?",
+          "options": [
+            "Free",
+            "Shared",
+            "Basic",
+            "Standard"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Always-on est disponible à partir du tier Basic. Sans Always-on (tiers Free et Shared), l'app se met en veille après ~20 minutes d'inactivité et subit un cold start à la prochaine requête."
+        },
+        {
+          "question": "Qu'est-ce qu'un 'cold start' dans le contexte d'Azure App Service ?",
+          "options": [
+            "Une erreur de démarrage causée par un Dockerfile incorrect",
+            "Le temps de build de l'image Docker dans ACR",
+            "Le délai de démarrage quand une app idle doit redémarrer ou quand de nouvelles instances sont créées au scale-out",
+            "Le temps de connexion initial à la base de données"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un cold start survient quand l'app était en veille (idle) et doit redémarrer, ou quand App Service crée de nouvelles instances pour absorber une charge supplémentaire. Ce délai peut aller de quelques secondes à plusieurs minutes selon la taille de l'image et le temps de démarrage de l'application."
+        },
+        {
+          "question": "Quel est l'avantage principal de Web App for Containers par rapport à déployer sur une VM Azure ?",
+          "options": [
+            "App Service est toujours moins cher qu'une VM",
+            "App Service supporte plus de langages de programmation",
+            "App Service gère l'infrastructure (OS, patches, scaling, load balancing) — tu fournis juste l'image Docker",
+            "App Service permet de déployer sur plusieurs régions simultanément"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'avantage clé est l'élimination de la gestion d'infrastructure. Sur une VM, tu gères : l'OS, les patches, Docker, le load balancer, le scaling. Sur App Service, tu fournis l'image et Azure gère tout le reste. Cela réduit considérablement la charge opérationnelle."
+        }
+      ]
+    },
+    {
+      "slug": "appservice-deploy",
+      "title": "Unité 2 — Déployer des containers sur App Service",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la différence entre system-assigned et user-assigned managed identity pour App Service ?",
+          "options": [
+            "System-assigned : ressource indépendante assignable à plusieurs apps. User-assigned : liée au cycle de vie de l'app",
+            "Elles sont identiques — deux noms pour la même fonctionnalité",
+            "System-assigned : liée au cycle de vie de la web app, supprimée avec elle. User-assigned : ressource Azure indépendante, assignable à plusieurs apps",
+            "System-assigned est gratuite, user-assigned coûte selon le nombre d'apps"
+          ],
+          "correctAnswer": 2,
+          "explanation": "System-assigned identity est créée et supprimée avec la web app — simple pour un seul service. User-assigned identity existe comme ressource Azure indépendante — idéal quand plusieurs apps partagent le même accès ACR ou quand tu veux configurer les permissions avant de créer l'app."
+        },
+        {
+          "question": "Tu pushes une nouvelle image avec le tag `latest` dans ACR. App Service met-il à jour le container automatiquement ?",
+          "options": [
+            "Oui — App Service surveille les changements de contenu des tags en continu",
+            "Oui — mais seulement si le déploiement continu est activé sur le tag `latest` spécifiquement",
+            "Non — App Service ne détecte pas le changement. Il faut redémarrer manuellement ou activer le CD avec une webhook",
+            "Non — il faut impérativement changer le tag pour déclencher une mise à jour"
+          ],
+          "correctAnswer": 2,
+          "explanation": "App Service ne poll pas le registry. Il ne sait pas que le contenu sous un tag a changé. Deux solutions : soit utiliser un nouveau tag (v1 → v2) ce qui déclenche automatiquement le pull, soit activer le déploiement continu (webhook ACR → App Service restart)."
+        },
+        {
+          "question": "Quel rôle Azure RBAC minimal faut-il assigner à la managed identity pour qu'App Service puisse puller des images depuis ACR ?",
+          "options": [
+            "AcrPull",
+            "Contributor",
+            "AcrAdmin",
+            "Reader"
+          ],
+          "correctAnswer": 0,
+          "explanation": "AcrPull est le rôle minimal requis — il permet uniquement de télécharger (pull) des images du registry. AcrAdmin donne trop de permissions (push, delete, admin). Contributor et Reader sont des rôles Azure génériques qui ne s'appliquent pas à ACR."
+        },
+        {
+          "question": "Lors d'un scale-out (ajout de nouvelles instances), comment App Service gère-t-il l'image Docker sur les nouvelles instances ?",
+          "options": [
+            "Les nouvelles instances partagent l'image déjà chargée des instances existantes",
+            "App Service pré-charge l'image sur toutes les instances avant d'accepter du trafic",
+            "Chaque nouvelle instance pull l'image depuis le registry — peut être lent si l'image est volumineuse et les couches ne sont pas en cache",
+            "App Service utilise uniquement les couches en cache — jamais de pull complet au scale-out"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Chaque nouvelle instance doit puller l'image depuis le registry. Si les couches ne sont pas en cache sur la nouvelle infrastructure, un pull complet est nécessaire. C'est pourquoi optimiser la taille des images est important — une image de 2GB multipliée par 10 nouvelles instances = 20GB de téléchargement."
+        },
+        {
+          "question": "Quelle commande CLI configure App Service pour puller automatiquement une nouvelle image à chaque push dans ACR ?",
+          "options": [
+            "az webapp config container set --auto-pull true",
+            "az acr webhook create --actions push --uri <app-service-url>",
+            "az webapp deployment container config --enable-cd true",
+            "az webapp update --continuous-deployment true"
+          ],
+          "correctAnswer": 2,
+          "explanation": "az webapp deployment container config --enable-cd true retourne une webhook URL. Tu configures ensuite ACR pour appeler cette URL à chaque push. App Service reçoit la notification, redémarre et pull la nouvelle image automatiquement."
+        },
+        {
+          "question": "⭐ Microsoft — Après un déploiement App Service, les requêtes retournent 404. Le container démarre correctement. Quelle est la cause la plus probable ?",
+          "options": [
+            "L'image est trop volumineuse pour App Service",
+            "Le certificat SSL de l'app a expiré",
+            "L'application écoute sur localhost au lieu de 0.0.0.0, ou WEBSITES_PORT est incorrect",
+            "Le health check bloque le trafic entrant"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un container qui bind sur localhost (127.0.0.1) ne reçoit pas les connexions externes d'App Service. Il faut binder sur 0.0.0.0. Autre cause fréquente : WEBSITES_PORT qui ne correspond pas au port réel écouté par le container."
+        },
+        {
+          "question": "Pour GitHub Container Registry, quelle server URL faut-il utiliser avec `az webapp create --docker-registry-server-url` ?",
+          "options": [
+            "https://docker.github.io",
+            "https://registry.github.com",
+            "https://ghcr.io",
+            "https://packages.github.com"
+          ],
+          "correctAnswer": 2,
+          "explanation": "GitHub Container Registry utilise https://ghcr.io comme URL de registry. Docker Hub utilise https://index.docker.io/v1/. ACR utilise https://<nom>.azurecr.io."
+        }
+      ]
+    },
+    {
+      "slug": "appservice-runtime",
+      "title": "Unité 3 — Configurer le runtime du container",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "La startup command dans App Service remplace quelle instruction du Dockerfile ?",
+          "options": [
+            "ENTRYPOINT uniquement",
+            "CMD uniquement — ENTRYPOINT reste inchangé",
+            "À la fois ENTRYPOINT et CMD",
+            "RUN — elle réexécute des commandes au démarrage"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La startup command override uniquement CMD. ENTRYPOINT reste défini tel quel dans le Dockerfile. C'est le comportement standard Docker : CMD fournit les arguments par défaut, ENTRYPOINT définit l'exécutable. App Service suit cette même convention."
+        },
+        {
+          "question": "Ton container Python Flask écoute sur le port 5000. Quelle app setting App Service faut-il configurer ?",
+          "options": [
+            "CONTAINER_PORT=5000",
+            "APP_PORT=5000",
+            "DOCKER_PORT=5000",
+            "WEBSITES_PORT=5000"
+          ],
+          "correctAnswer": 3,
+          "explanation": "WEBSITES_PORT est la variable spécifique qu'App Service lit pour savoir vers quel port du container rediriger le trafic HTTP entrant. Sans cette variable, App Service tente le port 80 puis 8080 par défaut."
+        },
+        {
+          "question": "Que se passe-t-il avec les données écrites dans `/home` sur une app scalée à 3 instances, avec WEBSITES_ENABLE_APP_SERVICE_STORAGE=true ?",
+          "options": [
+            "Chaque instance a son propre /home isolé — les données ne sont pas partagées",
+            "Les 3 instances partagent le même /home — toutes lisent et écrivent au même endroit",
+            "Seule l'instance primaire écrit dans /home — les autres lisent uniquement",
+            "Les données dans /home sont répliquées entre instances toutes les 5 minutes"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Avec WEBSITES_ENABLE_APP_SERVICE_STORAGE=true, le répertoire /home est monté depuis un stockage partagé commun à toutes les instances. Cela peut causer des conflits si plusieurs instances écrivent simultanément les mêmes fichiers. Pour les workloads à haute concurrence, Azure Blob Storage avec des noms de fichiers uniques est préférable."
+        },
+        {
+          "question": "Un health check App Service envoie des pings toutes les minutes. Après combien d'échecs consécutifs l'instance est-elle retirée du load balancer ?",
+          "options": [
+            "3 échecs",
+            "5 échecs",
+            "10 échecs",
+            "20 échecs"
+          ],
+          "correctAnswer": 2,
+          "explanation": "App Service retire une instance du load balancer après 10 pings échoués consécutifs. Si l'instance reste unhealthy pendant une période prolongée, App Service peut la remplacer. L'endpoint /health doit retourner HTTP 200 pour être considéré sain."
+        },
+        {
+          "question": "Pourquoi Always-on est recommandé pour les apps qui chargent des modèles ML au démarrage ?",
+          "options": [
+            "Always-on accélère le chargement des modèles via un cache Azure",
+            "Always-on désactive le garbage collector pour maintenir les modèles en mémoire",
+            "Sans Always-on, l'app entre en veille après ~20 min d'inactivité — le prochain cold start inclut le rechargement du modèle, pouvant prendre plusieurs minutes",
+            "Always-on pré-charge les modèles ML dans Azure CDN pour une distribution plus rapide"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les modèles ML peuvent peser plusieurs GB et prendre 2-5 minutes à charger. Sans Always-on, ce cold start se produit à chaque période d'inactivité (~20 min). Always-on maintient l'app active en permanence via des pings périodiques — le modèle reste chargé en mémoire."
+        },
+        {
+          "question": "⭐ Microsoft — Une app de traitement de documents écrit des fichiers output pendant le traitement. Après un redémarrage du container, les fichiers sont perdus. Comment configurer App Service pour les persister ?",
+          "options": [
+            "Utiliser une image plus grande avec plus d'espace disque",
+            "Activer Always-on pour éviter les redémarrages",
+            "Activer WEBSITES_ENABLE_APP_SERVICE_STORAGE=true et écrire les fichiers dans /home",
+            "Configurer un Azure Blob Storage dans le Dockerfile"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Par défaut, le filesystem du container est éphémère — perdu au redémarrage. WEBSITES_ENABLE_APP_SERVICE_STORAGE=true monte /home comme stockage persistant partagé entre toutes les instances. L'application doit écrire dans /home/ (ex: /home/output/) pour que les fichiers survivent aux redémarrages."
+        },
+        {
+          "question": "⭐ Microsoft — Les health checks échouent et App Service retire des instances du load balancer. L'app a un endpoint /healthz qui retourne HTTP 200. Quelle est la cause la plus probable ?",
+          "options": [
+            "Les health checks nécessitent HTTPS mais le container ne sert que HTTP",
+            "Le container manque de mémoire pour gérer les requêtes health check",
+            "Le port configuré pour les health checks ne correspond pas au port du container",
+            "Le chemin configuré dans App Service (/health) ne correspond pas au chemin réel de l'app (/healthz)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "App Service envoie les pings de health check vers le chemin configuré. Si App Service est configuré pour /health mais que l'app répond sur /healthz, les pings reçoivent un 404 → App Service considère l'instance comme unhealthy. La config et le code doivent utiliser exactement le même chemin."
+        }
+      ]
+    },
+    {
+      "slug": "appservice-settings",
+      "title": "Unité 4 — Configurer les App Settings",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Pourquoi les Connection Strings (type SQLAzure, MySQL, etc.) sont-elles moins recommandées pour Python que pour .NET ?",
+          "options": [
+            "Python ne supporte pas la lecture des variables d'environnement avec préfixes",
+            "App Service n'injecte pas les Connection Strings dans les containers Linux",
+            "Le préfixe automatique (SQLAZURECONNSTR_, MYSQLCONNSTR_...) ajoute de la complexité sans bénéfice — Python ne cherche pas ces préfixes",
+            "Les Connection Strings sont chiffrées différemment pour Python"
+          ],
+          "correctAnswer": 2,
+          "explanation": "App Service préfixe automatiquement les Connection Strings (SQLAZURECONNSTR_ pour SQLAzure, etc.). .NET/Entity Framework cherche ces préfixes nativement. Python lit os.environ.get('MA_VAR') — le préfixe inattendu complique le code. Pour Python, utilise une simple App Setting avec le nom exact que tu veux."
+        },
+        {
+          "question": "Tu fais un swap staging → production. `ENVIRONMENT=staging` était configuré comme Slot Setting sur le slot staging. Qu'est-ce qui se passe après le swap ?",
+          "options": [
+            "La prod reçoit ENVIRONMENT=staging — le slot setting suit le code",
+            "La prod garde ENVIRONMENT=production — le slot setting reste attaché au slot, pas au code",
+            "Les deux slots ont ENVIRONMENT=staging après le swap",
+            "Le Slot Setting est supprimé lors du swap — il faut le reconfigurer"
+          ],
+          "correctAnswer": 1,
+          "explanation": "C'est exactement l'utilité des Slot Settings : ils restent attachés au slot, pas au code swappé. Après le swap, le slot production garde ENVIRONMENT=production, le slot staging garde ENVIRONMENT=staging. Le code a changé de slot, mais chaque slot conserve sa propre configuration."
+        },
+        {
+          "question": "Une Key Vault Reference dans App Service est configurée sans numéro de version dans l'URI (`/secrets/api-key` sans `/<version>`). Comment App Service gère-t-il la rotation du secret ?",
+          "options": [
+            "App Service ne supporte pas la rotation automatique — il faut spécifier une version fixe",
+            "La rotation est immédiate — App Service vérifie le secret à chaque requête",
+            "App Service récupère toujours la dernière version et rafraîchit dans les 24h (ou immédiatement au prochain redémarrage)",
+            "App Service utilise le secret au moment du déploiement et ne le met jamais à jour"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Sans version dans l'URI, App Service résout toujours vers la dernière version du secret. Le refresh se fait dans les 24h après une rotation, ou immédiatement lors du prochain redémarrage de l'app. C'est pourquoi il est recommandé de ne pas spécifier de version — la rotation devient automatique."
+        },
+        {
+          "question": "Quels prérequis sont nécessaires pour utiliser une Key Vault Reference dans App Service ?",
+          "options": [
+            "Un App Service Plan Premium et un Key Vault dans la même région",
+            "Une managed identity activée sur la web app, avec le rôle 'Key Vault Secrets User' sur le Key Vault",
+            "Un certificat SSL configuré sur la web app et le Key Vault en accès public",
+            "Une connexion VNet entre App Service et Key Vault"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Pour les Key Vault References : (1) activer une managed identity sur la web app, (2) assigner à cette identité le rôle 'Key Vault Secrets User' sur le Key Vault, (3) utiliser la syntaxe @Microsoft.KeyVault(...) dans la valeur de l'App Setting. App Service résout alors le secret et l'injecte comme variable d'environnement normale."
+        },
+        {
+          "question": "Comment exporter tous les App Settings d'une web app pour les modifier en masse puis les réimporter ?",
+          "options": [
+            "az webapp config appsettings export → modifier le fichier → az webapp config appsettings import",
+            "az webapp config appsettings list --output json > settings.json → modifier → az webapp config appsettings set --settings @settings.json",
+            "Portail Azure → Configuration → Download → modifier → Upload",
+            "az webapp backup create --include-configuration → az webapp backup restore"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La commande 'list --output json' exporte les settings dans un tableau JSON avec name, value et slotSetting. Après modification, 'set --settings @settings.json' réimporte le fichier. Le @ indique à Azure CLI de lire depuis un fichier plutôt qu'une chaîne de caractères."
+        },
+        {
+          "question": "⭐ Microsoft — Une app production nécessite des URLs d'endpoints API différentes pour staging et production. Comment éviter que l'URL staging swap vers la production ?",
+          "options": [
+            "Stocker l'URL dans l'image container pour chaque environnement",
+            "Utiliser des Connection Strings au lieu des App Settings pour les URLs",
+            "Configurer API_ENDPOINT comme Slot Setting",
+            "Créer deux App Service Plans distincts pour staging et production"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un Slot Setting reste attaché au slot lors d'un swap — il ne suit pas le code. En configurant API_ENDPOINT comme Slot Setting sur chaque slot (staging et production), chaque slot garde sa propre URL après le swap. Le code change de slot, la config reste."
+        },
+        {
+          "question": "Tu configures `LOG_LEVEL=DEBUG` en tant que Slot Setting sur le slot staging. En production, LOG_LEVEL=WARNING aussi en Slot Setting. Après un swap staging → production, que vaut LOG_LEVEL en production ?",
+          "options": [
+            "DEBUG — la valeur de staging a suivi le code swappé",
+            "WARNING — le Slot Setting est resté attaché au slot production",
+            "La variable est supprimée — les Slot Settings ne survivent pas au swap",
+            "Ça dépend de l'ordre dans lequel le swap a été effectué"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les Slot Settings restent sur leur slot. Après le swap : la production garde WARNING (son Slot Setting), le staging garde DEBUG (son Slot Setting). Le code de staging est maintenant en production, mais chaque slot a conservé sa propre valeur de Slot Setting."
+        }
+      ]
+    },
+    {
+      "slug": "appservice-diagnostics",
+      "title": "Unité 5 — Observer et dépanner les containers",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la limitation fondamentale de Kudu (SCM) pour débugger un container App Service ?",
+          "options": [
+            "Kudu ne peut afficher que les 1000 dernières lignes de logs",
+            "Kudu n'est pas disponible sur les tiers inférieurs à Standard",
+            "Kudu tourne dans un environnement séparé du container — impossible de voir le filesystem du container ou ses processus internes",
+            "Kudu nécessite SSH pour fonctionner et n'est pas disponible sans cette configuration"
+          ],
+          "correctAnswer": 2,
+          "explanation": "C'est la limite la plus importante à retenir : Kudu est un site séparé de ta web app. Il accède à /home (stockage partagé) mais PAS au filesystem interne du container ni aux processus qui tournent dedans. Pour l'inspection interne du container, il faut activer SSH (port 2222)."
+        },
+        {
+          "question": "Quelle commande CLI permet de voir les logs du container en temps réel ?",
+          "options": [
+            "az webapp log tail",
+            "az webapp log stream --live",
+            "az container logs --follow",
+            "az webapp diagnostics stream"
+          ],
+          "correctAnswer": 0,
+          "explanation": "az webapp log tail streame les nouveaux logs en temps réel depuis App Service. Pour une app scalée, affiche les logs de toutes les instances avec un préfixe d'identification. Ctrl+C pour arrêter. Équivalent dans le portail : Monitoring → Log stream."
+        },
+        {
+          "question": "Ton container démarre mais retourne 404 sur toutes les routes. Quelle est la première cause à vérifier ?",
+          "options": [
+            "Le health check est mal configuré et bloque le trafic",
+            "L'image dans ACR est corrompue — il faut rebuilder",
+            "L'application écoute sur localhost (127.0.0.1) au lieu de 0.0.0.0, ou WEBSITES_PORT ne correspond pas au port réel",
+            "Le certificat SSL de la web app a expiré"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un container qui écoute sur localhost ne reçoit pas les requêtes externes — App Service ne peut pas router le trafic vers lui. L'app doit binder sur 0.0.0.0. Autre cause fréquente : WEBSITES_PORT mal configuré. Ces deux erreurs causent un 404 même si le container tourne correctement."
+        },
+        {
+          "question": "Pour configurer SSH dans un container App Service, quels sont les deux paramètres obligatoires dans le Dockerfile ?",
+          "options": [
+            "Port SSH = 22 et mot de passe root = 'Azure!'",
+            "Port SSH = 2222 et mot de passe root = 'Docker!'",
+            "Port SSH = 2222 et clé SSH publique dans /root/.ssh/authorized_keys",
+            "Port SSH = 22 et certificat SSL App Service monté dans /etc/ssh/"
+          ],
+          "correctAnswer": 1,
+          "explanation": "App Service exige exactement ces deux paramètres : le serveur SSH doit écouter sur le port 2222 (pas 22) et le mot de passe root doit être 'Docker!' (exact, avec majuscule et point d'exclamation). Ce sont des contraintes imposées par la plateforme App Service pour l'accès SSH."
+        },
+        {
+          "question": "Tu veux envoyer les logs App Service vers Log Analytics pour créer des alertes sur les erreurs. Quelle est la bonne approche ?",
+          "options": [
+            "az webapp log config --destination log-analytics --workspace <id>",
+            "az monitor diagnostic-settings create avec les catégories AppServiceConsoleLogs et AppServiceHTTPLogs",
+            "az webapp update --log-analytics-workspace <id>",
+            "Configurer Azure Monitor directement dans le Dockerfile avec une variable d'environnement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "az monitor diagnostic-settings create permet de router les logs App Service vers Log Analytics. Les catégories disponibles incluent AppServiceConsoleLogs (stdout/stderr), AppServiceHTTPLogs (requêtes HTTP), AppServicePlatformLogs (événements cycle de vie). Une fois dans Log Analytics, tu peux écrire des requêtes Kusto et créer des alertes."
+        },
+        {
+          "question": "Tu veux envoyer les logs App Service vers Log Analytics pour créer des alertes sur les erreurs. Quelle commande utilises-tu ?",
+          "options": [
+            "az webapp log config --destination log-analytics",
+            "az webapp update --log-analytics-workspace <id>",
+            "az monitor diagnostic-settings create avec les catégories AppServiceConsoleLogs",
+            "az monitor log-analytics workspace link --webapp <app>"
+          ],
+          "correctAnswer": 2,
+          "explanation": "az monitor diagnostic-settings create configure le routage des logs App Service vers Log Analytics. Tu spécifies les catégories souhaitées : AppServiceConsoleLogs (stdout/stderr), AppServiceHTTPLogs (requêtes), AppServicePlatformLogs (lifecycle). Une fois dans Log Analytics, tu écris des requêtes Kusto et crées des alertes."
+        },
+        {
+          "question": "Quelle est l'URL pour accéder aux variables d'environnement de ton app via Kudu ?",
+          "options": [
+            "https://<app>.azurewebsites.net/admin/env",
+            "https://<app>.scm.azurewebsites.net/Env",
+            "https://<app>.kudu.azure.com/environment",
+            "https://<app>.azurewebsites.net/diagnostics/env"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'URL Kudu (SCM) est toujours https://<app>.scm.azurewebsites.net. La page /Env affiche toutes les variables d'environnement injectées dans le container — tes App Settings + les variables système Azure (WEBSITE_HOSTNAME, etc.)."
+        }
+      ]
+    },
+    {
+      "slug": "appservice-lab",
+      "title": "Lab — Deploy a container to Azure App Service",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans le lab, pourquoi assigne-t-on le rôle AcrPull à la managed identity plutôt que d'utiliser les admin credentials de l'ACR ?",
+          "options": [
+            "Les admin credentials ne fonctionnent pas avec App Service",
+            "AcrPull est moins cher que les admin credentials",
+            "Pour éliminer les credentials stockés dans la config — la managed identity s'authentifie automatiquement sans mot de passe",
+            "Les admin credentials nécessitent une rotation mensuelle obligatoire"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La managed identity + AcrPull élimine tout stockage de credentials. App Service s'authentifie auprès d'ACR via l'identité Azure — sans username, sans password dans les App Settings. Si la web app est supprimée, l'accès est automatiquement révoqué."
+        },
+        {
+          "question": "Quelle commande active la system-assigned managed identity sur une web app App Service ?",
+          "options": [
+            "az webapp identity assign --resource-group myRG --name myApp",
+            "az identity create --resource-group myRG --name myApp-identity",
+            "az webapp config identity --enable --resource-group myRG --name myApp",
+            "az managed-identity assign --webapp myApp --resource-group myRG"
+          ],
+          "correctAnswer": 0,
+          "explanation": "az webapp identity assign active la system-assigned managed identity sur la web app. La commande retourne un JSON avec le principalId — nécessaire pour l'étape suivante (az role assignment create --assignee <principalId>)."
+        },
+        {
+          "question": "Dans le lab, `az appservice plan create --is-linux --sku B1` — pourquoi ces deux flags sont-ils obligatoires ?",
+          "options": [
+            "--is-linux pour activer Docker, --sku B1 pour activer les containers",
+            "--is-linux car les containers Linux sont requis pour Web App for Containers, --sku B1 car Free/Shared ne supportent pas la managed identity ni les containers custom",
+            "--is-linux pour réduire les coûts, --sku B1 car c'est le seul tier compatible avec ACR",
+            "--is-linux pour activer SSH, --sku B1 pour activer le déploiement continu"
+          ],
+          "correctAnswer": 1,
+          "explanation": "--is-linux crée un plan pour containers Linux (Web App for Containers est Linux uniquement). --sku B1 (Basic) est le tier minimal qui supporte les containers custom avec managed identity. Les tiers Free et Shared ne supportent ni les containers custom ni Always-on."
+        },
+        {
+          "question": "⭐ Microsoft — Une image container écoute sur le port 8000. Après déploiement sur App Service, les requêtes retournent des erreurs de connexion. Quelle config résout le problème ?",
+          "options": [
+            "Modifier le Dockerfile pour utiliser EXPOSE 80",
+            "Activer le protocole HTTP/2 dans les paramètres de la plateforme",
+            "Configurer WEBSITES_PORT=8000 dans les App Settings",
+            "Redéployer l'image avec un tag différent"
+          ],
+          "correctAnswer": 2,
+          "explanation": "App Service route le trafic vers les ports 80 ou 8080 par défaut. Si le container écoute sur un autre port (ici 8000), il faut configurer WEBSITES_PORT=8000 dans les App Settings. EXPOSE dans le Dockerfile est une documentation, pas une configuration d'App Service."
+        },
+        {
+          "question": "⭐ Microsoft — Un développeur doit vérifier que les App Settings sont correctement injectés dans le container. Quel outil fournit cette information ?",
+          "options": [
+            "La page Environment de la console Kudu (SCM)",
+            "Le log stream dans le portail Azure",
+            "Le dashboard de métriques App Service",
+            "La commande az webapp config appsettings list"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La console Kudu (https://<app>.scm.azurewebsites.net/Env) affiche TOUTES les variables d'environnement injectées dans le container, y compris les App Settings et les variables système Azure. C'est l'outil de référence pour vérifier que les settings arrivent bien jusqu'au container."
+        }
+      ]
+    }
+  ]
+}

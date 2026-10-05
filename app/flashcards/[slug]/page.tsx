@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getAllUnitSlugs, getUnit } from "@/lib/course";
 import FlashcardsClient from "@/components/FlashcardsClient";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAllUnitSlugs();
+}
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const unit = await prisma.unit.findUnique({
-    where: { slug },
-    include: { questions: true, module: true },
-  });
-  if (!unit) notFound();
+  const found = getUnit(slug);
+  if (!found) notFound();
+  const unit = { ...found.unit, module: found.module };
 
   const cards = unit.questions.map((q) => ({ front: q.question, back: q.explanation }));
 
@@ -24,7 +28,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ slu
   }
 
   return (
-    <div className="max-w-xl mx-auto px-6 py-8">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex items-center gap-2 text-sm text-slate-400 mb-6">
         <Link href="/" className="hover:text-indigo-600 transition-colors">Accueil</Link>
         <span>/</span>
@@ -41,7 +45,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ slu
           <h1 className="text-xl font-bold text-white mt-0.5">{unit.title}</h1>
           <p className="text-amber-100 text-xs mt-1">{cards.length} cartes · Clique pour retourner</p>
         </div>
-        <div className="px-8 py-8">
+        <div className="px-5 sm:px-8 py-8">
           <FlashcardsClient cards={cards} unitSlug={slug} moduleSlug={unit.module.slug} />
         </div>
       </div>

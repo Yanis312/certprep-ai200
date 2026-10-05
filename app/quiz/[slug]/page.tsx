@@ -1,23 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getAllUnitSlugs, getUnit } from "@/lib/course";
 import QuizClient from "@/components/QuizClient";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAllUnitSlugs();
+}
 
 export default async function QuizPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const unit = await prisma.unit.findUnique({
-    where: { slug },
-    include: { questions: true, module: true },
-  });
-  if (!unit) notFound();
+  const found = getUnit(slug);
+  if (!found) notFound();
+  const unit = { ...found.unit, module: found.module };
 
-  const questions = unit.questions.map((q) => ({
-    id: q.id,
-    question: q.question,
-    options: JSON.parse(q.options) as string[],
-    correctAnswer: q.correctAnswer,
-    explanation: q.explanation,
-  }));
+  const questions = unit.questions;
 
   if (questions.length === 0) {
     return (
@@ -30,7 +28,7 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-8">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex items-center gap-2 text-sm text-slate-400 mb-6">
         <Link href="/" className="hover:text-indigo-600 transition-colors">Accueil</Link>
         <span>/</span>
@@ -45,10 +43,10 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
         <div className="bg-linear-to-r from-violet-600 to-purple-600 px-8 py-5">
           <p className="text-violet-200 text-xs font-medium uppercase tracking-widest">Quiz</p>
           <h1 className="text-xl font-bold text-white mt-0.5">{unit.title}</h1>
-          <p className="text-violet-200 text-xs mt-1">{questions.length} questions · 4 choix par question</p>
+          <p className="text-violet-200 text-xs mt-1">{questions.length} questions · 70 % pour valider</p>
         </div>
-        <div className="px-8 py-8">
-          <QuizClient questions={questions} unitSlug={slug} unitId={unit.id} moduleSlug={unit.module.slug} />
+        <div className="px-5 sm:px-8 py-8">
+          <QuizClient questions={questions} unitSlug={slug} />
         </div>
       </div>
     </div>

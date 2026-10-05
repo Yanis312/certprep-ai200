@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { saveProgress } from "@/app/actions/progress";
+import { saveAttempt } from "@/lib/progress";
+import type { Question } from "@/lib/types";
 
-type Question = { id: string; question: string; options: string[]; correctAnswer: number; explanation: string };
-
-export default function QuizClient({ questions, unitSlug, unitId, moduleSlug }: { questions: Question[]; unitSlug: string; unitId: string; moduleSlug: string }) {
+export default function QuizClient({ questions, unitSlug }: { questions: Question[]; unitSlug: string }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<boolean[]>([]);
@@ -28,7 +27,7 @@ export default function QuizClient({ questions, unitSlug, unitId, moduleSlug }: 
 
   useEffect(() => {
     if (finished) {
-      saveProgress(unitId, score, questions.length);
+      saveAttempt(unitSlug, score, questions.length);
     }
   }, [finished]);  // eslint-disable-line react-hooks/exhaustive-deps
 

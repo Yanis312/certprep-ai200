@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CertPrep — révision AI-200
 
-## Getting Started
+Site de révision pour la certification **AI-200 — Azure AI Cloud Developer Associate** : fiches de cours, quiz, flashcards et plan de révision sur 10 semaines.
 
-First, run the development server:
+Le site est **100 % statique** (export Next.js) et publié sur GitHub Pages à chaque push sur `main`. La progression est enregistrée dans le navigateur (localStorage), il n'y a ni serveur ni base de données.
+
+## Lancer en local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # génère le site statique dans out/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Où est le contenu
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Quoi | Où |
+|---|---|
+| Modules, unités et questions de quiz | `data/modules/<slug-du-module>.json` |
+| Texte des fiches de cours | `content/<catégorie>/<slug-de-l-unité>.md` |
+| Plan officiel (9 learning paths) et planning des semaines | `data/plan.ts` |
+| Lexique | `components/Lexique.tsx` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Ajouter une unité
 
-## Learn More
+1. Écrire la fiche dans `content/AI-200/<slug>.md`.
+2. Ajouter l'unité dans le JSON de son module :
 
-To learn more about Next.js, take a look at the following resources:
+```json
+{
+  "slug": "aca-deploy",
+  "title": "Déployer sur Container Apps",
+  "order": 1,
+  "isLab": false,
+  "questions": [
+    {
+      "question": "…",
+      "options": ["A", "B", "C", "D"],
+      "correctAnswer": 0,
+      "explanation": "…"
+    }
+  ]
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Pour un nouveau module : créer `data/modules/<slug>.json` (`slug`, `title`, `description`, `category: "AI-200"`, `order`, `units`) puis renseigner `site: "<slug>"` sur la ligne correspondante de `data/plan.ts` pour qu'il remplace « Fiche à venir » sur l'accueil.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Une unité est validée quand le dernier quiz atteint 70 %.
 
-## Deploy on Vercel
+## Déploiement
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`.github/workflows/deploy.yml` construit le site et le publie sur GitHub Pages. Dans les réglages du dépôt : **Settings → Pages → Source : GitHub Actions**.

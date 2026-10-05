@@ -1,0 +1,407 @@
+{
+  "slug": "container-hosting",
+  "title": "Azure Container Registry (ACR)",
+  "description": "Hébergement d'applications conteneurisées — Learning Path 1",
+  "category": "AI-200",
+  "order": 1,
+  "units": [
+    {
+      "slug": "acr-introduction",
+      "title": "Unité 1 — Introduction à ACR",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'Azure Container Registry (ACR) ?",
+          "options": [
+            "Un service de déploiement de containers",
+            "Un registre privé géré Azure pour stocker des images OCI",
+            "Un orchestrateur de containers comme Kubernetes",
+            "Un service de monitoring des containers"
+          ],
+          "correctAnswer": 1,
+          "explanation": "ACR est un registre privé géré qui stocke et distribue des images OCI (Docker, Helm, etc.). Il est intégré nativement aux services Azure comme AKS, Container Apps et App Service."
+        },
+        {
+          "question": "Quelle est la différence principale entre ACR et Docker Hub ?",
+          "options": [
+            "ACR est gratuit, Docker Hub est payant",
+            "ACR est privé et intégré nativement à Azure, Docker Hub est public par défaut",
+            "ACR ne supporte que les images Windows",
+            "Docker Hub supporte la géo-réplication"
+          ],
+          "correctAnswer": 1,
+          "explanation": "ACR est un registre privé intégré nativement aux services Azure avec géo-réplication (Premium). Docker Hub est public par défaut et non lié à Azure."
+        },
+        {
+          "question": "Quel tier ACR offre la géo-réplication et les webhooks avancés ?",
+          "options": [
+            "Basic",
+            "Standard",
+            "Premium",
+            "Enterprise"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le tier Premium débloque la géo-réplication, les Private Endpoints, et les règles de rétention avancées. Basic et Standard couvrent les usages courants sans ces fonctionnalités."
+        },
+        {
+          "question": "Quelle est l'URL de login server pour un registry nommé 'myapp' ?",
+          "options": [
+            "docker.hub.com/myapp",
+            "myapp.docker.io",
+            "myapp.azurecr.io",
+            "azure.com/registries/myapp"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Chaque registry ACR a une URL unique au format <nom>.azurecr.io. C'est l'adresse utilisée pour docker login, docker pull et docker push."
+        },
+        {
+          "question": "Comment s'authentifier à ACR en production sans stocker de mot de passe ?",
+          "options": [
+            "Utiliser admin user + password",
+            "Utiliser un Service Principal Azure AD ou Managed Identity",
+            "Passer les credentials en variable d'environnement",
+            "Utiliser un token GitHub"
+          ],
+          "correctAnswer": 1,
+          "explanation": "En production, on utilise un Service Principal Azure AD ou une Managed Identity pour s'authentifier à ACR sans mots de passe en clair. L'admin user est pratique pour les tests uniquement."
+        }
+      ]
+    },
+    {
+      "slug": "acr-repositories",
+      "title": "Unité 2 — Registries, repositories et artifacts",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Complète la hiérarchie ACR : Registry → _______ → Artifact",
+          "options": [
+            "Container",
+            "Repository",
+            "Image",
+            "Namespace"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La hiérarchie est : Registry (myapp.azurecr.io) → Repository (groupe d'images du même nom, ex: api) → Artifact (image concrète avec tag ou digest)."
+        },
+        {
+          "question": "En production, tu veux garantir exactement la même image sur tous les serveurs. Tu utilises :",
+          "options": [
+            "Le tag :latest",
+            "Le tag :stable",
+            "Le digest sha256",
+            "Le namespace de production"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le digest sha256 est immuable — il identifie toujours exactement la même image. Les tags sont mutables et peuvent pointer vers une nouvelle image si quelqu'un repousse."
+        },
+        {
+          "question": "10 images Docker partagent la même base python:3.11. Combien de copies ACR stocke ?",
+          "options": [
+            "10 copies complètes",
+            "2 copies",
+            "1 seule copie partagée",
+            "Dépend du tier ACR"
+          ],
+          "correctAnswer": 2,
+          "explanation": "ACR déduplique les layers communs. Si 10 images partagent python:3.11, une seule copie de cette couche est stockée — économie de stockage importante."
+        },
+        {
+          "question": "Comment isoler l'accès entre l'équipe 'frontend' et l'équipe 'ml' dans le même registry ?",
+          "options": [
+            "Créer deux registries séparés",
+            "Utiliser des namespaces (frontend/image et ml/image)",
+            "Utiliser des tags différents",
+            "Utiliser des tiers différents"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les namespaces (préfixes avec /) permettent d'organiser les repositories et de contrôler les accès. Ex: frontend/web-app vs ml/model-server dans le même registry."
+        },
+        {
+          "question": "Quelle propriété d'un artifact ne change jamais, même si on pousse une nouvelle image avec le même tag ?",
+          "options": [
+            "Le tag",
+            "Le nom du repository",
+            "Le digest sha256",
+            "La date de création"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le digest sha256 est calculé à partir du contenu de l'image. Il est immuable par définition — si le contenu change, le digest change. Un tag peut pointer vers n'importe quelle version."
+        }
+      ]
+    },
+    {
+      "slug": "acr-tasks-unit",
+      "title": "Unité 3 — ACR Tasks",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle commande Azure CLI lance un build immédiat depuis le dossier courant ?",
+          "options": [
+            "az acr run --registry myregistry .",
+            "az acr build --registry myregistry --image api:v1 .",
+            "az acr task create --registry myregistry .",
+            "docker build -t myregistry.azurecr.io/api:v1 ."
+          ],
+          "correctAnswer": 1,
+          "explanation": "az acr build est la quick task. Elle envoie le contexte (.) à Azure, build l'image dans le cloud et la pousse dans le registry. Pas besoin de Docker en local."
+        },
+        {
+          "question": "Quels sont les 3 types de triggers pour les ACR Tasks ?",
+          "options": [
+            "Pull request, push, merge",
+            "Commit (source code), base image update, schedule (cron)",
+            "Manuel, automatique, hybride",
+            "GitHub, Azure DevOps, GitLab"
+          ],
+          "correctAnswer": 1,
+          "explanation": "ACR Tasks supporte 3 triggers : commit Git (source code trigger), mise à jour de l'image de base (base image trigger), et planification cron (scheduled trigger)."
+        },
+        {
+          "question": "À quoi sert {{.Run.ID}} dans une ACR Task ?",
+          "options": [
+            "Identifier le registry",
+            "Générer un tag unique et traçable pour chaque build",
+            "Authentifier la tâche",
+            "Spécifier la région de build"
+          ],
+          "correctAnswer": 1,
+          "explanation": "{{.Run.ID}} génère un identifiant unique pour chaque exécution (ex: ca3). Utilisé comme tag pour avoir des images traçables et uniques à chaque build."
+        },
+        {
+          "question": "Où stocker les tokens d'accès Git (PAT) pour les ACR Tasks ?",
+          "options": [
+            "Dans le Dockerfile",
+            "Dans une variable d'environnement locale",
+            "Dans Azure Key Vault",
+            "Dans le fichier .env du repo"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les Personal Access Tokens (PAT) doivent toujours être dans Azure Key Vault, jamais en dur dans les scripts ou fichiers de configuration versionnés."
+        },
+        {
+          "question": "Quelle commande permet d'exécuter une image existante dans ACR sans fichier source ?",
+          "options": [
+            "az acr build --test",
+            "az acr run --registry myregistry --cmd 'api:v1 python --version' /dev/null",
+            "az acr task run --registry myregistry",
+            "docker run myregistry.azurecr.io/api:v1"
+          ],
+          "correctAnswer": 1,
+          "explanation": "az acr run avec /dev/null comme contexte (pas de source nécessaire) exécute un container depuis ACR pour le tester — utile pour les smoke tests."
+        },
+        {
+          "question": "⭐ Microsoft — Ton équipe build les images sur les postes des développeurs, ce qui donne des résultats incohérents. Quelle fonctionnalité ACR résout ce problème ?",
+          "options": [
+            "ACR Tasks quick build",
+            "Geo-replication",
+            "Repository namespaces"
+          ],
+          "correctAnswer": 0,
+          "explanation": "ACR Tasks quick build (az acr build) exécute le build dans le cloud Azure, dans un environnement standardisé et contrôlé. Tous les membres de l'équipe obtiennent exactement le même résultat, peu importe leur machine locale."
+        },
+        {
+          "question": "⭐ Microsoft — Ton application IA dépend d'une image de base contenant PyTorch. Tu veux que ton image se rebuilde automatiquement quand PyTorch publie des patches de sécurité. Quel type de trigger ACR Tasks faut-il utiliser ?",
+          "options": [
+            "Base image update trigger",
+            "Source code commit trigger",
+            "Scheduled trigger"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le base image update trigger surveille l'image de base (ici PyTorch) dans le registry. Quand une nouvelle version est publiée, ACR Tasks rebuild automatiquement toutes les images qui en dépendent — sans intervention manuelle."
+        }
+      ]
+    },
+    {
+      "slug": "acr-tag-version",
+      "title": "Unité 4 — Tags et versioning des images",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la différence entre un tag 'stable' (:latest, :prod) et un tag 'unique' (:v1.0.3-abc123) ?",
+          "options": [
+            "Les tags stables sont immuables, les uniques sont mutables",
+            "Les tags stables sont mutables (mis à jour à chaque release), les uniques pointent une version précise",
+            "Il n'y a pas de différence pratique",
+            "Les tags uniques ne fonctionnent qu'avec ACR Premium"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Tags stables (:latest, :prod) sont pratiques mais mutables — ils peuvent pointer vers une nouvelle image à tout moment. Tags uniques (:v1.0.3-abc123) identifient une version précise immuable."
+        },
+        {
+          "question": "Comment rendre un repository en lecture seule pour protéger les images de production ?",
+          "options": [
+            "az acr repository delete --name api --write-enabled false",
+            "az acr repository update --name myregistry --repository api --write-enabled false",
+            "az acr lock --repository api",
+            "az acr tag --immutable api:prod"
+          ],
+          "correctAnswer": 1,
+          "explanation": "az acr repository update --write-enabled false verrouille un repository en lecture seule. Plus aucun push ne peut remplacer les images existantes — protection des images de production."
+        },
+        {
+          "question": "Quelle commande supprime les images de plus de 30 jours non taguées 'important' ?",
+          "options": [
+            "az acr delete --old 30d",
+            "az acr purge --registry myregistry --filter 'api:.*' --ago 30d --untagged",
+            "az acr retention --days 30",
+            "az acr clean --registry myregistry --days 30"
+          ],
+          "correctAnswer": 1,
+          "explanation": "az acr purge (via acr run) filtre les images par regex et ancienneté. --untagged supprime les manifests sans tag. --dry-run permet de vérifier avant de supprimer."
+        },
+        {
+          "question": "Quelle est la bonne pratique de versioning pour une image prête pour production ?",
+          "options": [
+            ":latest uniquement",
+            ":v1.2.3 (semver) + :latest mis à jour",
+            ":prod-build-$(date)",
+            ":main-branch"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La bonne pratique est de taguer avec semver (:v1.2.3) pour la traçabilité ET mettre à jour le tag :latest pour faciliter les déploiements. On utilise souvent les deux en parallèle."
+        },
+        {
+          "question": "Qu'est-ce qu'une politique de rétention dans ACR ?",
+          "options": [
+            "Un quota de stockage maximum",
+            "Une règle qui supprime automatiquement les manifests non-taguées après N jours",
+            "Un système de sauvegarde des images",
+            "Une limite sur le nombre de pulls par jour"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les politiques de rétention (tier Premium) suppriment automatiquement les manifests non-taguées après un nombre de jours configuré. Évite l'accumulation de couches orphelines."
+        },
+        {
+          "question": "⭐ Microsoft — Tu dois déployer une image en production et t'assurer que tous les nœuds Kubernetes tournent exactement la même version, même si quelqu'un pushe une nouvelle image avec le même tag. Comment référencer l'image ?",
+          "options": [
+            "Par manifest digest (sha256:...)",
+            "Par le tag latest",
+            "Par un tag de version sémantique comme v1.0.0"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un tag comme v1.0.0 ou latest peut être réassigné à une nouvelle image à tout moment. Le manifest digest (sha256:abc123...) est calculé depuis le contenu exact de l'image et est immuable — tous les nœuds téléchargeront exactement la même image, même si le tag change."
+        },
+        {
+          "question": "⭐ Microsoft — Tu implémentes une stratégie de tags pour la production. Tes besoins : traçabilité jusqu'au commit Git et capacité de rollback vers n'importe quelle version précédente. Quel pattern choisir ?",
+          "options": [
+            "Tags uniques avec le SHA du commit Git",
+            "Tags stables comme v1 et v2",
+            "Uniquement le tag latest"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les tags avec SHA de commit (ex: myapi:a3f8c2d) sont uniques et immuables — chaque commit produit un tag différent. Tu peux identifier exactement quel code est dans quelle image, et faire un rollback précis vers n'importe quel commit. Les tags stables (v1) peuvent être réassignés, latest ne permet aucun rollback."
+        }
+      ]
+    },
+    {
+      "slug": "acr-lab-tasks",
+      "title": "Lab — Build and manage images with ACR Tasks",
+      "order": 5,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Pourquoi faut-il exécuter `az provider register --namespace Microsoft.ContainerRegistry` avant de créer un ACR ?",
+          "options": [
+            "Pour mettre à jour Azure CLI vers la dernière version",
+            "Pour activer le service Container Registry sur ta subscription — nouveau sur chaque subscription",
+            "Pour créer les permissions administrateur sur le registry",
+            "Pour télécharger les images Docker de base"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Azure organise ses services en Resource Providers. Une nouvelle subscription n'a pas tous les providers activés par défaut. Il faut enregistrer Microsoft.ContainerRegistry une seule fois avant de pouvoir créer un ACR."
+        },
+        {
+          "question": "Dans le lab, pourquoi utilise-t-on `. .env.ps1` (avec un point devant) plutôt que `.\\.env.ps1` ?",
+          "options": [
+            "C'est une faute de frappe — les deux font la même chose",
+            "Le point (dot-sourcing) exécute le script dans le terminal courant, les variables restent disponibles après",
+            "Le point permet d'exécuter le script en mode administrateur",
+            "C'est requis uniquement sur Windows PowerShell"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Sans le dot-sourcing, les variables $env:ACR_NAME, $env:RESOURCE_GROUP disparaissent dès que le script se termine. Le dot-sourcing exécute le script dans le contexte courant — les variables persistent dans ton terminal."
+        },
+        {
+          "question": "Quelle commande a été utilisée dans le lab pour builder `inference-api:v1.0.0` sans Docker installé localement ?",
+          "options": [
+            "docker build -t acrf1450915.azurecr.io/inference-api:v1.0.0 ./api",
+            "az acr build --registry $env:ACR_NAME --image inference-api:v1.0.0 ./api",
+            "az container build --registry $env:ACR_NAME --image inference-api:v1.0.0",
+            "az acr task run --registry $env:ACR_NAME --image inference-api:v1.0.0"
+          ],
+          "correctAnswer": 1,
+          "explanation": "az acr build envoie le contexte (./api) vers Azure qui fait le build entièrement dans le cloud. Le Run ID ca1 a été généré et l'image pushée directement dans acrf1450915.azurecr.io sans aucune installation Docker locale."
+        },
+        {
+          "question": "Lors du build de v1.1.0, `python:3.11-slim` avait le même digest que pour v1.0.0. Qu'est-ce que ça démontre ?",
+          "options": [
+            "Les deux images sont identiques — le tag ne change rien",
+            "La déduplication des couches — la couche de base était en cache et n'a pas été re-téléchargée",
+            "Azure a fait une erreur et n'a pas mis à jour Python",
+            "Le digest est le même pour toutes les images basées sur Python"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Docker (et ACR) réutilise les couches identiques. python:3.11-slim avait déjà été téléchargée pour v1.0.0. Pour v1.1.0, seules les couches modifiées ont été reconstruites — c'est la déduplication des couches qui rend les builds rapides."
+        },
+        {
+          "question": "Dans le lab, quelle est la différence entre le tag `v1.0.0` et le digest `sha256:72d64d59...` ?",
+          "options": [
+            "Le tag identifie le repository, le digest identifie l'image",
+            "Le tag est mutable (peut pointer vers une autre image), le digest est immuable (lié à ce contenu exact pour toujours)",
+            "Le digest est créé manuellement, le tag est automatique",
+            "Ils sont identiques — deux façons de désigner la même chose"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un tag comme v1.0.0 peut être réassigné — quelqu'un peut pusher une nouvelle image avec le même tag. Le digest sha256:72d64d59... est calculé depuis le contenu de l'image et ne peut jamais changer. En production, déployer via digest garantit qu'on tourne exactement la même image."
+        },
+        {
+          "question": "La commande `az acr run --cmd '...inference-api:v1.0.0 python -c ...' /dev/null` — pourquoi `/dev/null` à la fin ?",
+          "options": [
+            "Pour rediriger les erreurs vers null et les ignorer",
+            "Pour indiquer qu'il n'y a pas de fichiers sources à envoyer — l'image est déjà dans le registry",
+            "C'est le nom du container à exécuter",
+            "Pour exécuter la commande en mode silencieux"
+          ],
+          "correctAnswer": 1,
+          "explanation": "/dev/null comme contexte source signifie 'pas de fichiers à uploader'. Contrairement à az acr build qui envoie du code source, az acr run utilise une image déjà présente dans le registry — pas besoin d'envoyer quoi que ce soit."
+        },
+        {
+          "question": "Après `az acr repository update --write-enabled false` sur `inference-api:v1.0.0`, que se passe-t-il si quelqu'un essaie de pusher une nouvelle image avec ce même tag ?",
+          "options": [
+            "La nouvelle image écrase l'ancienne normalement",
+            "Azure demande une confirmation avant d'écraser",
+            "Le push est refusé avec une erreur 403 Forbidden — l'image est protégée",
+            "Le tag est automatiquement renommé en v1.0.0-backup"
+          ],
+          "correctAnswer": 2,
+          "explanation": "writeEnabled: false verrouille l'image en lecture seule. Toute tentative de push sur inference-api:v1.0.0 renvoie une erreur 403. C'est la façon standard de protéger les images de production contre les écrasements accidentels."
+        },
+        {
+          "question": "Dans le lab, `az acr task list-runs` a montré 3 runs : ca1, ca2, ca3. Quel run correspondait au test Flask (`az acr run`) ?",
+          "options": [
+            "ca1 — le premier build",
+            "ca2 — le run de test Flask avec /dev/null",
+            "ca3 — le build v1.1.0",
+            "Aucun — az acr run n'apparaît pas dans l'historique"
+          ],
+          "correctAnswer": 1,
+          "explanation": "ca1 = build inference-api:v1.0.0 (22s), ca2 = az acr run test Flask (6s — beaucoup plus rapide car pas de build), ca3 = build inference-api:v1.1.0 (22s). az acr run crée aussi un run ID dans l'historique ACR Tasks."
+        },
+        {
+          "question": "⭐ Microsoft — Tu as déployé une API d'inférence critique en production et tu dois empêcher que l'image soit accidentellement supprimée ou modifiée. Quelle fonctionnalité ACR utiliser ?",
+          "options": [
+            "Image locking avec write-enabled false",
+            "Repository namespaces",
+            "Geo-replication"
+          ],
+          "correctAnswer": 0,
+          "explanation": "az acr repository update --write-enabled false verrouille l'image en lecture seule. Toute tentative de push ou de suppression est refusée. C'est exactement ce qu'on a fait dans le lab sur inference-api:v1.0.0 — writeEnabled: false confirmé dans la sortie."
+        }
+      ]
+    }
+  ]
+}

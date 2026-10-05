@@ -1,25 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getAllUnitSlugs, getUnit } from "@/lib/course";
 import { getMarkdownContent } from "@/lib/markdown";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAllUnitSlugs();
+}
+
 export default async function UnitPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const unit = await prisma.unit.findUnique({
-    where: { slug },
-    include: {
-      module: true,
-      _count: { select: { questions: true } },
-    },
-  });
-  if (!unit) notFound();
+  const found = getUnit(slug);
+  if (!found) notFound();
+  const unit = { ...found.unit, module: found.module };
 
   const { content } = getMarkdownContent(unit.module.category, slug);
-  const qCount = unit._count.questions;
+  const qCount = unit.questions.length;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex items-center gap-2 text-sm text-slate-400 mb-6">
         <Link href="/" className="hover:text-indigo-600 transition-colors">Accueil</Link>
         <span>/</span>
@@ -37,7 +38,7 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
               <span className="text-xs text-indigo-200 font-medium uppercase tracking-widest">{unit.module.category} · Unité {unit.order}</span>
               <h1 className="text-2xl font-bold text-white mt-1">{unit.title}</h1>
             </div>
-            <div className="px-8 py-8">
+            <div className="px-5 sm:px-8 py-8">
               <MarkdownRenderer content={content} />
             </div>
           </div>
@@ -48,21 +49,25 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
           <div className="sticky top-20 space-y-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">Continuer avec</p>
 
-            <Link href={`/quiz/${slug}`} className="flex items-center gap-3 w-full bg-violet-600 hover:bg-violet-700 text-white px-4 py-3.5 rounded-xl transition-colors shadow-sm shadow-violet-100">
-              <span className="text-xl">🧠</span>
-              <div className="text-left">
-                <p className="font-semibold text-sm">Quiz</p>
-                <p className="text-xs text-violet-200">{qCount} question{qCount > 1 ? "s" : ""}</p>
-              </div>
-            </Link>
+            {qCount > 0 && (
+              <>
+              <Link href={`/quiz/${slug}`} className="flex items-center gap-3 w-full bg-violet-600 hover:bg-violet-700 text-white px-4 py-3.5 rounded-xl transition-colors shadow-sm shadow-violet-100">
+                <span className="text-xl">🧠</span>
+                <div className="text-left">
+                  <p className="font-semibold text-sm">Quiz</p>
+                  <p className="text-xs text-violet-200">{qCount} question{qCount > 1 ? "s" : ""}</p>
+                </div>
+              </Link>
 
-            <Link href={`/flashcards/${slug}`} className="flex items-center gap-3 w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 rounded-xl transition-colors shadow-sm shadow-amber-100">
-              <span className="text-xl">🃏</span>
-              <div className="text-left">
-                <p className="font-semibold text-sm">Flashcards</p>
-                <p className="text-xs text-amber-100">{qCount} cartes</p>
-              </div>
-            </Link>
+              <Link href={`/flashcards/${slug}`} className="flex items-center gap-3 w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 rounded-xl transition-colors shadow-sm shadow-amber-100">
+                <span className="text-xl">🃏</span>
+                <div className="text-left">
+                  <p className="font-semibold text-sm">Flashcards</p>
+                  <p className="text-xs text-amber-100">{qCount} cartes</p>
+                </div>
+              </Link>
+              </>
+            )}
 
             <Link href={`/module/${unit.module.slug}`} className="flex items-center gap-3 w-full bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 px-4 py-3.5 rounded-xl transition-colors">
               <span className="text-xl">📋</span>
