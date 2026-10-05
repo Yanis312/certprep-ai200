@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import type { ModuleSummary } from "@/lib/types";
-import { isDone, resetAll, useProgress, useWeeksDone } from "@/lib/progress";
+import { isDone, resetAll, useProgress, useTasksDone } from "@/lib/progress";
 import { domains, exam, learningPaths, method, weeks, type DomainId } from "@/data/plan";
 
 export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
   const progress = useProgress();
-  const [weeksDone, toggleWeek] = useWeeksDone();
+  const [tasksDone, toggleTask] = useTasksDone();
+
+  const taskId = (weekId: string, i: number) => `${weekId}-${i}`;
+  const weekChecked = (w: (typeof weeks)[number]) => w.tasks.filter((_, i) => tasksDone.includes(taskId(w.id, i))).length;
+  const totalTasks = weeks.reduce((a, w) => a + w.tasks.length, 0);
+  const checkedTasks = weeks.reduce((a, w) => a + weekChecked(w), 0);
+  const weeksDone = weeks.filter((w) => weekChecked(w) === w.tasks.length).length;
+  const globalPct = Math.round((checkedTasks / totalTasks) * 100);
 
   const bySlug = new Map(modules.map((m) => [m.slug, m]));
   const lpById = new Map(learningPaths.map((lp) => [lp.id, lp]));
@@ -17,7 +24,7 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
   };
 
   function handleReset() {
-    if (window.confirm("Effacer toute ta progression (quiz et semaines cochées) ?")) resetAll();
+    if (window.confirm("Effacer toute ta progression (quiz et tâches cochées) ?")) resetAll();
   }
 
   return (
@@ -37,7 +44,16 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
           <div><p className="font-bold">{exam.duration}</p><p className="text-indigo-200 text-xs">Durée</p></div>
           <div><p className="font-bold">{exam.passScore}</p><p className="text-indigo-200 text-xs">Score requis</p></div>
           <div><p className="font-bold">{exam.price}</p><p className="text-indigo-200 text-xs">Prix</p></div>
-          <div><p className="font-bold">{weeksDone.length}/{weeks.length}</p><p className="text-indigo-200 text-xs">Semaines faites</p></div>
+          <div><p className="font-bold">{weeksDone}/{weeks.length}</p><p className="text-indigo-200 text-xs">Semaines faites</p></div>
+        </div>
+        <div className="mt-5">
+          <div className="flex items-center justify-between text-xs text-indigo-100 mb-1.5">
+            <span>{checkedTasks}/{totalTasks} tâches cochées</span>
+            <span className="font-bold">{globalPct}%</span>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: `${globalPct}%` }} />
+          </div>
         </div>
       </div>
 
@@ -76,7 +92,8 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
       <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Semaine par semaine</h2>
       <div className="space-y-4">
         {weeks.map((w) => {
-          const done = weeksDone.includes(w.id);
+          const checked = weekChecked(w);
+          const done = checked === w.tasks.length;
           const planModules = w.lps.flatMap((id) => lpById.get(id)?.modules ?? []).filter((m) => !m.bonus);
           const validated = planModules.filter((m) => moduleDone(m.site)).length;
           return (
@@ -91,21 +108,29 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
                     {planModules.length > 0 && ` · ${validated}/${planModules.length} modules validés par quiz`}
                   </p>
                 </div>
-                <button
-                  onClick={() => toggleWeek(w.id)}
-                  className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${done ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"}`}
-                >
-                  {done ? "✓ Semaine faite" : "Marquer comme faite"}
-                </button>
+                <span className={`text-xs px-3 py-1.5 rounded-lg font-semibold shrink-0 ${done ? "bg-emerald-100 text-emerald-700" : "bg-white border border-slate-200 text-slate-500"}`}>
+                  {done ? "✓ Semaine faite" : `${checked}/${w.tasks.length}`}
+                </span>
               </div>
               <div className="px-5 py-4">
-                <ul className="space-y-1.5">
-                  {w.tasks.map((t, i) => (
-                    <li key={i} className="flex gap-2.5 text-sm text-slate-700">
-                      <span className="text-slate-300 shrink-0">•</span>
-                      {t}
-                    </li>
-                  ))}
+                <ul className="space-y-1">
+                  {w.tasks.map((t, i) => {
+                    const id = taskId(w.id, i);
+                    const isChecked = tasksDone.includes(id);
+                    return (
+                      <li key={id}>
+                        <label className="flex items-start gap-3 text-sm px-2 py-2 -mx-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleTask(id)}
+                            className="mt-0.5 w-4 h-4 shrink-0 accent-emerald-500 cursor-pointer"
+                          />
+                          <span className={isChecked ? "text-slate-400 line-through" : "text-slate-700"}>{t}</span>
+                        </label>
+                      </li>
+                    );
+                  })}
                 </ul>
                 <p className="text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 mt-3">
                   <span className="font-semibold">À retenir : </span>{w.focus}

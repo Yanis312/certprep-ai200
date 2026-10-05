@@ -8,7 +8,7 @@ export type Attempt = { score: number; totalQ: number; at: number };
 export type ProgressMap = Record<string, Attempt>;
 
 const PROGRESS_KEY = "certprep-progress-v1";
-const WEEKS_KEY = "certprep-weeks-v1";
+const TASKS_KEY = "certprep-tasks-v1";
 export const PASS_RATIO = 0.7;
 
 const listeners = new Set<() => void>();
@@ -52,7 +52,7 @@ function useStored<T>(key: string, fallback: T): T {
 }
 
 const EMPTY_PROGRESS: ProgressMap = {};
-const EMPTY_WEEKS: string[] = [];
+const EMPTY_TASKS: string[] = [];
 
 export function useProgress(): ProgressMap {
   return useStored(PROGRESS_KEY, EMPTY_PROGRESS);
@@ -76,19 +76,20 @@ export function pctOf(a: Attempt | undefined): number | null {
   return a && a.totalQ > 0 ? Math.round((a.score / a.totalQ) * 100) : null;
 }
 
-export function useWeeksDone(): [string[], (id: string) => void] {
-  const weeks = useStored(WEEKS_KEY, EMPTY_WEEKS);
+// Tâches du plan cochées à la main, identifiées par "<semaine>-<index>" (ex. "S1-0")
+export function useTasksDone(): [string[], (id: string) => void] {
+  const tasks = useStored(TASKS_KEY, EMPTY_TASKS);
   const toggle = useCallback(
-    (id: string) => write(WEEKS_KEY, weeks.includes(id) ? weeks.filter((w) => w !== id) : [...weeks, id]),
-    [weeks]
+    (id: string) => write(TASKS_KEY, tasks.includes(id) ? tasks.filter((t) => t !== id) : [...tasks, id]),
+    [tasks]
   );
-  return [weeks, toggle];
+  return [tasks, toggle];
 }
 
 export function resetAll() {
   try {
     window.localStorage.removeItem(PROGRESS_KEY);
-    window.localStorage.removeItem(WEEKS_KEY);
+    window.localStorage.removeItem(TASKS_KEY);
   } catch {
     // rien à effacer
   }
