@@ -15,8 +15,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  # Un seul job : build et déploiement partagent la même machine.
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,13 +34,5 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
