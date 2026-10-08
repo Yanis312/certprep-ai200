@@ -1,0 +1,632 @@
+{
+  "slug": "ai103-optimize-model-performance",
+  "title": "Optimize generative AI model performance with Microsoft Foundry",
+  "description": "LP1 · Module 5 — prompt engineering, RAG, fine-tuning, et comment les combiner",
+  "category": "AI-103",
+  "order": 5,
+  "units": [
+    {
+      "slug": "ai103-optimize-introduction",
+      "title": "Introduction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les trois stratégies complémentaires pour optimiser un modèle génératif ?",
+          "options": [
+            "Prompt engineering, RAG et fine-tuning",
+            "Streaming, asynchrone et batch",
+            "Quota, région et SKU",
+            "Chiffrement, pare-feu et sauvegarde"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le module explore le prompt engineering, le RAG et le fine-tuning, utilisables seuls ou combinés."
+        },
+        {
+          "question": "De quoi dépendent la qualité, l'exactitude et la constance des réponses d'un modèle ?",
+          "options": [
+            "Uniquement de sa taille",
+            "De la couleur de l'interface",
+            "De la façon dont on le configure et dont on l'enrichit",
+            "Du nombre d'utilisateurs connectés"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un modèle de base seul peut ne pas suffire : la qualité, l'exactitude et la constance dépendent de sa configuration et de son augmentation."
+        },
+        {
+          "question": "Comment les trois stratégies se situent-elles en coût et en effort ?",
+          "options": [
+            "Elles coûtent toutes la même chose",
+            "Elles vont d'ajustements rapides et peu coûteux à des techniques plus lourdes en temps et en ressources",
+            "Le prompt engineering est la plus coûteuse",
+            "Le fine-tuning est gratuit"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les stratégies vont d'ajustements rapides et peu coûteux à des techniques plus exigeantes en temps et en ressources."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-prompt-engineering",
+      "title": "Optimize model output with prompt engineering",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est le rôle d'un message système ?",
+          "options": [
+            "Stocker l'historique des réponses",
+            "Récupérer des documents dans un index",
+            "Modifier définitivement les poids du modèle",
+            "Définir le comportement, le rôle et les contraintes du modèle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le message système donne des instructions qui définissent le comportement, le rôle et les contraintes du modèle."
+        },
+        {
+          "question": "Que faut-il savoir sur l'obéissance du modèle à un message système ?",
+          "options": [
+            "Il influence le modèle mais ne garantit pas la conformité : il faut tester et ajouter d'autres protections",
+            "Le modèle obéit toujours à 100 %",
+            "Le modèle l'ignore systématiquement",
+            "Il ne fonctionne qu'avec le fine-tuning"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un message système influence le modèle sans garantir la conformité. On le teste, on l'itère et on le complète par le filtrage de contenu et l'évaluation."
+        },
+        {
+          "question": "Comment appelle-t-on le fait de fournir quelques exemples d'entrée et de sortie dans le prompt ?",
+          "options": [
+            "Zero-shot learning",
+            "Fine-tuning",
+            "Few-shot learning",
+            "Chain of thought"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Few-shot : un ou plusieurs exemples (one-shot pour un seul). Sans exemple, c'est du zero-shot."
+        },
+        {
+          "question": "Que demande le pattern chain of thought ?",
+          "options": [
+            "D'adopter un rôle précis",
+            "D'expliquer le raisonnement étape par étape",
+            "De répondre en JSON",
+            "De répéter la question"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La chaîne de pensée demande au modèle d'expliquer son raisonnement pas à pas, ce qui réduit les erreurs et rend la logique vérifiable."
+        },
+        {
+          "question": "Pour quels modèles la technique chain of thought est-elle prévue ?",
+          "options": [
+            "Les modèles de génération d'images",
+            "Les modèles d'embedding",
+            "Tous les modèles de raisonnement comme la série o",
+            "Les modèles sans raisonnement intégré"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La chaîne de pensée est une technique pour les modèles non-raisonnement. Les modèles de raisonnement comme la série o gèrent cette logique en interne."
+        },
+        {
+          "question": "Quelle temperature choisir pour des réponses factuelles et déterministes ?",
+          "options": [
+            "Une valeur basse, par exemple 0,2",
+            "Une valeur haute, par exemple 0,9",
+            "Exactement 2",
+            "La temperature n'a aucun effet"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Valeurs basses pour les tâches factuelles (sortie ciblée et déterministe), valeurs hautes pour les tâches créatives."
+        },
+        {
+          "question": "Quelle est la recommandation générale sur temperature et top_p ?",
+          "options": [
+            "Toujours les mettre tous les deux au maximum",
+            "Ne jamais y toucher",
+            "Ajuster l'un ou l'autre, pas les deux en même temps",
+            "Les mettre à la même valeur"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On recommande d'ajuster soit temperature, soit top_p, mais pas les deux à la fois."
+        },
+        {
+          "question": "Le modèle ne suit pas toujours une consigne importante. Que suggère le cours, à cause du biais de récence ?",
+          "options": [
+            "Supprimer la consigne",
+            "Répéter la consigne clé à la fin du prompt",
+            "Mettre la consigne en majuscules au milieu",
+            "Passer en zero-shot"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le texte proche de la fin du prompt peut avoir plus d'influence. On peut répéter l'instruction clé à la fin."
+        },
+        {
+          "question": "Quel élément fait partie de la checklist de conception d'un message système ?",
+          "options": [
+            "Indiquer le prix de chaque token",
+            "Lister tous les utilisateurs",
+            "Ajouter le code source de l'application",
+            "Ajouter une règle « en cas de doute » pour les demandes ambiguës ou hors périmètre"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La checklist : le rôle, les limites, le format de sortie, et une règle disant quoi faire quand la demande est ambiguë, hors périmètre ou que l'information manque."
+        },
+        {
+          "question": "Dans quel cas le prompt engineering ne suffit-il plus ?",
+          "options": [
+            "Quand le modèle n'a pas accès à l'information nécessaire, comme le catalogue de l'entreprise",
+            "Quand il faut définir un rôle",
+            "Quand il faut préciser un format de sortie",
+            "Quand il faut itérer rapidement"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le prompt engineering ne donne pas accès à une information absente. Il atteint aussi sa limite quand un comportement ne tient pas malgré des consignes détaillées."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rag-grounding",
+      "title": "Ground your model with RAG",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les trois étapes du pattern RAG, dans l'ordre ?",
+          "options": [
+            "Generate, Retrieve, Augment",
+            "Retrieve, Augment, Generate",
+            "Train, Deploy, Evaluate",
+            "Index, Filter, Rank"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On récupère l'information pertinente, on l'ajoute au prompt comme contexte, puis le modèle génère une réponse ancrée."
+        },
+        {
+          "question": "Qu'est-ce qu'un embedding ?",
+          "options": [
+            "Un fichier de configuration",
+            "Un type de déploiement",
+            "Une représentation mathématique d'un texte sous forme de vecteur de nombres qui capture son sens",
+            "Un filtre de contenu"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un embedding est une liste de nombres à virgule flottante qui capture le sens de mots, de phrases ou de documents."
+        },
+        {
+          "question": "Que signifie une similarité cosinus proche de 1 entre deux vecteurs ?",
+          "options": [
+            "Les textes sont très différents",
+            "Les textes ont exactement les mêmes mots",
+            "Le calcul a échoué",
+            "Les vecteurs sont très similaires"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La similarité cosinus mesure l'angle entre deux vecteurs. Une valeur proche de 1 indique des vecteurs très similaires, même sans mots en commun."
+        },
+        {
+          "question": "Quel service fournit le composant de récupération des solutions RAG dans Microsoft Foundry ?",
+          "options": [
+            "Azure AI Search",
+            "Azure Translator",
+            "Azure Monitor",
+            "Azure Functions"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Azure AI Search permet d'apporter ses données, de créer un index interrogeable et de récupérer l'information pertinente."
+        },
+        {
+          "question": "Quelle technique de recherche est recommandée pour les applications d'IA générative ?",
+          "options": [
+            "La recherche par mots-clés seule",
+            "La recherche hybride",
+            "La recherche alphabétique",
+            "La recherche par date"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La recherche hybride combine mots-clés, sémantique et vectorielle pour les résultats les plus précis ; elle est recommandée pour l'IA générative."
+        },
+        {
+          "question": "Pourquoi un modèle non ancré peut-il renvoyer des noms d'hôtels fictifs ?",
+          "options": [
+            "Parce que la temperature est à 0",
+            "Parce qu'il refuse de répondre",
+            "Parce qu'il ne dispose que de ses données d'entraînement et peut générer des détails plausibles mais inventés",
+            "Parce que l'index est trop grand"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Sans ancrage, la seule information vient des données d'entraînement : la réponse peut être bien formée mais inexacte ou fabriquée."
+        },
+        {
+          "question": "Dans quel cas le RAG est-il particulièrement adapté ?",
+          "options": [
+            "Quand on veut un ton de marque constant",
+            "Quand on veut raccourcir les prompts",
+            "Quand on veut distiller un gros modèle",
+            "Quand l'information change souvent, comme les stocks ou les prix"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le RAG récupère les données courantes au moment de la requête, sans réentraînement : idéal pour les données qui changent fréquemment."
+        },
+        {
+          "question": "Dans l'exemple de code du cours, où les documents récupérés (retrieved_context) sont-ils injectés ?",
+          "options": [
+            "Dans le message système du prompt",
+            "Dans le paramètre temperature",
+            "Dans le nom du déploiement",
+            "Dans les poids du modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les résultats de l'index sont concaténés au message système, de sorte que la réponse s'appuie sur les données réelles."
+        },
+        {
+          "question": "Depuis quelles sources peut-on ajouter des données à Foundry pour créer un index ?",
+          "options": [
+            "Uniquement depuis GitHub",
+            "Azure Blob Storage, Azure Data Lake Storage Gen2, Microsoft OneLake ou un chargement direct de fichiers",
+            "Uniquement depuis un fichier .env",
+            "Uniquement depuis le playground"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ajoute les données depuis Azure Blob Storage, Azure Data Lake Storage Gen2 ou Microsoft OneLake, ou en chargeant des fichiers directement."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-fine-tuning",
+      "title": "Fine-tune a model for consistent behavior",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce que le fine-tuning ?",
+          "options": [
+            "L'ajout de documents au prompt",
+            "Le réglage de la temperature",
+            "La poursuite de l'entraînement d'un modèle préentraîné sur un petit jeu de données propre à une tâche",
+            "La création d'un index de recherche"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le fine-tuning entraîne davantage un modèle préentraîné sur un jeu de données plus petit et spécifique, ce qui ajuste ses poids internes."
+        },
+        {
+          "question": "Que fait la technique LoRA (Low-Rank Adaptation) ?",
+          "options": [
+            "Elle met à jour seulement un petit sous-ensemble de paramètres au lieu de tous les réentraîner",
+            "Elle réentraîne tous les paramètres du modèle",
+            "Elle supprime le message système",
+            "Elle crée des embeddings"
+          ],
+          "correctAnswer": 0,
+          "explanation": "LoRA approxime les changements de poids par une représentation de rang inférieur et ne met à jour qu'un sous-ensemble de paramètres : plus rapide et moins coûteux."
+        },
+        {
+          "question": "Quel type de fine-tuning entraîne le modèle sur des paires prompt/réponse étiquetées ?",
+          "options": [
+            "Reinforcement fine-tuning (RFT)",
+            "Direct Preference Optimization (DPO)",
+            "Retrieval Augmented Generation",
+            "Supervised fine-tuning (SFT)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le SFT utilise un jeu de données étiqueté de paires prompt/réponse. Il convient quand il existe des façons claires et bien définies d'aborder la tâche."
+        },
+        {
+          "question": "Quel type de fine-tuning utilise un grader pour récompenser progressivement les meilleures réponses ?",
+          "options": [
+            "Supervised fine-tuning (SFT)",
+            "Reinforcement fine-tuning (RFT)",
+            "Direct Preference Optimization (DPO)",
+            "LoRA"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le RFT optimise le comportement par retour itératif avec un grader. Il convient aux tâches complexes ou dynamiques avec beaucoup de solutions possibles."
+        },
+        {
+          "question": "Que fournit-on pour un fine-tuning de type Direct Preference Optimization (DPO) ?",
+          "options": [
+            "Un index vectoriel",
+            "Une liste d'outils",
+            "Des paires de réponses préférée et non préférée",
+            "Un message système vide"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le DPO aligne le modèle sur des préférences humaines avec des paires de réponses préférées et non préférées ; il est plus léger en calcul."
+        },
+        {
+          "question": "Dans quel format prépare-t-on les données d'entraînement ?",
+          "options": [
+            "JSONL (JSON Lines)",
+            "PDF",
+            "XLSX",
+            "YAML"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les exemples sont au format JSONL : pour un modèle de chat, chaque ligne est une conversation avec les messages system, user et assistant."
+        },
+        {
+          "question": "Que faut-il faire du message système dans les données d'entraînement ?",
+          "options": [
+            "Le laisser vide pour gagner des tokens",
+            "Le changer à chaque exemple",
+            "Le mettre uniquement dans le dernier exemple",
+            "Garder un message système cohérent dans tous les exemples et réutiliser le même à l'inférence"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Un message système cohérent est important ; le laisser vide tend à donner des modèles moins précis. On utilise le même au déploiement."
+        },
+        {
+          "question": "Qu'est-ce que la distillation ?",
+          "options": [
+            "Supprimer les exemples d'entraînement en double",
+            "Transférer les capacités d'un grand modèle coûteux vers un plus petit et plus efficace",
+            "Réduire la temperature progressivement",
+            "Découper les documents en morceaux"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On collecte les sorties d'un modèle performant pour fine-tuner un modèle plus petit qui atteint une qualité proche, avec un coût et une latence moindres."
+        },
+        {
+          "question": "Pourquoi faut-il évaluer une performance de référence avant de fine-tuner ?",
+          "options": [
+            "Parce que c'est obligatoire pour la facturation",
+            "Parce que le fine-tuning efface la référence",
+            "Parce que sans référence, il est difficile de savoir si le fine-tuning a amélioré ou dégradé le modèle",
+            "Parce que cela accélère l'entraînement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le fine-tuning est une capacité avancée : on commence toujours par évaluer un modèle standard par rapport aux besoins."
+        },
+        {
+          "question": "Quel risque apparaît quand un modèle est spécialisé de façon trop étroite ?",
+          "options": [
+            "La dérive du modèle : il devient moins efficace sur les tâches de langage générales hors du domaine",
+            "Il devient gratuit",
+            "Il ne peut plus être déployé",
+            "Il perd son message système"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Une spécialisation trop étroite peut rendre le modèle moins bon sur les tâches générales. S'ajoutent les coûts, la qualité des données, la maintenance et l'expérimentation."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-optimize-compare",
+      "title": "Compare and combine optimization strategies",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que cherche-t-on à maximiser quand on « optimise le contexte » avec le RAG ?",
+          "options": [
+            "La constance du style",
+            "La vitesse de génération",
+            "La longueur des prompts",
+            "L'exactitude des réponses"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Optimiser le contexte : le modèle manque de connaissances du domaine et l'on veut maximiser l'exactitude. Le RAG y répond."
+        },
+        {
+          "question": "Que cherche-t-on à maximiser quand on « optimise le modèle » avec le fine-tuning ?",
+          "options": [
+            "L'exactitude factuelle",
+            "La constance du comportement",
+            "Le nombre de sources de données",
+            "La fraîcheur des données"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Optimiser le modèle : améliorer le format, le style ou le ton en maximisant la constance du comportement."
+        },
+        {
+          "question": "Quelle est la combinaison de stratégies la plus courante ?",
+          "options": [
+            "Prompt engineering + RAG",
+            "RAG + fine-tuning",
+            "Fine-tuning seul",
+            "Les trois, systématiquement"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Prompt engineering + RAG traite à la fois comment le modèle doit agir et ce qu'il doit savoir."
+        },
+        {
+          "question": "Quelle stratégie a le coût le plus élevé, et pourquoi ?",
+          "options": [
+            "Le prompt engineering, à cause des tokens",
+            "Le RAG, à cause du message système",
+            "Le fine-tuning : calcul d'entraînement, hébergement du modèle et tokens",
+            "Aucune, elles sont gratuites"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le fine-tuning a le temps de mise en œuvre, la complexité et le coût les plus élevés."
+        },
+        {
+          "question": "De quoi dépend la qualité des réponses d'une solution RAG ?",
+          "options": [
+            "Du nombre d'epochs",
+            "De la couleur du portail",
+            "Du type de déploiement Developer",
+            "De la qualité de l'index de recherche et de la façon dont les données sont découpées et indexées"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La qualité du RAG dépend de la qualité de l'index et de la qualité du chunking et de l'indexation des données."
+        },
+        {
+          "question": "Par quoi le cadre de décision recommande-t-il de commencer ?",
+          "options": [
+            "Par le fine-tuning",
+            "Par le prompt engineering",
+            "Par le RAG",
+            "Par les trois en même temps"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On commence simple : prompt engineering, puis RAG si l'exactitude compte, fine-tuning si la constance compte, et on combine selon les besoins."
+        },
+        {
+          "question": "Dans une solution qui combine les trois stratégies, quel est le rôle du prompt engineering ?",
+          "options": [
+            "Ajouter les consignes propres à la conversation et les garde-fous",
+            "Garantir le style constant",
+            "Fournir les connaissances à jour",
+            "Entraîner le modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Fine-tuning : style et format constants. RAG : connaissances exactes et à jour. Prompt engineering : consignes de conversation et garde-fous."
+        },
+        {
+          "question": "Comment le fine-tuning peut-il réduire le coût par requête ?",
+          "options": [
+            "En supprimant l'authentification",
+            "En désactivant les filtres de contenu",
+            "En raccourcissant les prompts, car les schémas voulus sont inscrits dans les poids",
+            "En utilisant un index plus petit"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les schémas étant intégrés aux poids du modèle, les prompts peuvent être plus courts, ce qui réduit le coût par requête."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-optimize-lab",
+      "title": "Lab — fine-tuner un modèle de langage",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quelle méthode de personnalisation le lab sélectionne-t-il pour le travail de fine-tuning ?",
+          "options": [
+            "Reinforcement",
+            "Supervised",
+            "Direct Preference Optimization",
+            "Distillation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le lab choisit Customization method : Supervised, avec un fichier JSONL de conversations d'exemple."
+        },
+        {
+          "question": "Quel type de déploiement le lab choisit-il pour le modèle fine-tuné ?",
+          "options": [
+            "Global Batch",
+            "Data Zone Standard",
+            "Global Provisioned",
+            "Developer"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le lab choisit le type Developer, destiné à l'évaluation de modèles fine-tunés."
+        },
+        {
+          "question": "Pourquoi le lab demande-t-il de créer le projet dans North Central US ou Sweden Central ?",
+          "options": [
+            "Parce que ces régions prenaient en charge le fine-tuning des modèles gpt-5 au moment de la rédaction",
+            "Parce que ce sont les régions les moins chères du monde",
+            "Parce que le portail Foundry n'existe que là",
+            "Parce que les autres régions n'ont pas de playground"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Au moment de la rédaction du lab, ces régions prenaient en charge le fine-tuning pour les modèles gpt-5."
+        },
+        {
+          "question": "Comment comparer équitablement le modèle fine-tuné au modèle de base ?",
+          "options": [
+            "En changeant le message système à chaque question",
+            "En posant des questions différentes à chaque modèle",
+            "En utilisant les mêmes instructions et les mêmes questions avec les deux modèles",
+            "En comparant uniquement leur nom"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le lab remet les mêmes instructions puis repose les mêmes questions au modèle fine-tuné pour juger si son comportement est plus constant."
+        },
+        {
+          "question": "Que contient chaque exemple du fichier d'entraînement du lab ?",
+          "options": [
+            "Uniquement une réponse",
+            "Le même message système, un prompt utilisateur sur le voyage et une réponse dans le style voulu",
+            "Une image et une légende",
+            "Une liste d'outils"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Chaque interaction inclut le même message système que celui testé avec le modèle de base, un prompt utilisateur et une réponse dont le style sert de modèle."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-optimize-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 7,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est le but principal d'un message système dans un prompt ?",
+          "options": [
+            "Définir le rôle, le comportement et les contraintes de sortie du modèle",
+            "Fournir des données d'entraînement qui modifient le modèle de façon permanente",
+            "Récupérer des données dans une source externe"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Modifier le modèle de façon permanente relève du fine-tuning, récupérer des données externes relève du RAG."
+        },
+        {
+          "question": "Quand utiliser le RAG plutôt que de s'appuyer sur le seul prompt engineering ?",
+          "options": [
+            "Quand on veut que le modèle réponde dans un style et un format constants",
+            "Quand le modèle a besoin de données propres au domaine ou récentes sur lesquelles il n'a pas été entraîné",
+            "Quand on veut réduire la longueur des prompts envoyés au modèle"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Le style constant et les prompts plus courts sont des bénéfices du fine-tuning."
+        },
+        {
+          "question": "Que contrôle le paramètre temperature d'un modèle de langage ?",
+          "options": [
+            "Le nombre maximal de tokens que le modèle peut générer",
+            "L'aléa et la créativité des réponses du modèle",
+            "La vitesse à laquelle le modèle traite les requêtes"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Temperature contrôle l'aléa de la sortie : haute = créatif et varié, basse = ciblé et déterministe."
+        },
+        {
+          "question": "Qu'optimise le fine-tuning dans un modèle de langage ?",
+          "options": [
+            "L'exactitude factuelle des réponses en se connectant à des données externes",
+            "La constance du comportement, du style et du format de sortie du modèle",
+            "Le nombre de tokens que le modèle peut traiter en une requête"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. L'exactitude par connexion à des données externes, c'est le RAG."
+        },
+        {
+          "question": "Tu construis un chat qui doit répondre avec le catalogue produits de ton entreprise tout en gardant une voix de marque précise. Quelle combinaison est la plus appropriée ?",
+          "options": [
+            "Le prompt engineering seul, avec des messages système détaillés",
+            "Le RAG pour les données du catalogue, le fine-tuning pour la voix de marque, et le prompt engineering pour les consignes propres à la conversation",
+            "Le fine-tuning seul, avec le catalogue inclus dans les données d'entraînement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Chaque couche traite un besoin : RAG pour les faits, fine-tuning pour le style, prompt engineering pour les consignes."
+        },
+        {
+          "question": "Les prix de ton catalogue changent chaque jour. Pourquoi le RAG est-il préférable au fine-tuning pour ces données ?",
+          "options": [
+            "Parce que le RAG modifie les poids du modèle",
+            "Parce que le fine-tuning est interdit pour les prix",
+            "Parce que le RAG est toujours gratuit",
+            "Parce que le RAG récupère les données courantes au moment de la requête, sans réentraînement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le RAG lit les données à jour à chaque requête. Un modèle fine-tuné devrait être réentraîné à chaque changement."
+        },
+        {
+          "question": "Laquelle de ces affirmations résume le mieux le module ?",
+          "options": [
+            "Il faut toujours utiliser les trois stratégies",
+            "Le fine-tuning remplace le prompt engineering",
+            "Les trois stratégies sont complémentaires et traitent des dimensions différentes de la performance",
+            "Le RAG et le fine-tuning sont interchangeables"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Prompt engineering, RAG et fine-tuning ne sont pas concurrents : ils sont complémentaires. Toutes les applications n'ont pas besoin des trois."
+        }
+      ]
+    }
+  ]
+}
