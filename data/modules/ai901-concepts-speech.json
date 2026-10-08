@@ -1,0 +1,346 @@
+{
+  "slug": "ai901-concepts-speech",
+  "title": "Introduction to AI speech concepts",
+  "description": "LP1 · Module 4 — solutions vocales, reconnaissance vocale en 6 étapes (MFCC, phonèmes, beam search), synthèse vocale en 4 étapes (G2P, prosodie, vocodeur)",
+  "category": "AI-901",
+  "order": 4,
+  "units": [
+    {
+      "slug": "ai901-c-speech-solutions",
+      "title": "Introduction et Speech-enabled solutions",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que fait la reconnaissance vocale ?",
+          "options": [
+            "Elle transforme du texte en parole",
+            "Elle traduit un texte écrit",
+            "Elle transforme la parole en texte",
+            "Elle génère des images"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La reconnaissance vocale (speech-to-text) convertit la parole en texte ; la synthèse fait l'inverse."
+        },
+        {
+          "question": "Quel scénario relève de la synthèse vocale ?",
+          "options": [
+            "Lire à voix haute le contenu d'un écran",
+            "Transcrire une réunion",
+            "Dicter des notes médicales",
+            "Transcrire les appels du service client"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Lire un contenu à voix haute, c'est transformer du texte en parole : la synthèse vocale. Les trois autres sont de la reconnaissance."
+        },
+        {
+          "question": "Quelle solution combine reconnaissance et synthèse vocales ?",
+          "options": [
+            "La transcription d'une réunion",
+            "Un livre audio",
+            "Une alerte lue à voix haute",
+            "Un serveur vocal interactif (IVR) qui comprend la demande et répond"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Un IVR écoute l'appelant (reconnaissance) puis lui répond à voix haute (synthèse)."
+        },
+        {
+          "question": "Quel bénéfice n'est PAS cité pour les solutions vocales ?",
+          "options": [
+            "L'accessibilité",
+            "La suppression de tout besoin de protection des données",
+            "La productivité",
+            "L'ouverture à un public mondial"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les bénéfices sont l'accessibilité, la productivité, l'expérience utilisateur et la portée mondiale. La confidentialité reste au contraire un point de vigilance."
+        },
+        {
+          "question": "Quelle règle d'accessibilité faut-il appliquer à une solution vocale ?",
+          "options": [
+            "Toujours proposer une autre méthode d'entrée et de sortie",
+            "Interdire le clavier",
+            "N'accepter qu'une seule langue",
+            "Supprimer les sous-titres"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Tout le monde ne peut pas parler ou entendre : il faut toujours fournir une alternative, et respecter des normes comme WCAG."
+        },
+        {
+          "question": "Pourquoi la latence est-elle un point de vigilance ?",
+          "options": [
+            "Elle augmente la qualité audio",
+            "Elle remplace la confidentialité",
+            "Une réponse trop lente casse le rythme d'une conversation",
+            "Elle détermine la langue utilisée"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une conversation vocale exige des réponses rapides ; la latence fait partie des cinq points à vérifier."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-speech-recognition",
+      "title": "Speech recognition",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle fréquence d'échantillonnage est typique pour la reconnaissance vocale ?",
+          "options": [
+            "1 kHz",
+            "16 kHz",
+            "44,1 kHz",
+            "96 kHz"
+          ],
+          "correctAnswer": 1,
+          "explanation": "16 kHz est la valeur typique pour la parole ; 44,1 kHz sert à la musique."
+        },
+        {
+          "question": "Que sont les MFCC ?",
+          "options": [
+            "Des règles de ponctuation",
+            "Des modèles de langage",
+            "Des voix de synthèse",
+            "Des coefficients qui décrivent le son et forment les vecteurs de caractéristiques"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les Mel-Frequency Cepstral Coefficients sont extraits de chaque trame audio pendant le prétraitement ; on en garde environ 13."
+        },
+        {
+          "question": "Quelle est la durée d'une trame audio lors du prétraitement ?",
+          "options": [
+            "20 à 30 millisecondes",
+            "2 à 3 secondes",
+            "1 minute",
+            "1 microseconde"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le signal est découpé en trames de 20 à 30 ms avant l'application de la transformée de Fourier et de l'échelle de Mel."
+        },
+        {
+          "question": "Combien de phonèmes compte le mot anglais « cat » ?",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "5"
+          ],
+          "correctAnswer": 2,
+          "explanation": "« cat » se décompose en /k/ /æ/ /t/, soit trois phonèmes."
+        },
+        {
+          "question": "Que produit le modèle acoustique pour chaque trame ?",
+          "options": [
+            "Une image",
+            "Une distribution de probabilités sur les phonèmes",
+            "Une traduction",
+            "Un fichier audio"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le modèle acoustique, souvent un transformer avec attention, associe à chaque trame une probabilité pour chaque phonème possible."
+        },
+        {
+          "question": "Quel composant choisit entre « their » et « there » ?",
+          "options": [
+            "Le micro",
+            "Le vocodeur",
+            "La transformée de Fourier",
+            "Le modèle de langage"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Ces mots se prononcent pareil ; le modèle de langage utilise le contexte et les régularités statistiques pour choisir."
+        },
+        {
+          "question": "Quelle technique le décodeur utilise-t-il pour trouver la meilleure phrase ?",
+          "options": [
+            "La recherche en faisceau (beam search)",
+            "TF-IDF",
+            "La lemmatisation",
+            "La diffusion"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le beam search ne conserve à chaque pas que les meilleures hypothèses, en combinant scores acoustiques et scores du modèle de langage."
+        },
+        {
+          "question": "Dans quelle étape ajoute-t-on majuscules, ponctuation et format des nombres ?",
+          "options": [
+            "La capture audio",
+            "Le modèle acoustique",
+            "Le post-traitement",
+            "Le prétraitement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le post-traitement nettoie le texte brut : majuscules, ponctuation, nombres, filtre de grossièretés, scores de confiance."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-speech-synthesis",
+      "title": "Speech synthesis",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la première étape de la synthèse vocale ?",
+          "options": [
+            "Le vocodeur",
+            "La normalisation du texte",
+            "La prosodie",
+            "Le décodage"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On commence par réécrire abréviations, nombres et symboles en mots prononçables."
+        },
+        {
+          "question": "Que devient « Dr. » après la normalisation du texte ?",
+          "options": [
+            "Il est supprimé",
+            "Il reste inchangé",
+            "Il devient un phonème",
+            "Il devient « Doctor »"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La normalisation développe les abréviations, les nombres et les symboles en toutes lettres."
+        },
+        {
+          "question": "Que signifie G2P ?",
+          "options": [
+            "Grapheme-to-phoneme : la conversion des lettres en phonèmes",
+            "GPU-to-processor",
+            "General text processing",
+            "Grammar-to-punctuation"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'analyse linguistique convertit les graphèmes (lettres) en phonèmes (sons)."
+        },
+        {
+          "question": "Que montre l'exemple « though, through, cough » ?",
+          "options": [
+            "Que tous les mots se prononcent comme ils s'écrivent",
+            "Que la prosodie est inutile",
+            "Que les mêmes lettres peuvent se prononcer différemment",
+            "Que le vocodeur est lent"
+          ],
+          "correctAnswer": 2,
+          "explanation": "« ough » se prononce de trois façons : la conversion G2P doit tenir compte du mot et du contexte."
+        },
+        {
+          "question": "Quel élément ne fait PAS partie de la prosodie ?",
+          "options": [
+            "La hauteur (pitch)",
+            "L'orthographe",
+            "Les pauses",
+            "L'accentuation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La prosodie regroupe hauteur, durée, intensité, pauses et accentuation."
+        },
+        {
+          "question": "Que produit le modèle acoustique en synthèse vocale ?",
+          "options": [
+            "Un mel-spectrogramme",
+            "Une transcription",
+            "Une liste de mots vides",
+            "Un score de confiance"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle acoustique transforme phonèmes et prosodie en mel-spectrogramme, que le vocodeur convertit ensuite en son."
+        },
+        {
+          "question": "Lequel est un vocodeur neuronal ?",
+          "options": [
+            "Word2Vec",
+            "TextRank",
+            "Naive Bayes",
+            "HiFi-GAN"
+          ],
+          "correctAnswer": 3,
+          "explanation": "WaveNet, WaveGlow et HiFi-GAN sont des vocodeurs neuronaux qui transforment le mel-spectrogramme en onde audio."
+        },
+        {
+          "question": "Que montre la phrase « I never said he ate the cake » ?",
+          "options": [
+            "Que la normalisation supprime les verbes",
+            "Que les phonèmes sont identiques dans toutes les langues",
+            "Que le mot accentué change le sens de la phrase",
+            "Que la synthèse n'a que deux étapes"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Selon le mot sur lequel on insiste, la phrase change de sens : la prosodie porte du sens."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-speech-lab-bilan",
+      "title": "Lab et bilan — concepts de la parole",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "[Question officielle] Que se passe-t-il pendant l'étape de prétraitement de la reconnaissance vocale ?",
+          "options": [
+            "Le texte est converti en audio",
+            "La ponctuation est ajoutée à la transcription",
+            "Des vecteurs de caractéristiques sont extraits de l'onde audio"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le prétraitement transforme le signal brut en vecteurs de caractéristiques, généralement avec les MFCC."
+        },
+        {
+          "question": "[Question officielle] Que sont les phonèmes ?",
+          "options": [
+            "La plus petite unité de son de la parole",
+            "Des fichiers audio compressés",
+            "Des mots prononcés avec un accent"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un phonème est la plus petite unité de son ; l'anglais en compte environ 44."
+        },
+        {
+          "question": "[Question officielle] Pourquoi la prosodie est-elle importante en synthèse vocale ?",
+          "options": [
+            "Elle réduit la taille des fichiers audio",
+            "Elle donne une prononciation et une cadence naturelles",
+            "Elle traduit le texte dans une autre langue"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La prosodie (hauteur, durée, pauses, accentuation) rend la voix naturelle au lieu de robotique."
+        },
+        {
+          "question": "Dans le lab, à quoi correspond l'état « Listening » ?",
+          "options": [
+            "À la synthèse vocale",
+            "À la génération d'images",
+            "Au téléchargement du modèle",
+            "À la reconnaissance vocale"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Listening : l'application écoute et reconnaît la parole. Processing : le modèle répond. Speaking : la réponse est synthétisée."
+        },
+        {
+          "question": "Quel service Foundry permet des conversations vocales en temps réel avec gestion des interruptions ?",
+          "options": [
+            "Voice Live",
+            "Azure Language",
+            "Content Understanding",
+            "Azure Translator"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Voice Live gère les conversations en temps réel sur plusieurs tours, avec interruptions et suppression du bruit."
+        },
+        {
+          "question": "Quels termes appartiennent à la chaîne de synthèse vocale ?",
+          "options": [
+            "MFCC et beam search",
+            "G2P, prosodie et vocodeur",
+            "TF-IDF et bag-of-words",
+            "Capture audio et décodage"
+          ],
+          "correctAnswer": 1,
+          "explanation": "G2P, prosodie et vocodeur sont côté synthèse ; MFCC et beam search sont côté reconnaissance."
+        }
+      ]
+    }
+  ]
+}
