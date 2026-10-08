@@ -1,0 +1,513 @@
+{
+  "slug": "ai901-ai-concepts",
+  "title": "Introduction to AI concepts",
+  "description": "LP1 · Module 1 — IA générative et agents, texte, parole, vision, extraction d'informations, IA responsable",
+  "category": "AI-901",
+  "order": 1,
+  "units": [
+    {
+      "slug": "ai901-genai-agents",
+      "title": "Introduction, IA générative et agents",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Sur quoi repose la capacité de l'IA générative à produire du contenu ?",
+          "options": [
+            "Sur une base de réponses préécrites",
+            "Sur un modèle de langage entraîné avec d'énormes volumes de données",
+            "Sur un moteur de règles écrit à la main",
+            "Sur un tableur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La génération de contenu repose sur un modèle de langage entraîné sur de très grands volumes de données, souvent issus d'Internet ou de sources publiques."
+        },
+        {
+          "question": "Comment les utilisateurs interagissent-ils avec un modèle de langage génératif ?",
+          "options": [
+            "Par des requêtes SQL",
+            "Par des fichiers de configuration",
+            "Par des prompts : des phrases ou questions en langage naturel",
+            "Par des scripts de déploiement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On interagit avec les modèles génératifs par des prompts, c'est-à-dire des énoncés ou questions en langage naturel."
+        },
+        {
+          "question": "Quels sont les trois éléments clés d'un agent IA ?",
+          "options": [
+            "Un grand modèle de langage, des instructions et des outils",
+            "Un serveur, une base de données et un pare-feu",
+            "Une caméra, un micro et un écran",
+            "Un prompt, une clé et un endpoint"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un agent a un modèle (son cerveau), des instructions (sa fiche de poste) et des outils pour interagir avec le monde."
+        },
+        {
+          "question": "Dans quel cas un petit modèle de langage (SLM) convient-il bien ?",
+          "options": [
+            "Quand il faut la plus grande polyvalence possible",
+            "Quand on veut le modèle le plus coûteux",
+            "Quand on veut générer des vidéos longues",
+            "Pour des scénarios ciblés sur un sujet précis ou des modèles faciles à déployer en local, sur appareil"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les SLM fonctionnent bien sur des domaines ciblés ou quand il faut de petits modèles faciles à déployer pour des applications locales et des agents sur appareil."
+        },
+        {
+          "question": "Envoyer un e-mail ou mettre à jour un agenda : de quel type d'outil d'agent s'agit-il ?",
+          "options": [
+            "Un outil de connaissance",
+            "Un outil d'action",
+            "Un outil d'entraînement",
+            "Un outil de facturation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les outils d'action permettent à l'agent d'exécuter des tâches. Les outils de connaissance donnent accès à l'information, comme les moteurs de recherche ou les bases de données."
+        },
+        {
+          "question": "À quoi servent les instructions d'un agent ?",
+          "options": [
+            "À stocker les données d'entraînement",
+            "À chiffrer les échanges",
+            "À définir le rôle et le comportement de l'agent, comme une fiche de poste",
+            "À choisir la région Azure"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les instructions sont un prompt système qui définit le rôle et le comportement de l'agent."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-text-nlp",
+      "title": "Text and natural language",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle technique détermine si un texte est positif, négatif ou neutre ?",
+          "options": [
+            "L'analyse de sentiment",
+            "La détection de langue",
+            "Le résumé",
+            "L'OCR"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'analyse de sentiment, une forme de classification de texte, détermine si un texte est positif, négatif ou neutre."
+        },
+        {
+          "question": "Quelle technique est souvent la première étape d'un traitement de texte en plusieurs phases ?",
+          "options": [
+            "Le résumé",
+            "L'analyse de sentiment",
+            "La synthèse vocale",
+            "La détection de langue"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La détection de langue détermine la ou les langues d'un document ; c'est souvent la première étape d'un flux de traitement."
+        },
+        {
+          "question": "Détecter et masquer des noms, adresses et numéros de téléphone est une forme spécialisée de quelle technique ?",
+          "options": [
+            "Le résumé",
+            "La détection d'entités",
+            "La classification d'images",
+            "La détection de langue"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La détection et le masquage des informations personnelles identifiables (PII) sont une forme particulièrement spécialisée de détection d'entités."
+        },
+        {
+          "question": "Pourquoi utiliser des outils NLP spécialisés alors que les modèles génératifs savent analyser du texte ?",
+          "options": [
+            "Parce que les modèles génératifs ne lisent pas le texte",
+            "Parce que c'est obligatoire dans Azure",
+            "Pour produire des résultats prévisibles ou appliquer des règles personnalisées",
+            "Parce qu'ils génèrent des images"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Pour certains cas d'analyse de texte, des outils NLP spécialisés donnent des résultats prévisibles ou permettent d'appliquer des règles personnalisées."
+        },
+        {
+          "question": "Quelle relation existe entre le NLP et les grands modèles de langage ?",
+          "options": [
+            "Le NLP est la base sur laquelle les LLM de l'IA générative sont construits",
+            "Le NLP a été remplacé et n'existe plus",
+            "Ce sont deux domaines sans rapport",
+            "Les LLM ont été inventés avant le NLP"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le NLP est le fondement sur lequel les grands modèles de langage de l'IA générative sont bâtis."
+        },
+        {
+          "question": "Quelle technique repère les mentions de personnes, de lieux et d'organisations dans un document ?",
+          "options": [
+            "La segmentation sémantique",
+            "Le résumé",
+            "La synthèse vocale",
+            "La détection d'entités"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'extraction de termes clés et la détection d'entités identifient les mots importants et les mentions d'entités comme les personnes, lieux et organisations."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-speech",
+      "title": "Speech",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle capacité transcrit un signal audio de parole en texte ?",
+          "options": [
+            "La synthèse vocale",
+            "La reconnaissance vocale (speech-to-text)",
+            "L'analyse de sentiment",
+            "La détection d'objets"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La reconnaissance vocale est la capacité de l'IA à « entendre » et interpréter la parole, en général sous forme de speech-to-text."
+        },
+        {
+          "question": "Quelle capacité convertit une information textuelle en signal audible ?",
+          "options": [
+            "La reconnaissance vocale",
+            "L'OCR",
+            "La synthèse vocale (text-to-speech)",
+            "La détection de langue"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La synthèse vocale est la capacité de l'IA à prononcer des mots, en général sous forme de text-to-speech."
+        },
+        {
+          "question": "Un assistant écoute une question orale puis y répond à l'oral. Quelles capacités utilise-t-il ?",
+          "options": [
+            "La reconnaissance vocale puis la synthèse vocale",
+            "Uniquement la synthèse vocale",
+            "Uniquement la reconnaissance vocale",
+            "La classification d'images"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Écouter demande la reconnaissance vocale ; répondre à voix haute demande la synthèse vocale."
+        },
+        {
+          "question": "Lequel de ces scénarios relève de la reconnaissance vocale ?",
+          "options": [
+            "Lire un livre numérique à voix haute",
+            "Annoncer les directions d'un GPS",
+            "Générer une description audio d'une vidéo",
+            "Transcrire automatiquement des appels ou des réunions"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La transcription automatique d'appels ou de réunions transforme la voix en texte : c'est de la reconnaissance vocale."
+        },
+        {
+          "question": "Quels défis la technologie vocale gère-t-elle de mieux en mieux ?",
+          "options": [
+            "Le calcul de taxes",
+            "Ignorer le bruit de fond, détecter les interruptions, générer des voix expressives",
+            "La compression d'images",
+            "La gestion des abonnements Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La technologie évolue rapidement pour ignorer le bruit de fond, détecter les interruptions et produire des voix plus expressives et humaines."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-vision",
+      "title": "Computer vision",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel type de modèle prédit l'étiquette la plus appropriée pour une image entière ?",
+          "options": [
+            "La détection d'objets",
+            "La segmentation sémantique",
+            "La classification d'images",
+            "L'OCR"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La classification d'images est entraînée avec des images étiquetées par leur sujet principal, pour prédire l'étiquette d'images non étiquetées."
+        },
+        {
+          "question": "Quel type de modèle identifie l'emplacement d'objets précis dans une image ?",
+          "options": [
+            "La détection d'objets",
+            "La classification d'images",
+            "L'analyse de sentiment",
+            "La synthèse vocale"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La détection d'objets entraîne le modèle à identifier l'emplacement d'objets spécifiques dans une image."
+        },
+        {
+          "question": "En quoi la segmentation sémantique va-t-elle plus loin que la détection d'objets ?",
+          "options": [
+            "Elle donne une seule étiquette par image",
+            "Elle transcrit le texte de l'image",
+            "Elle génère une légende",
+            "Elle identifie les pixels de l'image qui appartiennent à un objet, au lieu d'une boîte autour de lui"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La segmentation sémantique est une forme avancée de détection d'objets : elle identifie les pixels individuels de chaque objet."
+        },
+        {
+          "question": "Quel type de modèle produit une description complète d'une image en combinant caractéristiques visuelles et texte ?",
+          "options": [
+            "La classification d'images",
+            "Un modèle multimodal",
+            "La détection de langue",
+            "La détection d'objets"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles multimodaux combinent des caractéristiques visuelles et les descriptions textuelles associées, ce qui permet de générer des descriptions complètes."
+        },
+        {
+          "question": "Comment obtient-on un modèle de vision par ordinateur ?",
+          "options": [
+            "En écrivant des règles pour chaque image",
+            "En utilisant un seul exemple",
+            "En entraînant un modèle avec un grand nombre d'images",
+            "En convertissant l'image en audio"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La vision par ordinateur s'obtient en entraînant un modèle avec de grandes quantités d'images."
+        },
+        {
+          "question": "Lequel de ces scénarios est un usage courant de la vision par ordinateur ?",
+          "options": [
+            "Identifier des articles en caisse ou suivre les stocks dans le commerce",
+            "Traduire un texte",
+            "Résumer un article",
+            "Détecter la langue d'un e-mail"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le suivi des stocks et l'identification d'articles en caisse font partie des usages courants, avec les légendes automatiques, la recherche visuelle ou la vidéosurveillance."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-info-extraction",
+      "title": "Information extraction",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle technologie de vision est à la base de la plupart des solutions d'analyse de documents ?",
+          "options": [
+            "La segmentation sémantique",
+            "La synthèse vocale",
+            "L'analyse de sentiment",
+            "La reconnaissance optique de caractères (OCR)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'OCR identifie l'emplacement du texte dans une image ; c'est la base de la plupart des solutions d'analyse de documents."
+        },
+        {
+          "question": "Avec quoi l'OCR est-il souvent combiné pour extraire des champs précis d'un document ?",
+          "options": [
+            "Un modèle de synthèse vocale",
+            "Un modèle d'analyse qui interprète les valeurs du document",
+            "Un pare-feu",
+            "Un modèle de génération vidéo"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'OCR est souvent combiné à un modèle analytique capable d'interpréter les valeurs individuelles et d'extraire des champs."
+        },
+        {
+          "question": "Dans quel type de sources l'extraction d'informations trouve-t-elle des données ?",
+          "options": [
+            "Uniquement dans des bases de données relationnelles",
+            "Uniquement dans du code source",
+            "Dans des sources non structurées : documents et formulaires scannés, images, enregistrements audio ou vidéo",
+            "Uniquement dans des feuilles de calcul"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'extraction d'informations débloque des enseignements dans des sources de données non structurées."
+        },
+        {
+          "question": "Lequel de ces cas est un scénario typique d'extraction d'informations ?",
+          "options": [
+            "Traiter automatiquement une note de frais à partir d'un reçu",
+            "Lire un texte à voix haute",
+            "Classer une photo comme « chat » ou « chien »",
+            "Détecter la langue d'un message"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le traitement automatisé de formulaires et documents dans un processus métier, comme une note de frais, est un scénario type."
+        },
+        {
+          "question": "Quelle évolution récente concerne les modèles d'extraction de données ?",
+          "options": [
+            "Ils ne fonctionnent plus sur les formulaires",
+            "Ils ne lisent que le texte manuscrit",
+            "Ils sont limités aux reçus",
+            "Des modèles plus avancés extraient de l'information d'enregistrements audio, d'images et de vidéos"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Historiquement centrés sur les formulaires textuels, les modèles évoluent vers l'audio, les images et les vidéos."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-responsible-ai",
+      "title": "Responsible AI",
+      "order": 6,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Un système d'admission universitaire doit éviter toute discrimination fondée sur des facteurs démographiques non pertinents. Quel principe ?",
+          "options": [
+            "Transparence",
+            "Équité (fairness)",
+            "Inclusion",
+            "Responsabilité"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'équité : il faut minimiser les biais dans les données d'entraînement et tester l'équité des systèmes."
+        },
+        {
+          "question": "Un robot n'agit sur un objet que si le niveau de confiance de son identification dépasse un seuil. Quel principe ?",
+          "options": [
+            "Fiabilité et sécurité",
+            "Inclusion",
+            "Transparence",
+            "Équité"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'IA repose sur des modèles probabilistes et n'est pas infaillible ; utiliser un seuil de confiance relève de la fiabilité et de la sécurité."
+        },
+        {
+          "question": "Un agent vocal génère aussi des sous-titres pour les utilisateurs malentendants. Quel principe ?",
+          "options": [
+            "Confidentialité et sécurité",
+            "Responsabilité",
+            "Inclusion",
+            "Fiabilité et sécurité"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'inclusion : les solutions ne doivent exclure aucun utilisateur."
+        },
+        {
+          "question": "Une banque signale qu'elle utilise l'IA pour approuver des prêts et décrit les données d'entraînement. Quel principe ?",
+          "options": [
+            "Équité",
+            "Inclusion",
+            "Fiabilité et sécurité",
+            "Transparence"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La transparence : informer les utilisateurs du fonctionnement du système et de ses limites éventuelles."
+        },
+        {
+          "question": "Un système d'identification faciale supprime les images personnelles dès qu'elles ne sont plus nécessaires. Quel principe ?",
+          "options": [
+            "Transparence",
+            "Confidentialité et sécurité",
+            "Équité",
+            "Inclusion"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Confidentialité et sécurité : protéger les données personnelles et empêcher qu'elles soient révélées ou accessibles sans nécessité."
+        },
+        {
+          "question": "Que demande le principe de responsabilité (accountability) aux organisations ?",
+          "options": [
+            "De définir et d'appliquer un cadre de gouvernance pour respecter les principes d'IA responsable",
+            "De rendre l'IA gratuite",
+            "De cacher le fonctionnement des modèles",
+            "De supprimer tous les filtres de contenu"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les personnes et organisations qui développent et distribuent des solutions d'IA répondent de leurs actes, d'où le besoin d'un cadre de gouvernance."
+        },
+        {
+          "question": "Quelle affirmation sur les filtres de contenu est correcte ?",
+          "options": [
+            "Ils suffisent à eux seuls pour une IA responsable",
+            "Ils servent à accélérer le modèle",
+            "Ils sont un moyen de réduire le risque de contenu nuisible, mais une IA responsable exige de respecter des principes de la conception à l'exploitation",
+            "Ils remplacent les principes d'IA responsable"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les filtres de contenu sont un moyen parmi d'autres ; la responsabilité se joue de la conception à l'exploitation."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-concepts-bilan",
+      "title": "Lab, bilan et évaluation du module",
+      "order": 7,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la description la plus exacte de l'IA générative ?",
+          "options": [
+            "L'IA générative utilise un modèle de langage pour créer du contenu original en réponse à un prompt.",
+            "L'IA générative est une forme ancienne d'IA, remplacée par le machine learning.",
+            "L'IA générative est une forme complexe d'IA réservée aux spécialistes comme les data scientists."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. L'IA générative produit du contenu nouveau à partir d'un prompt, grâce à un modèle de langage."
+        },
+        {
+          "question": "Qu'est-ce qu'un agent IA ?",
+          "options": [
+            "Un professionnel de la technologie qui construit des applications d'IA.",
+            "Toute personne qui utilise des applications d'IA.",
+            "Une application d'IA qui peut effectuer des tâches pour le compte d'un utilisateur."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Un agent est une application construite sur l'IA générative qui automatise des tâches à l'aide d'outils."
+        },
+        {
+          "question": "Une application d'IA lit des e-mails à voix haute à un utilisateur. Quelle capacité vocale est utilisée ?",
+          "options": [
+            "La reconnaissance vocale",
+            "La synthèse vocale",
+            "L'analyse de sentiment"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Passer du texte à la voix, c'est de la synthèse vocale (text-to-speech)."
+        },
+        {
+          "question": "Une application doit récupérer le total et la date d'un reçu photographié. Quelle capacité ?",
+          "options": [
+            "La synthèse vocale",
+            "L'analyse de sentiment",
+            "La classification d'images",
+            "L'extraction d'informations"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Récupérer des champs précis d'un document non structuré relève de l'extraction d'informations, à base d'OCR et d'un modèle d'analyse."
+        },
+        {
+          "question": "Laquelle de ces associations est correcte ?",
+          "options": [
+            "Détection d'objets → une étiquette pour toute l'image",
+            "Segmentation sémantique → les pixels appartenant à chaque objet",
+            "Classification d'images → une boîte autour de chaque objet",
+            "Modèle multimodal → un numéro de série"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Classification = étiquette de l'image ; détection = emplacement des objets ; segmentation = pixels de chaque objet ; multimodal = description."
+        },
+        {
+          "question": "Un service client veut savoir si les avis sur un produit sont globalement favorables. Quelle technique ?",
+          "options": [
+            "L'analyse de sentiment",
+            "L'OCR",
+            "La synthèse vocale",
+            "La détection d'objets"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Évaluer le sentiment et l'opinion dans des avis produits est un usage courant de l'analyse de texte."
+        }
+      ]
+    }
+  ]
+}

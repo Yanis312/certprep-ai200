@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer */}
         <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-400">
-          CertPrep · Révision Microsoft AI-103 et AI-200
+          CertPrep · Révision Microsoft AI-901, AI-103 et AI-200
         </footer>
       </body>
     </html>

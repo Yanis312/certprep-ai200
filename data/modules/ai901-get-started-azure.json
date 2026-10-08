@@ -1,0 +1,371 @@
+{
+  "slug": "ai901-get-started-azure",
+  "title": "Get started with AI in Azure",
+  "description": "LP2 · Module 1 — hiérarchie Azure, sécurité, hébergement, stockage, Microsoft Foundry, endpoints REST",
+  "category": "AI-901",
+  "order": 8,
+  "units": [
+    {
+      "slug": "ai901-azure-basics",
+      "title": "Introduction et Understand Azure",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment appelle-t-on le fait, pour un modèle, d'appliquer à une nouvelle entrée ce qu'il a appris pendant l'entraînement ?",
+          "options": [
+            "Le déploiement",
+            "L'inférence",
+            "Le réentraînement",
+            "L'indexation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Quand on interagit avec une application d'IA, le modèle effectue une inférence : il applique ce qu'il a appris à une nouvelle entrée."
+        },
+        {
+          "question": "Dans quel ordre s'organise la hiérarchie Azure, du plus large au plus précis ?",
+          "options": [
+            "Ressource, groupe de ressources, abonnement, tenant",
+            "Abonnement, tenant, ressource, groupe de ressources",
+            "Tenant, abonnement, groupe de ressources, ressource",
+            "Groupe de ressources, tenant, abonnement, ressource"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Azure organise l'accès et la gestion par tenants, abonnements, groupes de ressources et ressources."
+        },
+        {
+          "question": "Qu'est-ce qu'un abonnement Azure ?",
+          "options": [
+            "Un conteneur de facturation pour tes ressources cloud",
+            "Un dossier qui regroupe des ressources liées",
+            "L'identité de l'organisation dans le cloud Microsoft",
+            "Un service individuel comme un compte de stockage"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un abonnement relie l'usage Azure à un moyen de paiement ou à des crédits et fixe des limites de coût, de quotas et de contrôle d'accès."
+        },
+        {
+          "question": "À quoi sert un groupe de ressources ?",
+          "options": [
+            "À facturer l'organisation",
+            "À authentifier les utilisateurs",
+            "À stocker des fichiers",
+            "À regrouper des ressources Azure liées pour les gérer ensemble"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les groupes de ressources sont des dossiers qui contiennent des ressources liées, avec des permissions et politiques possibles à leur niveau."
+        },
+        {
+          "question": "Qu'est-ce qu'un tenant Azure ?",
+          "options": [
+            "Une machine virtuelle",
+            "La base et l'identité d'une organisation dans le cloud Microsoft, avec ses utilisateurs, groupes et politiques",
+            "Un type de base de données",
+            "Un niveau de performance"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le tenant est l'espace dédié et sécurisé de l'organisation, créé quand elle s'inscrit à Azure ou Microsoft 365."
+        },
+        {
+          "question": "Quelle catégorie de services Azure permet de faire tourner des applications et des charges de travail dans le cloud ?",
+          "options": [
+            "Storage",
+            "Networking",
+            "Compute",
+            "Billing"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Compute : la capacité d'exécuter applications, programmes et charges de travail. Les autres catégories sont Storage, Networking et App Services."
+        },
+        {
+          "question": "Quel est l'intérêt de créer des ressources Azure par programmation plutôt que dans le portail ?",
+          "options": [
+            "Répéter la même configuration, automatiser les déploiements et réduire les erreurs manuelles",
+            "C'est la seule méthode autorisée",
+            "Cela supprime le besoin d'un abonnement",
+            "Cela rend les ressources gratuites"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le code ou les scripts, par exemple avec Azure CLI, rendent les déploiements plus rapides, fiables et faciles à maintenir."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-azure-ai-apps",
+      "title": "Developing AI apps on Azure",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Où stocke-t-on en général les secrets d'une application dans Azure ?",
+          "options": [
+            "Dans le code source",
+            "Dans un dépôt GitHub",
+            "Dans le nom de la ressource",
+            "Dans Azure Key Vault"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Dans Azure, les secrets sont stockés dans Azure Key Vault, pas dans le code ni sur GitHub."
+        },
+        {
+          "question": "Quel service garantit que seules les bonnes personnes et les bons services accèdent à tes ressources d'IA ?",
+          "options": [
+            "Azure Cosmos DB",
+            "Microsoft Entra ID",
+            "Azure App Service",
+            "Azure SQL Database"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Entra ID assure le contrôle des identités et permet le contrôle d'accès basé sur les rôles (RBAC)."
+        },
+        {
+          "question": "Que signifie « scale out » ?",
+          "options": [
+            "Augmenter le CPU de l'instance existante",
+            "Supprimer l'application",
+            "Ajouter des instances de l'application",
+            "Changer de région"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Scale out (horizontal) : ajouter des instances. Scale up (vertical) : augmenter le CPU ou la mémoire de l'instance existante."
+        },
+        {
+          "question": "Quel service Azure orchestre un grand nombre de conteneurs ?",
+          "options": [
+            "Azure Kubernetes Service (AKS)",
+            "Azure Key Vault",
+            "Azure SQL Database",
+            "Microsoft Entra ID"
+          ],
+          "correctAnswer": 0,
+          "explanation": "AKS orchestre, c'est-à-dire gère, un grand nombre de conteneurs. Azure App Service héberge des applications web, des API et des tâches de fond."
+        },
+        {
+          "question": "Qu'est-ce qu'une clé, dans le contexte des secrets ?",
+          "options": [
+            "Un type de machine virtuelle",
+            "Une région Azure",
+            "Un format de fichier",
+            "Un type de secret : une longue chaîne aléatoire qui authentifie ta requête à un endpoint"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une clé est un secret, généralement une longue chaîne générée aléatoirement, qui authentifie la requête lors de l'appel d'un endpoint."
+        },
+        {
+          "question": "Par quelle méthode sûre l'application récupère-t-elle un secret dans Key Vault à l'exécution ?",
+          "options": [
+            "En le copiant dans un e-mail",
+            "Par identité managée",
+            "En le lisant dans un commentaire du code",
+            "Par FTP"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Dans l'exemple du cours, l'application récupère le secret à l'exécution par une méthode sécurisée : l'identité managée."
+        },
+        {
+          "question": "Quel service de données est cité pour les données temps réel distribuées mondialement ?",
+          "options": [
+            "Azure SQL Database",
+            "Azure Database for PostgreSQL",
+            "Azure Cosmos DB",
+            "Azure Key Vault"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Azure SQL Database pour les charges critiques, Azure Cosmos DB pour le temps réel distribué mondialement, PostgreSQL pour des solutions intelligentes et évolutives."
+        },
+        {
+          "question": "À quelle catégorie de données appartient l'entrée saisie en temps réel par l'utilisateur ?",
+          "options": [
+            "Données d'entrée d'inférence",
+            "Données d'entraînement",
+            "Journaux et télémétrie",
+            "Données de configuration"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les données d'entrée d'inférence sont l'entrée en temps réel de l'utilisateur ou du système."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-foundry-for-ai",
+      "title": "Microsoft Foundry for AI",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment le cours décrit-il Microsoft Foundry ?",
+          "options": [
+            "Un système d'exploitation",
+            "Une base de données relationnelle",
+            "Un éditeur de code",
+            "Une plateforme en tant que service (PaaS) unifiée pour créer, déployer et gérer des applications et agents d'IA"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Foundry est une PaaS unifiée de niveau entreprise qui regroupe modèles, orchestration d'agents, supervision et gouvernance."
+        },
+        {
+          "question": "Quelle est la différence entre une ressource Foundry et un projet Foundry ?",
+          "options": [
+            "Ce sont deux noms pour la même chose",
+            "La ressource est la ressource Azure qui fournit les capacités de la plateforme ; le projet est un espace de travail à l'intérieur",
+            "Le projet contient plusieurs ressources Foundry",
+            "La ressource est gratuite, le projet payant"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On peut avoir une ressource Foundry pour une équipe et plusieurs projets à l'intérieur, chacun centré sur un cas d'usage."
+        },
+        {
+          "question": "Dans une application d'IA construite sur Foundry, à quoi correspond le serveur ?",
+          "options": [
+            "À l'écran de l'utilisateur",
+            "Au navigateur web",
+            "Au déploiement de modèle",
+            "Au fichier .env"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le client demande des résultats au modèle, hébergé par le serveur. Dans Foundry, le serveur est ton déploiement de modèle."
+        },
+        {
+          "question": "Laquelle de ces responsabilités revient au client ?",
+          "options": [
+            "Recueillir l'entrée de l'utilisateur et afficher la sortie renvoyée",
+            "Exécuter l'inférence sur le modèle",
+            "Appliquer les instructions système et la sécurité",
+            "Héberger le modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le client présente une interface, recueille l'entrée, la met en forme, envoie la requête et affiche la sortie. Le serveur exécute l'inférence."
+        },
+        {
+          "question": "Que fournit Foundry IQ ?",
+          "options": [
+            "Un test de QI pour les modèles",
+            "Un service de facturation",
+            "Un éditeur d'images",
+            "Une couche de connaissances multi-sources, consciente des permissions, qui ancre les agents dans les données de l'organisation"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Foundry IQ crée une base de connaissances à partir de sources internes et externes et renvoie des réponses ancrées, avec citations."
+        },
+        {
+          "question": "Comment fonctionne la récupération agentique de Foundry IQ ?",
+          "options": [
+            "Elle lit tous les documents un par un",
+            "Elle découpe la question en sous-requêtes, interroge plusieurs sources en parallèle et renvoie une information pertinente avec citations",
+            "Elle demande à l'utilisateur où chercher",
+            "Elle n'utilise qu'une seule source"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La récupération agentique décompose la question, cherche dans plusieurs sources en parallèle et applique les permissions de l'utilisateur."
+        },
+        {
+          "question": "Quelle est la première étape du workflow de développement dans le portail Foundry ?",
+          "options": [
+            "Écrire le code de l'application cliente",
+            "Tester le modèle dans le playground",
+            "Se connecter au portail avec son abonnement Azure et créer un projet",
+            "Supprimer le groupe de ressources"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On crée un projet, on choisit et déploie un modèle du catalogue, on l'expérimente dans le playground, puis on l'utilise dans une application cliente."
+        },
+        {
+          "question": "Que gère Foundry pour les agents, afin que le développeur se concentre sur leurs objectifs ?",
+          "options": [
+            "La coordination sous-jacente : fil des messages, exécution des outils, contrôles de sécurité et observabilité",
+            "Uniquement la couleur de l'interface",
+            "L'achat du matériel",
+            "La rédaction des prompts à sa place"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Foundry prend en charge le threading des messages, l'exécution des outils, les contrôles de sécurité et l'observabilité."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-foundry-endpoints",
+      "title": "Using Microsoft Foundry endpoints",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'un endpoint d'API ?",
+          "options": [
+            "Un fichier de configuration local",
+            "Le point d'entrée d'un service, avec une adresse HTTP unique destinée au code des applications clientes",
+            "Un type de modèle",
+            "Une région Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'endpoint représente le point d'entrée du service ; il a une adresse HTTP unique, pour du code plutôt que pour des utilisateurs humains."
+        },
+        {
+          "question": "De quoi se compose une requête REST ?",
+          "options": [
+            "D'un fichier image et d'un fichier audio",
+            "D'un mot de passe uniquement",
+            "D'en-têtes contenant des métadonnées et d'un corps contenant des données au format JSON",
+            "D'un tableau Excel"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les en-têtes portent les métadonnées, comme l'authentification et le format ; le corps contient les données en JSON."
+        },
+        {
+          "question": "Que doit présenter une application pour accéder à un endpoint Foundry protégé ?",
+          "options": [
+            "Rien, l'accès est libre",
+            "Une adresse e-mail",
+            "Un numéro de carte bancaire",
+            "La bonne clé d'API ou un jeton confirmant des identifiants Microsoft Entra ID valides"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'endpoint est protégé : il faut la clé d'API correcte ou un jeton Entra ID valide."
+        },
+        {
+          "question": "Pourquoi la plupart des développeurs utilisent-ils un SDK plutôt que les interfaces REST directement ?",
+          "options": [
+            "Parce que le SDK abstrait les interfaces REST avec des bibliothèques dans leur langage et construit les appels pour eux",
+            "Parce que REST est interdit",
+            "Parce que le SDK évite toute authentification",
+            "Parce que le SDK est le seul moyen d'utiliser JSON"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les SDK fournissent des bibliothèques pour Python, JavaScript ou C# qui construisent les appels REST à ta place."
+        },
+        {
+          "question": "Quels sont les deux types courants d'endpoints dans Foundry ?",
+          "options": [
+            "Endpoints publics et privés",
+            "Endpoints de projet et endpoints de modèle",
+            "Endpoints rapides et lents",
+            "Endpoints texte et image"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les endpoints de projet servent à travailler avec le projet et ses ressources ; les endpoints de modèle à envoyer des prompts aux modèles déployés."
+        },
+        {
+          "question": "Dans quel format la réponse d'une requête REST à un modèle revient-elle ?",
+          "options": [
+            "En PDF",
+            "En CSV",
+            "En JSON",
+            "En HTML uniquement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La réponse revient avec des en-têtes et un corps au format JSON, qui contient notamment le texte généré."
+        },
+        {
+          "question": "Que signifie REST ?",
+          "options": [
+            "Remote Execution of Server Tasks",
+            "Rapid Endpoint Security Token",
+            "Resource Enabled Storage Tier",
+            "Representational State Transfer"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les interfaces fournies à l'endpoint sont des interfaces Representational State Transfer, ou REST."
+        }
+      ]
+    }
+  ]
+}
