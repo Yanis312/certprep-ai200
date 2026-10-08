@@ -1,7 +1,7 @@
 {
   "slug": "ai901-get-started-azure",
   "title": "Get started with AI in Azure",
-  "description": "LP2 · Module 1 — hiérarchie Azure, sécurité, hébergement, stockage, Microsoft Foundry, endpoints REST",
+  "description": "LP2 · Module 1 — hiérarchie Azure, sécurité, hébergement, stockage, Microsoft Foundry, endpoints REST, lab",
   "category": "AI-901",
   "order": 8,
   "units": [
@@ -364,6 +364,91 @@
           ],
           "correctAnswer": 3,
           "explanation": "Les interfaces fournies à l'endpoint sont des interfaces Representational State Transfer, ou REST."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-azure-lab",
+      "title": "Lab — premiers pas avec Microsoft Foundry",
+      "order": 5,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quelles informations la page Home d'un projet Foundry affiche-t-elle pour accéder au projet depuis une application cliente ?",
+          "options": [
+            "Le numéro de carte bancaire et la facture",
+            "Une clé d'API, l'endpoint du projet et l'endpoint Azure OpenAI",
+            "Le code source des modèles",
+            "La liste des utilisateurs du tenant"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le projet a une clé d'API, un endpoint de projet et un endpoint Azure OpenAI, utilisables pour accéder de façon sécurisée aux modèles, agents et autres éléments."
+        },
+        {
+          "question": "Dans le lab, quel endpoint faut-il saisir dans l'application Computing History ?",
+          "options": [
+            "L'endpoint Azure OpenAI",
+            "L'adresse du portail Azure",
+            "L'endpoint du projet",
+            "L'endpoint d'Azure Language"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le lab insiste : utiliser l'endpoint du projet, et non l'endpoint Azure OpenAI, avec le nom du déploiement et la clé d'API."
+        },
+        {
+          "question": "Sur quelle page du portail Foundry développe-t-on les solutions : agents, déploiements, outils, guardrails, évaluations ?",
+          "options": [
+            "Build",
+            "Discover",
+            "Docs",
+            "Operate"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La page Build est celle où l'on développe les solutions d'IA. Discover sert à découvrir modèles et services, Operate à exploiter."
+        },
+        {
+          "question": "Sur quelle page voit-on et gère-t-on la configuration des quotas d'usage des modèles ?",
+          "options": [
+            "Discover",
+            "Docs",
+            "Home",
+            "Operate"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La page Operate permet de gérer les éléments du projet, la conformité, les quotas et les tâches d'administration."
+        },
+        {
+          "question": "Qu'est-ce que la ressource parente d'un projet ?",
+          "options": [
+            "Un fichier de configuration local",
+            "Une ressource Microsoft Foundry d'un abonnement Azure, dont les services et la configuration s'appliquent à plusieurs projets enfants",
+            "Un modèle de langage",
+            "Une application cliente"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Chaque projet a une ressource parente ; on peut y voir les projets, utilisateurs et ressources connectées, et la gérer aussi dans le portail Azure."
+        },
+        {
+          "question": "Pourquoi l'agent refuse-t-il le prompt « Teach me how to hack a bank account » ?",
+          "options": [
+            "Parce que le modèle ne comprend pas l'anglais",
+            "Parce que la clé d'API a expiré",
+            "Parce que les Foundry Models sont configurés par défaut avec des guardrails qui appliquent des filtres de sécurité du contenu",
+            "Parce que le quota est dépassé"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Par défaut, les modèles Foundry ont des guardrails qui imposent des filtres de sécurité du contenu."
+        },
+        {
+          "question": "Quel service l'application du lab utilise-t-elle pour reconnaître et synthétiser la parole ?",
+          "options": [
+            "Azure Speech dans les Foundry Tools de ta ressource",
+            "Azure Translator",
+            "Azure Document Intelligence",
+            "Azure Cosmos DB"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'application utilise Azure Speech dans Foundry Tools pour la reconnaissance et la synthèse vocales."
         }
       ]
     }
