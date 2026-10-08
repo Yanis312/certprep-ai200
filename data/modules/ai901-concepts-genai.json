@@ -1,0 +1,354 @@
+{
+  "slug": "ai901-concepts-genai",
+  "title": "Introduction to generative AI and agents",
+  "description": "LP1 · Module 2 — LLM, tokenisation, embeddings, transformer et attention, prompts, RAG, agents et multi-agents",
+  "category": "AI-901",
+  "order": 2,
+  "units": [
+    {
+      "slug": "ai901-c-llm",
+      "title": "Introduction et Large language models",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "À quoi les LLM sont-ils fondamentalement entraînés ?",
+          "options": [
+            "À trier des fichiers",
+            "À générer des complétions à partir de prompts",
+            "À compresser des images",
+            "À gérer des bases de données"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les LLM sont entraînés à générer des complétions à partir de prompts, comme une saisie prédictive très puissante."
+        },
+        {
+          "question": "Qu'est-ce qu'un token ?",
+          "options": [
+            "Toujours un mot entier",
+            "Une clé d'API",
+            "Un mot, un sous-mot, un signe de ponctuation ou une autre suite de caractères fréquente",
+            "Un fichier d'entraînement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les tokens incluent des mots, mais aussi des sous-mots comme « un » dans « unbelievable », la ponctuation et d'autres suites de caractères."
+        },
+        {
+          "question": "Dans la phrase tokenisée « I heard a dog bark loudly at a cat », quel identifiant reçoit le second « a » ?",
+          "options": [
+            "Le même identifiant que le premier « a »",
+            "Un nouvel identifiant",
+            "Aucun identifiant",
+            "L'identifiant de « cat »"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Chaque token distinct reçoit un identifiant unique ; le second « a » réutilise l'identifiant déjà attribué."
+        },
+        {
+          "question": "Pourquoi appelle-t-on « embeddings » les vecteurs produits par l'entraînement ?",
+          "options": [
+            "Parce qu'ils sont stockés dans une base de données",
+            "Parce qu'ils sont très courts",
+            "Parce qu'ils contiennent le texte original",
+            "Parce que des caractéristiques linguistiques et sémantiques y sont incrustées"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les nouveaux vecteurs ont des valeurs sémantiques intégrées, d'où le nom d'embeddings."
+        },
+        {
+          "question": "Quel bloc du transformer crée les embeddings ?",
+          "options": [
+            "Le décodeur",
+            "L'encodeur",
+            "Le tokeniseur",
+            "Le filtre de contenu"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'encodeur crée les embeddings par l'attention ; le décodeur s'en sert pour déterminer le token suivant le plus probable."
+        },
+        {
+          "question": "Que fait le décodeur d'un transformer ?",
+          "options": [
+            "Il supprime la ponctuation",
+            "Il traduit les tokens en binaire",
+            "Il utilise les embeddings pour déterminer le token suivant le plus probable d'une suite commencée par un prompt",
+            "Il attribue les identifiants de tokens"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le décodeur prédit le token suivant, l'ajoute à la suite, et répète jusqu'à prédire la fin."
+        },
+        {
+          "question": "Pourquoi fournit-on un encodage positionnel avec les vecteurs de tokens ?",
+          "options": [
+            "Parce que l'ordre des tokens dans la suite compte pour leur relation",
+            "Pour chiffrer le texte",
+            "Pour réduire la taille du vocabulaire",
+            "Pour traduire le texte"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'encodage positionnel indique où le token apparaît dans la suite, car l'ordre est pertinent."
+        },
+        {
+          "question": "Les embeddings de « dog » et « puppy » pointent dans des directions proches. Qu'est-ce que cela indique ?",
+          "options": [
+            "Que les deux tokens ont le même identifiant",
+            "Que le modèle a fait une erreur",
+            "Que les deux mots ont la même longueur",
+            "Que ces tokens sont utilisés dans des contextes similaires et ont des sens proches"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les tokens utilisés dans des contextes similaires donnent des vecteurs de direction similaire ; on mesure cela par la similarité cosinus."
+        },
+        {
+          "question": "Dans « I heard a dog bark », quels tokens reçoivent le plus de poids d'attention pour « bark » ?",
+          "options": [
+            "« I » et « a »",
+            "« heard » et « dog »",
+            "Tous le même poids",
+            "Aucun"
+          ],
+          "correctAnswer": 1,
+          "explanation": "« heard » et « dog » sont des indicateurs plus forts pour « bark » que « I » ou « a »."
+        },
+        {
+          "question": "À quoi sert l'attention multi-têtes (multi-head attention) ?",
+          "options": [
+            "À supprimer les tokens rares",
+            "À ajouter des mots au vocabulaire",
+            "À évaluer plusieurs éléments du token en parallèle, pour rendre l'encodage plus efficace",
+            "À détecter la langue"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'attention multi-têtes considère différents éléments des vecteurs en parallèle."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-prompts",
+      "title": "Prompts",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment appelle-t-on la réponse d'un modèle à un prompt ?",
+          "options": [
+            "Une complétion",
+            "Un token",
+            "Un embedding",
+            "Un corpus"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle répond à un prompt par une complétion."
+        },
+        {
+          "question": "Quel est le rôle d'un prompt système ?",
+          "options": [
+            "Poser la question de l'utilisateur",
+            "Stocker l'historique",
+            "Récupérer des documents",
+            "Fixer le comportement et le ton du modèle, ainsi que les contraintes à respecter"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le prompt système détermine les contraintes et les styles des réponses ; il est en général fixé par l'application."
+        },
+        {
+          "question": "Pourquoi les applications d'IA générative conservent-elles l'historique de la conversation ?",
+          "options": [
+            "Pour réentraîner le modèle",
+            "Pour fournir un contexte continu sur lequel le modèle peut s'appuyer",
+            "Pour facturer davantage",
+            "Pour traduire les réponses"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'historique, souvent résumé, est inclus dans les prompts suivants pour garder la conversation cohérente."
+        },
+        {
+          "question": "En quoi consiste le RAG ?",
+          "options": [
+            "À réentraîner le modèle sur de nouveaux documents",
+            "À supprimer le prompt système",
+            "À récupérer de l'information et à l'utiliser pour augmenter le prompt avec des données pertinentes",
+            "À générer des images"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On récupère des documents ou e-mails, on augmente le prompt, et la réponse est ancrée dans l'information fournie."
+        },
+        {
+          "question": "Lequel de ces conseils améliore un prompt ?",
+          "options": [
+            "Être clair et précis, avec des consignes explicites",
+            "Rester le plus vague possible",
+            "Ne jamais donner d'exemple",
+            "Éviter de préciser le format voulu"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les quatre conseils : être clair et précis, ajouter du contexte, utiliser des exemples, demander une structure."
+        },
+        {
+          "question": "Qui fixe en général le prompt système ?",
+          "options": [
+            "L'utilisateur final, à chaque message",
+            "Le fournisseur d'électricité",
+            "Le navigateur",
+            "L'application qui utilise le modèle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le prompt système est en général défini par l'application ; les prompts utilisateur viennent d'un humain ou sont générés pour son compte."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-agents",
+      "title": "AI agents",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle image le cours associe-t-il aux instructions d'un agent ?",
+          "options": [
+            "Son cerveau",
+            "Sa fiche de poste",
+            "Ses mains",
+            "Sa mémoire"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le LLM est le cerveau de l'agent ; les instructions, un prompt système, sont sa fiche de poste."
+        },
+        {
+          "question": "Dans un système multi-agents, comment les agents communiquent-ils entre eux ?",
+          "options": [
+            "Par e-mail",
+            "Par des fichiers Excel",
+            "Par des prompts",
+            "Ils ne communiquent pas"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les agents communiquent par des prompts et utilisent l'IA générative pour déterminer les tâches et les agents responsables."
+        },
+        {
+          "question": "Quel est l'intérêt d'un système multi-agents ?",
+          "options": [
+            "Plusieurs agents collaborent, chacun avec sa spécialité, pour traiter des workflows complexes",
+            "Il supprime le besoin de modèles de langage",
+            "Il fonctionne sans outils",
+            "Il remplace les utilisateurs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un agent rassemble les données, un autre les analyse, un troisième agit, comme une équipe humaine."
+        },
+        {
+          "question": "Un moteur de recherche utilisé par un agent est un exemple de quel type d'outil ?",
+          "options": [
+            "Outil d'action",
+            "Outil de facturation",
+            "Outil d'entraînement",
+            "Outil de connaissance"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les outils de connaissance donnent accès à l'information ; les outils d'action exécutent des tâches."
+        },
+        {
+          "question": "Qu'est-ce qui distingue un agent d'un simple assistant qui répond aux questions ?",
+          "options": [
+            "Il n'utilise pas de modèle",
+            "Il automatise des tâches avec des outils et réagit au contexte pour agir de façon appropriée",
+            "Il ne comprend pas le langage naturel",
+            "Il ne peut pas générer de texte"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un agent raisonne, génère du langage, automatise des tâches avec des outils et réagit aux conditions du contexte."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-genai-lab-bilan",
+      "title": "Lab, bilan et évaluation du module",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'un grand modèle de langage (LLM) ?",
+          "options": [
+            "Un type de modèle d'IA conçu pour générer du texte proche du langage humain.",
+            "Un modèle qui ne traite que des images, pas du texte.",
+            "Un petit modèle efficace pour les appareils mobiles."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "À quoi sert la tokenisation ?",
+          "options": [
+            "À trier les mots d'une phrase par ordre alphabétique",
+            "À découper le texte en unités plus petites.",
+            "À convertir le texte en code binaire pour le traitement par les ordinateurs."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Que sont les embeddings ?",
+          "options": [
+            "Des mots supplémentaires ajoutés par un transformer pour améliorer la génération de texte.",
+            "De petits modèles de langage utilisés pour des tâches précises.",
+            "Des représentations vectorielles des tokens qui capturent leur sens."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Que fait une couche d'attention dans un modèle transformer ?",
+          "options": [
+            "Elle supprime les mots non pertinents du texte d'entrée.",
+            "Elle examine les relations entre chaque token et les tokens qui l'entourent.",
+            "Elle signale le contenu inapproprié dans le texte généré."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "À quoi sert un prompt système ?",
+          "options": [
+            "À fournir du contexte et des instructions au modèle d'IA.",
+            "À configurer un modèle d'IA générative pour qu'il tourne sur un système d'exploitation particulier.",
+            "À stocker les préférences de l'utilisateur pour de futures interactions."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Qu'est-ce qu'un agent dans le contexte de l'IA ?",
+          "options": [
+            "Un modèle d'IA générative qui opère en secret.",
+            "Un opérateur humain vers qui les modèles d'IA générative transfèrent les demandes qu'ils ne savent pas traiter.",
+            "Un système d'IA qui peut effectuer des tâches pour le compte d'un utilisateur."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Dans le lab, quelle différence observe-t-on entre le mode Basic et le mode avec le modèle Phi ?",
+          "options": [
+            "Aucune différence",
+            "Le mode Basic génère des images",
+            "Le mode Phi ne garde jamais l'historique",
+            "Le mode Basic retrouve un texte statique par mots-clés ; le modèle génère la réponse et le prompt en influence le style"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les réponses d'un LLM sont générées dynamiquement ; une recherche classique retrouve un texte statique à partir de mots-clés."
+        },
+        {
+          "question": "Dans le code du lab, à quoi correspond le paramètre instructions de responses.create ?",
+          "options": [
+            "À la clé d'API",
+            "Au prompt système",
+            "Au nom du modèle",
+            "À l'historique de la conversation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "instructions porte le prompt système ; input porte le prompt utilisateur."
+        }
+      ]
+    }
+  ]
+}

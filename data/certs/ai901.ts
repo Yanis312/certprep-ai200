@@ -10,7 +10,7 @@ const learningPaths: LearningPath[] = [
     domains: [1],
     modules: [
       { title: "Introduction to AI concepts", learn: "get-started-ai-fundamentals", site: "ai901-ai-concepts" },
-      { title: "Introduction to generative AI and agents", learn: "fundamentals-generative-ai" },
+      { title: "Introduction to generative AI and agents", learn: "fundamentals-generative-ai", site: "ai901-concepts-genai" },
       { title: "Introduction to natural language processing concepts", learn: "introduction-language" },
       { title: "Introduction to AI speech concepts", learn: "introduction-ai-speech" },
       { title: "Introduction to computer vision concepts", learn: "introduction-computer-vision" },
