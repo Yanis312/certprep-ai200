@@ -1,0 +1,379 @@
+{
+  "slug": "ai901-concepts-nlp",
+  "title": "Introduction to natural language processing concepts",
+  "description": "LP1 · Module 3 — tokenisation, prétraitement du texte, TF-IDF, bag-of-words, TextRank, embeddings et similarité cosinus",
+  "category": "AI-901",
+  "order": 3,
+  "units": [
+    {
+      "slug": "ai901-c-tokenization",
+      "title": "Introduction et Tokenization",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment appelle-t-on le corps de texte que l'on analyse ?",
+          "options": [
+            "Un lemme",
+            "Un corpus",
+            "Un n-gramme",
+            "Un vecteur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La première étape de l'analyse consiste à découper le corps de texte, appelé corpus, en tokens."
+        },
+        {
+          "question": "Dans « We choose to go to the moon », combien d'identifiants de tokens distincts obtient-on ?",
+          "options": [
+            "7",
+            "5",
+            "6",
+            "4"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La phrase compte 7 mots, mais « to » apparaît deux fois et garde le même identifiant (3) : il y a donc 6 tokens distincts."
+        },
+        {
+          "question": "Que fait la normalisation du texte ?",
+          "options": [
+            "Elle supprime la ponctuation et passe le texte en minuscules",
+            "Elle traduit le texte en anglais",
+            "Elle attribue une catégorie grammaticale à chaque mot",
+            "Elle regroupe les mots par paires"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La normalisation retire la ponctuation et met tout en minuscules avant de créer les tokens."
+        },
+        {
+          "question": "Que montre l'exemple « Mr Banks has worked in many banks. » ?",
+          "options": [
+            "Que les n-grammes sont inutiles",
+            "Que le stemming produit toujours des mots valides",
+            "Que les mots vides portent le sens principal",
+            "Que la normalisation peut faire perdre du sens"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Sans majuscules ni ponctuation, on ne distingue plus la personne Mr Banks des banques où il a travaillé."
+        },
+        {
+          "question": "Quels mots sont des mots vides (stop words) ?",
+          "options": [
+            "« moon », « invoice », « agent »",
+            "« the », « a », « it »",
+            "« power », « run », « globe »",
+            "« artificial intelligence »"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les mots vides comme « the », « a » ou « it » rendent le texte lisible mais portent peu de sens ; on les exclut de l'analyse."
+        },
+        {
+          "question": "« natural language processing » est un exemple de :",
+          "options": [
+            "Unigramme",
+            "Bigramme",
+            "Lemme",
+            "Trigramme"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une expression de trois mots est un trigramme ; deux mots forment un bigramme, un seul mot un unigramme."
+        },
+        {
+          "question": "Quelle technique ramène « powering », « powered » et « powerful » à « power » en coupant les terminaisons ?",
+          "options": [
+            "Le stemming",
+            "L'étiquetage grammatical",
+            "La suppression des mots vides",
+            "L'extraction de n-grammes"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le stemming applique des algorithmes qui retirent les terminaisons pour que les mots de même racine comptent comme un seul token."
+        },
+        {
+          "question": "Qu'est-ce qui distingue la lemmatisation du stemming ?",
+          "options": [
+            "Elle supprime la ponctuation",
+            "Elle ne fonctionne que sur les nombres",
+            "Elle utilise des règles linguistiques et un vocabulaire pour obtenir un mot valide du dictionnaire",
+            "Elle ignore le sens des mots"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La lemmatisation ramène le mot à son lemme, une forme valide du dictionnaire, alors que le stemming se contente de couper la fin du mot."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-statistical",
+      "title": "Statistical text analysis",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la limite de la simple analyse de fréquence ?",
+          "options": [
+            "Elle exige un modèle génératif",
+            "Elle ne fonctionne qu'en anglais",
+            "Elle ne distingue pas bien plusieurs documents d'un même corpus",
+            "Elle ne peut pas compter les mots"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'analyse de fréquence est efficace sur un seul document ; pour différencier plusieurs documents, il faut pondérer les termes par rapport à la collection."
+        },
+        {
+          "question": "Que signifie TF-IDF ?",
+          "options": [
+            "Term Frequency - Inverse Document Frequency",
+            "Text Format - Indexed Data File",
+            "Token Filter - Internal Document Function",
+            "Total Frequency - Intelligent Data Feature"
+          ],
+          "correctAnswer": 0,
+          "explanation": "TF-IDF combine la fréquence du terme dans le document et l'inverse de sa fréquence dans la collection."
+        },
+        {
+          "question": "Dans une collection de 2 documents, un mot apparaît dans les deux. Que vaut son IDF ?",
+          "options": [
+            "2",
+            "1",
+            "0,693",
+            "0"
+          ],
+          "correctAnswer": 3,
+          "explanation": "idf = log(N / df) = log(2 / 2) = log(1) = 0 : un mot présent partout ne distingue aucun document."
+        },
+        {
+          "question": "Que signifie un score TF-IDF élevé pour un mot ?",
+          "options": [
+            "Le mot est un mot vide",
+            "Le mot apparaît souvent dans ce document mais rarement dans les autres",
+            "Le mot apparaît dans tous les documents",
+            "Le mot est mal orthographié"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un score élevé désigne les mots fréquents dans un document et rares dans la collection ; un score bas, les mots communs à beaucoup de documents."
+        },
+        {
+          "question": "Que néglige la représentation bag-of-words ?",
+          "options": [
+            "La fréquence des mots",
+            "Le nombre de documents",
+            "La grammaire et l'ordre des mots",
+            "La longueur du texte"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Bag-of-words représente le texte comme un vecteur de fréquences de mots, sans tenir compte de la grammaire ni de l'ordre."
+        },
+        {
+          "question": "Quel algorithme, alimenté par un bag-of-words, sert à filtrer le spam ?",
+          "options": [
+            "Naive Bayes",
+            "TextRank",
+            "Word2Vec",
+            "PageRank"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Naive Bayes est un classifieur probabiliste qui prédit la classe d'un document d'après la fréquence des mots, par exemple spam ou non spam."
+        },
+        {
+          "question": "Dans TextRank appliqué au résumé, que représentent les nœuds du graphe ?",
+          "options": [
+            "Les documents de la collection",
+            "Les lettres de l'alphabet",
+            "Les catégories de spam",
+            "Les phrases du texte"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Chaque phrase devient un nœud ; les arêtes sont pondérées par la similarité entre phrases."
+        },
+        {
+          "question": "Quelle différence entre résumé extractif et abstractif ?",
+          "options": [
+            "L'extractif traduit, l'abstractif classe",
+            "L'extractif sélectionne des phrases existantes, l'abstractif génère un nouveau texte",
+            "L'extractif génère un nouveau texte, l'abstractif sélectionne des phrases",
+            "Il n'y a aucune différence"
+          ],
+          "correctAnswer": 1,
+          "explanation": "TextRank fait un résumé extractif : aucun texte nouveau n'est généré, contrairement au résumé abstractif."
+        },
+        {
+          "question": "Sur quel algorithme TextRank est-il fondé ?",
+          "options": [
+            "Naive Bayes",
+            "GloVe",
+            "PageRank",
+            "Le stemming"
+          ],
+          "correctAnswer": 2,
+          "explanation": "TextRank applique au texte le principe de PageRank, l'algorithme de Google qui classe les pages web."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-semantic",
+      "title": "Semantic language models",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment appelle-t-on les vecteurs qui codent le sens des tokens ?",
+          "options": [
+            "Des n-grammes",
+            "Des embeddings",
+            "Des lemmes",
+            "Des corpus"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles sémantiques codent les tokens sous forme de vecteurs appelés embeddings."
+        },
+        {
+          "question": "Quelles techniques ont répandu la représentation vectorielle des tokens ?",
+          "options": [
+            "TF-IDF et TextRank",
+            "Naive Bayes et PageRank",
+            "Le stemming et la lemmatisation",
+            "Word2Vec et GloVe"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Word2Vec et GloVe représentent les tokens comme des vecteurs denses à plusieurs dimensions."
+        },
+        {
+          "question": "Que mesure la similarité cosinus ?",
+          "options": [
+            "La proximité d'orientation de deux vecteurs",
+            "Le nombre de mots d'un document",
+            "La fréquence d'un terme",
+            "La longueur d'une phrase"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La similarité cosinus compare l'orientation de deux vecteurs : des tokens de sens proche ont des orientations proches."
+        },
+        {
+          "question": "Avec les vecteurs du cours, dog/cat ≈ 0,992, dog/tree ≈ 0,333 et cat/tree ≈ 0,452. Quel mot est l'intrus ?",
+          "options": [
+            "dog",
+            "cat",
+            "tree",
+            "Aucun"
+          ],
+          "correctAnswer": 2,
+          "explanation": "dog et cat sont très proches ; tree a une similarité faible avec les deux, c'est l'intrus."
+        },
+        {
+          "question": "Que donne l'opération vectorielle dog + young dans l'exemple du cours ?",
+          "options": [
+            "kitten",
+            "puppy",
+            "cat",
+            "tree"
+          ],
+          "correctAnswer": 1,
+          "explanation": "[0.8, 0.6, 0.1] + [0.1, 0.1, 0.3] = [0.9, 0.7, 0.4], le vecteur de puppy."
+        },
+        {
+          "question": "Quel calcul répond à l'analogie « puppy est à dog ce que kitten est à ? » ?",
+          "options": [
+            "kitten + puppy + dog",
+            "dog - kitten - puppy",
+            "puppy - kitten - dog",
+            "kitten - puppy + dog"
+          ],
+          "correctAnswer": 3,
+          "explanation": "kitten - puppy + dog donne [0.7, 0.5, 0.2], le vecteur de cat."
+        },
+        {
+          "question": "Qu'apporte l'attention aux modèles de langage ?",
+          "options": [
+            "Elle prend en compte le contexte de chaque token et produit des embeddings contextualisés",
+            "Elle supprime les mots vides",
+            "Elle compte la fréquence des termes",
+            "Elle coupe la terminaison des mots"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'attention considère chaque token dans son contexte et calcule l'influence des tokens voisins ; c'est la base des modèles de la famille GPT."
+        },
+        {
+          "question": "Comment représente-t-on un document entier pour le classer avec des embeddings ?",
+          "options": [
+            "Par son nom de fichier",
+            "Par son premier mot seulement",
+            "Par un vecteur agrégé, par exemple la moyenne des embeddings de ses mots",
+            "Par le nombre de ses pages"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le document devient un vecteur agrégé, utilisé par un classifieur ou comparé aux vecteurs types de chaque classe."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-nlp-lab-bilan",
+      "title": "Lab et bilan — concepts NLP",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "[Question officielle] Quel est le but de la tokenisation dans l'analyse de texte ?",
+          "options": [
+            "Traduire le texte dans une autre langue",
+            "Découper le texte en unités plus petites pour l'analyse",
+            "Résumer de longs documents"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La tokenisation découpe le corpus en tokens, les unités de base sur lesquelles reposent toutes les analyses."
+        },
+        {
+          "question": "[Question officielle] Quelle technique détermine l'importance des mots dans un document précis, par rapport à une collection plus large de documents ?",
+          "options": [
+            "Naive Bayes",
+            "Word2Vec",
+            "TF-IDF (Term Frequency-Inverse Document Frequency)"
+          ],
+          "correctAnswer": 2,
+          "explanation": "TF-IDF pondère la fréquence d'un terme dans un document par sa rareté dans la collection. Naive Bayes classe, Word2Vec crée des vecteurs."
+        },
+        {
+          "question": "[Question officielle] Quel est le rôle des vecteurs d'embedding en NLP ?",
+          "options": [
+            "Capturer les relations sémantiques entre tokens dans plusieurs dimensions",
+            "Dupliquer les tokens dans plusieurs langues",
+            "Définir les mots vides à retirer de l'analyse"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les embeddings sont des vecteurs à plusieurs dimensions dont les valeurs reflètent les caractéristiques sémantiques des tokens."
+        },
+        {
+          "question": "Dans le lab, quelle application propose les analyseurs Language detection et Text PII extraction ?",
+          "options": [
+            "Le portail Azure",
+            "Copilot Studio",
+            "Speech Playground",
+            "Language Playground (aka.ms/language-app)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le Language Playground fournit des analyseurs spécialisés, plus prévisibles qu'un modèle génératif généraliste."
+        },
+        {
+          "question": "Dans le lab, quels types de PII l'application repère-t-elle ?",
+          "options": [
+            "Noms de personnes, e-mails, numéros de téléphone, adresses postales",
+            "Uniquement les numéros de carte bancaire",
+            "Les empreintes digitales",
+            "Les mots de passe"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'analyseur Text PII extraction reconnaît les noms, adresses e-mail, numéros de téléphone et adresses postales."
+        },
+        {
+          "question": "Quelle technique choisir pour résumer un article en gardant ses phrases d'origine ?",
+          "options": [
+            "TF-IDF",
+            "TextRank",
+            "Le stemming",
+            "L'étiquetage grammatical"
+          ],
+          "correctAnswer": 1,
+          "explanation": "TextRank classe les phrases et extrait les mieux notées : c'est un résumé extractif."
+        }
+      ]
+    }
+  ]
+}
