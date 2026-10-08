@@ -1,0 +1,368 @@
+{
+  "slug": "ai901-concepts-extraction",
+  "title": "Introduction to AI-powered information extraction concepts",
+  "description": "LP1 · Module 6 — extraction d'informations, pipeline OCR en 5 étapes, extraction et association de champs, templates, machine learning et IA générative",
+  "category": "AI-901",
+  "order": 6,
+  "units": [
+    {
+      "slug": "ai901-c-ie-overview",
+      "title": "Introduction et Overview of information extraction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que fait une solution d'extraction d'informations ?",
+          "options": [
+            "Elle génère des images à partir de prompts",
+            "Elle extrait des champs de données structurés d'un contenu non structuré",
+            "Elle traduit des documents",
+            "Elle compresse des fichiers"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'extraction d'informations tire des champs structurés de médias non structurés : documents, images, voire vidéos et audio."
+        },
+        {
+          "question": "Quelles sont les deux étapes du processus d'extraction d'informations ?",
+          "options": [
+            "Traduction puis résumé",
+            "Chiffrement puis stockage",
+            "OCR, puis identification des valeurs et association aux champs",
+            "Entraînement puis déploiement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On détecte et extrait d'abord le texte par OCR, puis on associe les valeurs à des champs de données."
+        },
+        {
+          "question": "Dans l'exemple du reçu, à quel champ correspond « Fourth Coffee » ?",
+          "options": [
+            "Vendor",
+            "Tax",
+            "Date",
+            "Total Claim"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Fourth Coffee est le fournisseur (Vendor) ; les autres champs sont la date, le sous-total, la taxe et le total réclamé."
+        },
+        {
+          "question": "Quelle approche est favorisée pour des formulaires standardisés, à la mise en page régulière ?",
+          "options": [
+            "La génération de vidéo",
+            "La saisie manuelle",
+            "La traduction automatique",
+            "Une approche par modèles (templates)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les formulaires standardisés conviennent aux templates ; des formats variés demandent une solution de machine learning."
+        },
+        {
+          "question": "Que peut exiger une application où la précision est critique ?",
+          "options": [
+            "Une validation humaine (human-in-the-loop)",
+            "La suppression de l'OCR",
+            "Un modèle plus petit",
+            "L'abandon de toute sécurité"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les usages critiques peuvent demander qu'un humain valide les résultats."
+        },
+        {
+          "question": "Quels services Azure servent de base aux solutions d'extraction d'informations ?",
+          "options": [
+            "Azure Translator et Azure Speech",
+            "Azure Document Intelligence et Azure Content Understanding",
+            "Azure Container Registry et App Service",
+            "Azure Cosmos DB et Azure Managed Redis"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Document Intelligence et Content Understanding, dans Foundry Tools, réduisent l'effort de développement."
+        },
+        {
+          "question": "Pourquoi le cloud est-il souvent adapté à ces solutions ?",
+          "options": [
+            "Il supprime le besoin de sécurité",
+            "Il rend l'OCR inutile",
+            "Il offre une meilleure mise à l'échelle pour des charges variables",
+            "Il empêche l'usage de l'IA générative"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Parmi les contraintes techniques, les solutions cloud s'adaptent mieux aux charges de travail variables."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-ocr",
+      "title": "Optical character recognition (OCR)",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Combien d'étapes compte le pipeline OCR ?",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Acquisition de l'image, prétraitement, détection des zones de texte, reconnaissance des caractères, génération de la sortie."
+        },
+        {
+          "question": "Dans quelle étape corrige-t-on l'inclinaison d'un document scanné ?",
+          "options": [
+            "Le prétraitement et l'amélioration de l'image",
+            "L'acquisition de l'image",
+            "La génération de la sortie",
+            "La reconnaissance des caractères"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le prétraitement regroupe réduction du bruit, ajustement du contraste, correction de l'inclinaison et optimisation de la résolution."
+        },
+        {
+          "question": "Que fait l'analyse de la mise en page ?",
+          "options": [
+            "Elle traduit le texte",
+            "Elle distingue les zones de texte des images, graphiques et espaces vides",
+            "Elle corrige l'orthographe",
+            "Elle calcule les totaux"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'analyse de la mise en page fait partie de la détection des zones de texte."
+        },
+        {
+          "question": "Quelle étape est le cœur du processus OCR ?",
+          "options": [
+            "L'acquisition de l'image",
+            "Le prétraitement",
+            "La reconnaissance et classification des caractères",
+            "La détection des zones de texte"
+          ],
+          "correctAnswer": 2,
+          "explanation": "C'est à cette étape que chaque caractère est identifié."
+        },
+        {
+          "question": "À quoi sert l'analyse du contexte lors de la reconnaissance des caractères ?",
+          "options": [
+            "À améliorer la précision grâce aux caractères et mots voisins, aux dictionnaires et aux modèles de langage",
+            "À redresser l'image",
+            "À réduire la taille du fichier",
+            "À choisir la couleur du texte"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le contexte aide à trancher entre des caractères ambigus."
+        },
+        {
+          "question": "Que fait la cartographie des coordonnées ?",
+          "options": [
+            "Elle traduit le document",
+            "Elle supprime le bruit",
+            "Elle classe les documents par type",
+            "Elle enregistre la position exacte de chaque élément de texte dans l'image d'origine"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Cette information de position, produite à la dernière étape, sert ensuite à l'extraction de champs."
+        },
+        {
+          "question": "Qu'est-ce qui influence fortement la précision finale dès la première étape ?",
+          "options": [
+            "Le nom du fichier",
+            "La qualité de l'image",
+            "La langue de l'interface",
+            "La date du document"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La qualité de l'image à l'acquisition a un impact important sur la précision de l'extraction."
+        },
+        {
+          "question": "Que représente le score de confiance en OCR ?",
+          "options": [
+            "Le prix de l'analyse",
+            "Le nombre de pages",
+            "La probabilité que le caractère reconnu soit le bon",
+            "La résolution de l'image"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un score de probabilité est attribué à chaque caractère selon la certitude du système."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-field-extraction",
+      "title": "Field extraction and mapping",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle différence entre l'OCR et l'extraction de champs ?",
+          "options": [
+            "Il n'y en a aucune",
+            "L'OCR classe les documents, l'extraction de champs les imprime",
+            "L'OCR dit quel texte existe, l'extraction de champs dit ce qu'il signifie",
+            "L'OCR dit ce que le texte signifie, l'extraction de champs le lit"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'OCR fournit le texte ; l'extraction de champs lui donne un sens et l'associe à des champs métier."
+        },
+        {
+          "question": "Pourquoi la position du texte compte-t-elle dans l'extraction de champs ?",
+          "options": [
+            "Elle détermine la langue",
+            "Elle aide à savoir si « 12345 » est un numéro de facture, un identifiant client ou un téléphone",
+            "Elle remplace l'OCR",
+            "Elle n'a aucune importance"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'extraction de champs s'appuie fortement sur l'emplacement du texte, pas seulement sur son contenu."
+        },
+        {
+          "question": "Quelle approche repose sur des mises en page prédéfinies et des expressions régulières ?",
+          "options": [
+            "La détection par modèles (templates)",
+            "L'IA générative",
+            "L'apprentissage auto-supervisé",
+            "La diffusion"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La détection par templates utilise des règles : positions connues, paires libellé-valeur, expressions régulières."
+        },
+        {
+          "question": "Quelle est une limite de l'approche par templates ?",
+          "options": [
+            "Elle est lente",
+            "Ses résultats sont inexplicables",
+            "Elle demande beaucoup de puissance de calcul",
+            "Elle exige de créer les modèles à la main et gère mal les variations de mise en page"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les templates sont précis, rapides et explicables sur des documents connus, mais demandent une création manuelle et supportent mal les variations."
+        },
+        {
+          "question": "Dans l'extraction par prompt, que fournit-on au LLM ?",
+          "options": [
+            "Le texte du document et la définition d'un schéma",
+            "Uniquement l'image brute",
+            "Un fichier audio",
+            "Une liste d'expressions régulières"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le LLM reçoit le texte et un schéma, et associe le texte aux champs du schéma."
+        },
+        {
+          "question": "Quel exemple illustre la validation croisée entre champs ?",
+          "options": [
+            "Vérifier que le fichier est un PDF",
+            "Redresser l'image",
+            "Vérifier que la somme des lignes d'articles égale le total de la facture",
+            "Traduire le nom du fournisseur"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La validation croisée contrôle les relations entre champs extraits."
+        },
+        {
+          "question": "Dans quelle étape toutes les dates sont-elles converties dans un même format ?",
+          "options": [
+            "L'ingestion de la sortie OCR",
+            "La normalisation et standardisation",
+            "La détection des champs",
+            "L'acquisition de l'image"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La normalisation transforme les valeurs brutes en formats cohérents, par exemple des dates au format ISO."
+        },
+        {
+          "question": "Quelle technique aide à associer les cellules d'un tableau aux champs ?",
+          "options": [
+            "La réduction du bruit",
+            "Le vocodeur",
+            "La diffusion",
+            "L'association ligne-colonne et la détection des en-têtes"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Pour les tableaux, on utilise l'association ligne-colonne, la détection des en-têtes et le traitement hiérarchique."
+        },
+        {
+          "question": "Que fait la dernière étape du pipeline d'extraction de champs ?",
+          "options": [
+            "Elle scanne le document",
+            "Elle supprime les champs",
+            "Elle intègre les valeurs aux processus et systèmes de l'entreprise",
+            "Elle entraîne un CNN"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les champs sont mis en correspondance avec des schémas de base de données, des API ou des files de messages."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-ie-lab-bilan",
+      "title": "Lab et bilan — concepts d'extraction",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "[Question officielle] Quelle affirmation définit correctement l'extraction d'informations par IA ?",
+          "options": [
+            "Utiliser du code SQL pour interroger une base de données",
+            "Copier des fichiers du stockage cloud vers des disques locaux",
+            "Analyser un contenu non structuré pour identifier et extraire les champs et valeurs pertinents"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'extraction d'informations identifie et extrait des champs et valeurs à partir de contenu non structuré."
+        },
+        {
+          "question": "[Question officielle] Comment l'OCR est-il utilisé dans le processus d'extraction d'informations ?",
+          "options": [
+            "Online Content Retrieval (OCR) copie des données cloud sur un appareil local",
+            "Optical character recognition (OCR) convertit des images de texte en données texte lisibles par une machine",
+            "Open Conversion Routine (OCR) convertit des données JSON en images"
+          ],
+          "correctAnswer": 1,
+          "explanation": "OCR signifie optical character recognition : la conversion d'images de texte en texte exploitable."
+        },
+        {
+          "question": "[Question officielle] Comment l'IA générative améliore-t-elle le processus d'extraction de données ?",
+          "options": [
+            "En utilisant des modèles de langage sémantiques pour associer précisément les valeurs extraites aux champs",
+            "En codant manuellement des règles d'extraction pour chaque type de document",
+            "En générant de nouveaux documents à partir de zéro"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les LLM comprennent le sens du texte et l'associent aux champs d'un schéma, sans règles codées à la main."
+        },
+        {
+          "question": "Dans le lab, quel mode extrait les champs d'un reçu ?",
+          "options": [
+            "OCR/Read",
+            "Image analysis",
+            "Voice mode",
+            "Receipt Fields"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Receipt Fields exécute l'OCR puis l'extraction de champs, affichés dans l'onglet Fields."
+        },
+        {
+          "question": "Dans le lab, que montre le mode OCR/Read ?",
+          "options": [
+            "Le texte extrait de l'image",
+            "Une image générée",
+            "Une traduction",
+            "Un résumé audio"
+          ],
+          "correctAnswer": 0,
+          "explanation": "OCR/Read lit le texte présent dans l'image et l'affiche dans le panneau Result."
+        },
+        {
+          "question": "Quel outil Foundry est une solution d'extraction multimodale pour documents, images, audio et vidéos ?",
+          "options": [
+            "Azure Translator",
+            "Content Understanding",
+            "Voice Live",
+            "Azure Language"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Content Understanding analyse des documents, des images, des fichiers audio et des vidéos."
+        }
+      ]
+    }
+  ]
+}
