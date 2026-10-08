@@ -1,0 +1,407 @@
+{
+  "slug": "ai901-foundry-iq",
+  "title": "Get started with Microsoft Foundry IQ",
+  "description": "LP2 · Module 7 — couche de connaissances managée : bases et sources de connaissances, récupération agentique, agent connecté par MCP",
+  "category": "AI-901",
+  "order": 14,
+  "units": [
+    {
+      "slug": "ai901-fiq-what",
+      "title": "Introduction et What is Foundry IQ?",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Sur quelle ressource Azure une solution Foundry IQ repose-t-elle pour la récupération des connaissances ?",
+          "options": [
+            "Azure Cosmos DB",
+            "Azure AI Search",
+            "Azure Key Vault",
+            "Azure Kubernetes Service"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Azure AI Search fournit l'infrastructure d'indexation et de récupération de Foundry IQ."
+        },
+        {
+          "question": "Quels sont les trois composants principaux d'une solution Foundry IQ ?",
+          "options": [
+            "Modèle, instructions, outils",
+            "Tenant, abonnement, ressource",
+            "Base de connaissances, source de connaissances, récupération agentique",
+            "Schéma, analyseur, champ"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La base de connaissances regroupe des sources ; la récupération agentique planifie, cherche, classe et cite."
+        },
+        {
+          "question": "Par quel protocole plusieurs agents se connectent-ils à la ressource Foundry IQ ?",
+          "options": [
+            "Le Model Context Protocol (MCP)",
+            "FTP",
+            "SMTP",
+            "Bluetooth"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les agents utilisent MCP pour se connecter à Foundry IQ et chercher dans ses bases de connaissances."
+        },
+        {
+          "question": "Quel inconvénient y a-t-il à construire un pipeline RAG séparé pour chaque agent ?",
+          "options": [
+            "C'est interdit par Azure",
+            "Les agents ne peuvent plus utiliser de modèle",
+            "Cela supprime les citations",
+            "Cela peut dupliquer le travail et produire des résultats incohérents"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Chaque pipeline demande traitement des documents, embeddings, index, logique de récupération, permissions et supervision."
+        },
+        {
+          "question": "Qu'est-ce qu'une source de connaissances ?",
+          "options": [
+            "L'historique des conversations",
+            "Une connexion à du contenu indexé ou distant, comme SharePoint, une base Azure SQL ou des documents dans Azure Storage",
+            "Un modèle de langage",
+            "Un type de déploiement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Une source de connaissances est une connexion à un contenu que Foundry IQ peut récupérer."
+        },
+        {
+          "question": "À quel rôle faut-il ajouter l'identité managée du projet Foundry sur la ressource Azure AI Search pour tester la récupération ?",
+          "options": [
+            "Owner",
+            "Billing Reader",
+            "Search Index Data Reader",
+            "Virtual Machine Contributor"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On ajoute l'identité managée du projet, puis celles des agents de production, au rôle Search Index Data Reader."
+        },
+        {
+          "question": "Que fournit le modèle, que fournissent les outils et que fournissent les connaissances à un agent ?",
+          "options": [
+            "Le langage et le raisonnement ; la capacité d'agir ; l'information absente de l'entraînement du modèle",
+            "Le stockage ; la facturation ; le réseau",
+            "Les permissions ; les quotas ; les régions",
+            "Rien ; tout ; rien"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les modèles apportent langage et raisonnement, les outils permettent d'agir, les connaissances apportent une information non incluse dans l'entraînement."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-fiq-knowledge-bases",
+      "title": "Knowledge bases",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que donne une base de connaissances à un agent ?",
+          "options": [
+            "Un nouveau modèle de langage",
+            "Un accès administrateur à l'abonnement",
+            "Une copie locale de tous les documents",
+            "Une seule interface de récupération sur une ou plusieurs sources de connaissances"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Au lieu d'apprendre à l'agent où se trouve chaque document, on le connecte à une base qui représente un domaine métier."
+        },
+        {
+          "question": "Que comprend la configuration d'une base de connaissances pour soutenir la récupération agentique ?",
+          "options": [
+            "Une machine virtuelle dédiée",
+            "Un modèle d'IA générative",
+            "Un certificat SSL",
+            "Un fichier Excel"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La configuration inclut un modèle génératif, ainsi que des prompts pour prioriser les sources et guider les réponses."
+        },
+        {
+          "question": "Pourquoi n'est-il pas forcément utile d'ajouter toutes les sources disponibles à une même base de connaissances ?",
+          "options": [
+            "Parce qu'une base ne peut contenir qu'une source",
+            "Parce que c'est facturé à la source",
+            "Parce qu'un contenu sans rapport ou contradictoire peut rendre la récupération moins précise",
+            "Parce que les agents refusent les grandes bases"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une base doit contenir des sources qui vont ensemble et répondre à un ensemble clair de questions."
+        },
+        {
+          "question": "Lequel de ces éléments est un type de source de connaissances pris en charge ?",
+          "options": [
+            "Du contenu Microsoft SharePoint",
+            "Un écran d'ordinateur",
+            "Un fichier .env",
+            "Une clé d'API"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Sources prises en charge : index Azure AI Search, Azure Blob Storage, SharePoint, OneLake, web public."
+        },
+        {
+          "question": "En planifiant une base de connaissances, que désigne le critère « autorité » ?",
+          "options": [
+            "Le nombre d'utilisateurs",
+            "Le prix du service",
+            "La vitesse de recherche",
+            "Les systèmes qui contiennent la source de vérité approuvée"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Autorité : quels systèmes contiennent la source de vérité approuvée ? Les autres critères sont portée, fraîcheur, métadonnées, qualité du contenu et accès."
+        },
+        {
+          "question": "Selon quels critères choisit-on les sources de connaissances ?",
+          "options": [
+            "Leur couleur et leur taille",
+            "L'endroit où se trouvent les données qui font autorité, leur besoin de fraîcheur et les permissions à appliquer",
+            "Leur ordre alphabétique",
+            "Le nom du développeur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On choisit selon où vivent les données faisant autorité, à quel point elles doivent être à jour et quelles permissions s'appliquent."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-fiq-connect-agent",
+      "title": "Connect an agent to Foundry IQ",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Sous quelle forme la connexion à une base de connaissances est-elle ajoutée à un agent ?",
+          "options": [
+            "Comme un fichier .env",
+            "Comme un déploiement de modèle",
+            "Comme un outil MCP",
+            "Comme un groupe de ressources"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les bases de connaissances Foundry IQ exposent un outil Model Context Protocol pour l'intégration aux agents."
+        },
+        {
+          "question": "Connecter une base de connaissances suffit-il pour que l'agent l'utilise de façon constante ?",
+          "options": [
+            "Non, les instructions de l'agent doivent préciser le comportement attendu",
+            "Oui, toujours",
+            "Oui, si la base est grande",
+            "Non, il faut réentraîner le modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Connecter une base ne garantit pas son usage ; les instructions doivent dire quand et comment l'utiliser."
+        },
+        {
+          "question": "Que doit faire l'agent quand la base de connaissances ne contient pas assez d'information ?",
+          "options": [
+            "Inventer une réponse plausible",
+            "Répondre avec un autre sujet",
+            "Supprimer la question",
+            "Dire qu'il ne sait pas plutôt que de deviner, ou orienter vers une personne ou un processus approprié"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les instructions doivent prévoir quoi faire quand la preuve manque : reconnaître l'incertitude ou orienter l'utilisateur."
+        },
+        {
+          "question": "Comment faut-il évaluer une expérience d'agent enrichi par des connaissances ?",
+          "options": [
+            "Uniquement sur la longueur des réponses",
+            "En évaluant séparément la récupération et la réponse finale",
+            "Sans jamais poser de question sans réponse",
+            "Uniquement avec un seul utilisateur administrateur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On vérifie d'abord si la preuve renvoyée est pertinente, à jour et autorisée, puis si la réponse est ancrée, pertinente, complète et bien citée."
+        },
+        {
+          "question": "Quelles permissions la connexion du projet à la base de connaissances doit-elle avoir ?",
+          "options": [
+            "Toutes les permissions possibles",
+            "Les permissions d'administrateur global",
+            "Uniquement les permissions nécessaires pour récupérer le contenu",
+            "Aucune identité"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La connexion doit utiliser une identité appropriée avec seulement les permissions requises."
+        },
+        {
+          "question": "Parmi les questions de test recommandées, laquelle vérifie la résistance à une manipulation ?",
+          "options": [
+            "Un contenu contenant du texte qui tente de changer les instructions de l'agent",
+            "Une question simple avec une source claire",
+            "Une question demandant plusieurs sources",
+            "Une question ambiguë"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On teste aussi un contenu qui essaie de modifier les instructions : le texte récupéré ne doit pas être traité comme une instruction."
+        },
+        {
+          "question": "Quels éléments des instructions rendent les réponses ancrées ?",
+          "options": [
+            "La couleur de l'interface et la police",
+            "Le nom du groupe de ressources",
+            "Le nombre de tokens maximum uniquement",
+            "Quand récupérer, comment utiliser la preuve, comment citer, et quoi faire quand la preuve manque"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Des instructions efficaces définissent ces quatre points."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-fiq-lab",
+      "title": "Lab — un agent de notes de frais avec Foundry IQ",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans le lab, pourquoi la première réponse de l'agent sur le remboursement d'un taxi n'est-elle pas fiable ?",
+          "options": [
+            "Parce que le modèle n'est pas déployé",
+            "Parce que l'agent n'a aucune connaissance des politiques de l'entreprise : la réponse n'est pas ancrée dans une information exacte",
+            "Parce que la question est en anglais",
+            "Parce que le quota est dépassé"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'agent peut donner une réponse qui semble correcte, mais il ne connaît pas encore la politique de frais."
+        },
+        {
+          "question": "Quelle différence entre les modes de sortie « extractive data » et « answer synthesis » ?",
+          "options": [
+            "Aucune",
+            "Le premier génère des images, le second des vidéos",
+            "Le premier renvoie le texte tel quel de la source ; le second fait composer une réponse par un modèle génératif",
+            "Le premier est gratuit, le second payant"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le mode de sortie détermine comment Foundry IQ renvoie la connaissance à l'agent."
+        },
+        {
+          "question": "Dans le lab, à quoi servent les « Retrieval instructions » de la base de connaissances ?",
+          "options": [
+            "À guider la façon dont Foundry IQ cherche la connaissance dans les bases disponibles",
+            "À fixer le prix du service",
+            "À choisir la voix de l'agent",
+            "À supprimer les citations"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les Answer instructions agissent comme un prompt système pour la réponse ; les Retrieval instructions guident la recherche."
+        },
+        {
+          "question": "Dans quel portail attribue-t-on le rôle à l'identité managée du projet, et sur quelle page ?",
+          "options": [
+            "Dans le portail Foundry, page Discover",
+            "Dans GitHub, page Settings",
+            "Dans Microsoft Learn, page Profile",
+            "Dans le portail Azure, page Access control (IAM) du service de recherche"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On ouvre le service de recherche Foundry IQ dans le portail Azure, puis Access control (IAM) → Add role assignment."
+        },
+        {
+          "question": "Qu'est-ce qui montre, à la fin du lab, que l'agent utilise la base de connaissances ?",
+          "options": [
+            "La réponse est plus longue",
+            "Une citation de la documentation de frais apparaît en bas de la réponse",
+            "Le modèle change de nom",
+            "L'agent répond en français"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La réponse comporte une citation de la documentation de frais."
+        },
+        {
+          "question": "Quel avantage le lab attribue-t-il à Foundry IQ par rapport à une implémentation RAG sur mesure ?",
+          "options": [
+            "Il rend les modèles gratuits",
+            "Il supprime le besoin d'un abonnement",
+            "Il centralise l'accès aux connaissances : on lui délègue le choix de la source et la logique de récupération, et on réutilise les sources entre agents",
+            "Il remplace les agents"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On réutilise les sources de connaissances dans plusieurs agents sans dupliquer le code ni la logique d'accès aux données."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-fiq-bilan",
+      "title": "Bilan et knowledge check",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est le but principal de Microsoft Foundry IQ ?",
+          "options": [
+            "Fournir une couche de connaissances managée que les agents utilisent pour récupérer de l'information d'entreprise en respectant les permissions.",
+            "Entraîner un nouveau modèle de fondation à partir de chaque document d'une organisation.",
+            "Remplacer les agents d'IA par une page de recherche traditionnelle par mots-clés."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Que contient une base de connaissances Foundry IQ ?",
+          "options": [
+            "Uniquement l'historique de conversation d'un seul agent.",
+            "Uniquement des documents chargés directement dans un modèle de langage.",
+            "Une ou plusieurs sources de connaissances et des réglages qui contrôlent le comportement de la récupération."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Que fait la récupération agentique d'une question complexe d'un utilisateur ?",
+          "options": [
+            "Elle ajoute de façon permanente la question et la réponse aux données d'entraînement du modèle.",
+            "Elle peut décomposer la question, chercher dans les sources pertinentes en parallèle, reclasser les résultats et renvoyer des preuves citées.",
+            "Elle cherche dans chaque source avec une correspondance exacte de mots-clés et renvoie les résultats sans classement."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Pourquoi faut-il demander à un agent de citer les sources de la base de connaissances ?",
+          "options": [
+            "Les citations permettent à l'agent de contourner les permissions des documents sources.",
+            "Les citations font que le modèle de langage se réentraîne après chaque réponse.",
+            "Les citations aident les utilisateurs à retracer et vérifier la preuve qui soutient une réponse."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Quelle pratique aide à protéger l'information d'entreprise dans une solution Foundry IQ ?",
+          "options": [
+            "Copier chaque source dans un seul index public pour que tous les agents récupèrent le même contenu.",
+            "Utiliser des identités et des contrôles d'accès pour que la récupération ne renvoie que le contenu auquel l'appelant est autorisé à accéder.",
+            "Faire confiance au texte des documents récupérés comme à des instructions pour l'agent."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Laquelle de ces affirmations sur Foundry IQ est correcte ?",
+          "options": [
+            "Il réentraîne le modèle à chaque question",
+            "Il fonctionne sans Azure AI Search",
+            "Chaque agent doit avoir sa propre copie des documents",
+            "Plusieurs agents peuvent utiliser la même base de connaissances"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une amélioration de la connaissance partagée profite à tous les agents connectés ; rien n'est réentraîné."
+        },
+        {
+          "question": "Une réponse d'agent est fausse alors que le bon document a bien été renvoyé par Foundry IQ. Où se situe le problème ?",
+          "options": [
+            "Dans la récupération",
+            "Dans la génération de la réponse par l'agent",
+            "Dans la facturation",
+            "Dans le portail Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On évalue séparément : ici la récupération est bonne, c'est donc la réponse rédigée (ancrage, citation) ou les instructions qui sont à revoir."
+        }
+      ]
+    }
+  ]
+}

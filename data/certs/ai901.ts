@@ -30,7 +30,7 @@ const learningPaths: LearningPath[] = [
       { title: "Get started with speech in Azure", learn: "get-started-speech-azure", site: "ai901-speech-azure" },
       { title: "Get started with computer vision in Azure", learn: "get-started-vision-azure", site: "ai901-vision-azure" },
       { title: "Get started with AI-powered information extraction in Azure", learn: "get-started-information-extraction", site: "ai901-info-extraction-azure" },
-      { title: "Get started with Microsoft Foundry IQ", learn: "get-started-foundry-iq" },
+      { title: "Get started with Microsoft Foundry IQ", learn: "get-started-foundry-iq", site: "ai901-foundry-iq" },
     ],
   },
 ];
