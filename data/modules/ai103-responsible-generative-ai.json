@@ -1,0 +1,524 @@
+{
+  "slug": "ai103-responsible-generative-ai",
+  "title": "Implement a responsible generative AI solution in Microsoft Foundry",
+  "description": "LP1 · Module 6 — Map, Measure, Mitigate, Manage ; les 4 couches d'atténuation et les guardrails",
+  "category": "AI-103",
+  "order": 6,
+  "units": [
+    {
+      "slug": "ai103-rai-plan",
+      "title": "Introduction et plan en 4 étapes",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont, dans l'ordre, les quatre étapes du processus Microsoft pour une IA générative responsable ?",
+          "options": [
+            "Measure, Map, Manage, Mitigate",
+            "Plan, Build, Test, Deploy",
+            "Map, Measure, Mitigate, Manage",
+            "Identify, Protect, Detect, Respond"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Cartographier les préjudices potentiels, mesurer leur présence, les atténuer sur plusieurs couches, puis gérer la solution de façon responsable."
+        },
+        {
+          "question": "À quoi les quatre étapes correspondent-elles de près ?",
+          "options": [
+            "Aux fonctions du NIST AI Risk Management Framework",
+            "Aux six principes d'IA responsable",
+            "Aux types de déploiement Foundry",
+            "Aux étapes du RAG"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Ces étapes correspondent étroitement aux fonctions du NIST AI Risk Management Framework."
+        },
+        {
+          "question": "Que fait-on à l'étape Mitigate ?",
+          "options": [
+            "On recense les préjudices possibles",
+            "On atténue les préjudices sur plusieurs couches de la solution et on communique avec transparence sur les risques",
+            "On mesure la présence des préjudices",
+            "On définit le plan de déploiement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Mitigate : atténuer les préjudices à plusieurs couches pour réduire leur présence et leur impact, avec une communication transparente sur les risques."
+        },
+        {
+          "question": "Sur quoi les lignes directrices pour l'IA générative responsable s'appuient-elles ?",
+          "options": [
+            "Sur la documentation d'Azure Kubernetes Service",
+            "Sur les conditions du Marketplace",
+            "Sur le guide de tarification Azure",
+            "Sur le standard d'IA responsable de Microsoft, adapté aux modèles génératifs"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les lignes directrices prolongent le Responsible AI standard de Microsoft pour tenir compte des spécificités des modèles génératifs."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-map",
+      "title": "Map potential harms",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les quatre sous-étapes de la cartographie des préjudices ?",
+          "options": [
+            "Identifier, prioriser, tester et vérifier, documenter et partager",
+            "Préparer, soumettre, évaluer, publier",
+            "Modèle, sécurité, prompt, interface",
+            "Juridique, confidentialité, sécurité, accessibilité"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On identifie les préjudices potentiels, on les priorise, on teste et vérifie leur présence, puis on documente et partage."
+        },
+        {
+          "question": "Sur quels critères priorise-t-on les préjudices identifiés ?",
+          "options": [
+            "Leur ordre alphabétique",
+            "Le coût du modèle",
+            "La probabilité qu'ils se produisent et le niveau d'impact s'ils se produisent",
+            "Le nombre de tokens consommés"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Pour chaque préjudice, on évalue la probabilité d'occurrence et le niveau d'impact, puis on traite d'abord les plus probables et les plus graves."
+        },
+        {
+          "question": "Qu'est-ce que le red teaming appliqué à une solution d'IA générative ?",
+          "options": [
+            "Un entraînement du modèle sur des données rouges",
+            "Une équipe de testeurs qui sonde volontairement la solution pour trouver ses faiblesses et tenter de produire des résultats nuisibles",
+            "Un type de déploiement réservé aux tests",
+            "Un filtre de contenu de niveau élevé"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le red teaming consiste à chercher délibérément les faiblesses et à tenter de produire des résultats nuisibles ; les réussites sont documentées et examinées."
+        },
+        {
+          "question": "Quel document d'Azure OpenAI Service aide à comprendre les considérations propres au service et à ses modèles ?",
+          "options": [
+            "La facture mensuelle",
+            "Le fichier .env",
+            "Le leaderboard",
+            "La transparency note"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Azure OpenAI Service inclut une transparency note. Les développeurs de modèles peuvent aussi fournir une documentation comme la system card d'OpenAI pour GPT-4."
+        },
+        {
+          "question": "Dans l'exemple du copilote de cuisine, pourquoi la priorisation est-elle un sujet de discussion ?",
+          "options": [
+            "Le poison a l'impact le plus élevé, mais les temps de cuisson inexacts risquent d'arriver bien plus souvent",
+            "Les deux préjudices sont identiques",
+            "Aucun des deux n'est un vrai préjudice",
+            "La priorisation est calculée automatiquement par Foundry"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'impact et la fréquence pointent dans des directions différentes ; la décision revient à l'équipe, éventuellement avec des experts en politique ou en droit."
+        },
+        {
+          "question": "Que fait-on une fois les preuves de préjudices réunies ?",
+          "options": [
+            "On les supprime",
+            "On les garde secrètes",
+            "On documente les détails, on les partage avec les parties prenantes et on tient la liste à jour",
+            "On arrête le projet"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On documente et on partage avec les parties prenantes. La liste priorisée est maintenue et complétée si de nouveaux préjudices apparaissent."
+        },
+        {
+          "question": "Lequel de ces éléments est un type courant de préjudice potentiel d'une solution générative ?",
+          "options": [
+            "Une latence trop faible",
+            "Du contenu comportant des inexactitudes factuelles",
+            "Un index trop bien structuré",
+            "Un quota trop élevé"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Types courants : contenu offensant, péjoratif ou discriminatoire ; inexactitudes factuelles ; contenu encourageant des comportements illégaux ou contraires à l'éthique."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-measure",
+      "title": "Measure potential harms",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est l'objectif de l'étape de mesure ?",
+          "options": [
+            "Choisir la région Azure",
+            "Rédiger le message système",
+            "Supprimer tous les prompts des utilisateurs",
+            "Créer une référence initiale qui quantifie les préjudices, puis suivre les améliorations par rapport à elle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On crée une référence qui quantifie les préjudices dans des scénarios donnés, puis on suit les améliorations au fil des modifications."
+        },
+        {
+          "question": "Quelles sont les trois étapes de l'approche de mesure ?",
+          "options": [
+            "Retrieve, Augment, Generate",
+            "Préparer des prompts variés, les soumettre et récupérer les sorties, appliquer des critères prédéfinis pour classer les sorties",
+            "Identifier, prioriser, documenter",
+            "Déployer, superviser, supprimer"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On prépare une sélection variée de prompts, on les soumet au système, puis on évalue les sorties avec des critères prédéfinis."
+        },
+        {
+          "question": "Par quoi commencer dans la plupart des scénarios de test ?",
+          "options": [
+            "Par tester et évaluer manuellement un petit jeu d'entrées",
+            "Par automatiser immédiatement des milliers de cas",
+            "Par supprimer les critères d'évaluation",
+            "Par déployer en production"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On commence manuellement sur un petit ensemble pour vérifier la cohérence des résultats et la précision des critères, puis on automatise."
+        },
+        {
+          "question": "Une fois les tests automatisés en place, que faut-il continuer de faire ?",
+          "options": [
+            "Rien, l'automatisation suffit",
+            "Désactiver les filtres de contenu",
+            "Réaliser périodiquement des tests manuels pour valider de nouveaux scénarios et vérifier que l'automatisation fonctionne comme prévu",
+            "Changer de modèle chaque semaine"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Même avec une approche automatisée, il faut refaire périodiquement des tests manuels."
+        },
+        {
+          "question": "Que peut inclure une solution automatisée de test et de mesure ?",
+          "options": [
+            "Un modèle de génération vidéo",
+            "Un plan de retour arrière",
+            "Une transparency note",
+            "Un modèle de classification qui évalue automatiquement les sorties"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une solution automatisée peut utiliser un modèle de classification pour évaluer automatiquement les sorties."
+        },
+        {
+          "question": "Quelle exigence s'applique aux critères de classement des sorties ?",
+          "options": [
+            "Ils doivent être stricts et applicables de la même façon à chaque sortie",
+            "Ils peuvent changer d'une sortie à l'autre",
+            "Ils doivent rester secrets",
+            "Ils sont facultatifs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Que la classification soit binaire ou graduée, il faut des critères stricts applicables aux sorties pour les classer."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-mitigate",
+      "title": "Mitigate potential harms",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les quatre couches d'atténuation d'une solution d'IA générative ?",
+          "options": [
+            "Réseau, calcul, stockage, identité",
+            "Modèle, système de sécurité, message système et ancrage, expérience utilisateur",
+            "Map, Measure, Mitigate, Manage",
+            "Juridique, confidentialité, sécurité, accessibilité"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les techniques d'atténuation s'appliquent à quatre couches : modèle, système de sécurité, message système et ancrage, expérience utilisateur."
+        },
+        {
+          "question": "À quelle couche appartiennent les guardrails et les filtres de contenu de Foundry ?",
+          "options": [
+            "La couche modèle",
+            "La couche expérience utilisateur",
+            "La couche système de sécurité",
+            "La couche message système et ancrage"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La couche système de sécurité regroupe les configurations et capacités de niveau plateforme, dont les guardrails."
+        },
+        {
+          "question": "En combien de niveaux de gravité les filtres de contenu classent-ils le contenu ?",
+          "options": [
+            "Quatre : safe, low, medium, high",
+            "Deux : bloqué, autorisé",
+            "Trois : faible, moyen, fort",
+            "Dix, de 1 à 10"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les filtres classent le contenu en quatre niveaux de gravité (safe, low, medium, high) pour cinq catégories de préjudice potentiel."
+        },
+        {
+          "question": "Quelles sont les cinq catégories de préjudice des filtres de contenu citées dans le cours ?",
+          "options": [
+            "Coût, latence, quota, région, version",
+            "Spam, phishing, malware, DDoS, fraude",
+            "Qualité, sécurité, coût, performance, conformité",
+            "Hate and fairness, sexual, violence, self-harm, task-adherence"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les cinq catégories : haine et équité, sexuel, violence, automutilation, respect de la tâche."
+        },
+        {
+          "question": "À quoi servent les prompt shields ?",
+          "options": [
+            "À chiffrer les prompts",
+            "À détecter, par des algorithmes de détection d'abus, si la solution est systématiquement détournée, par exemple pour contourner le prompt système",
+            "À raccourcir les prompts trop longs",
+            "À traduire les prompts"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les prompt shields utilisent des algorithmes de détection d'abus pour déterminer si la solution fait l'objet d'abus systématiques."
+        },
+        {
+          "question": "Laquelle de ces atténuations relève de la couche modèle ?",
+          "options": [
+            "Limiter les champs de saisie dans l'interface",
+            "Ajouter un filtre de contenu",
+            "Choisir un modèle plus simple, adapté à l'usage prévu",
+            "Rédiger une documentation transparente"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Couche modèle : choisir un modèle approprié (un modèle plus simple peut suffire avec moins de risque) et fine-tuner avec ses propres données."
+        },
+        {
+          "question": "Laquelle de ces techniques relève de la couche message système et ancrage ?",
+          "options": [
+            "Utiliser le RAG pour inclure dans les prompts des données de contexte issues de sources de confiance",
+            "Bloquer une adresse IP",
+            "Monter le seuil du filtre Violence",
+            "Lancer une revue juridique"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Cette couche porte sur la construction des prompts : entrées système, prompt engineering avec données d'ancrage, RAG sur des sources de confiance."
+        },
+        {
+          "question": "Que doit faire la documentation d'une solution générative, au titre de la couche expérience utilisateur ?",
+          "options": [
+            "Cacher les limites du système",
+            "Promettre des réponses toujours exactes",
+            "Ne mentionner aucun modèle",
+            "Être transparente sur les capacités et limites du système, les modèles utilisés et les préjudices pas toujours couverts"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La documentation doit être transparente sur les capacités, les limites, les modèles sous-jacents et les préjudices que les atténuations ne traitent pas toujours."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-manage",
+      "title": "Manage a responsible generative AI solution",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles revues de conformité sont courantes avant la sortie d'une solution générative ?",
+          "options": [
+            "Marketing, ventes, support, finance",
+            "Juridique, confidentialité, sécurité, accessibilité",
+            "Performance, coût, quota, région",
+            "Design, couleur, typographie, logo"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les revues courantes : Legal, Privacy, Security, Accessibility."
+        },
+        {
+          "question": "Que définit un plan de retour arrière (rollback) ?",
+          "options": [
+            "La liste des premiers utilisateurs",
+            "Le prix de la solution",
+            "Les étapes pour ramener la solution à un état antérieur si un incident survient",
+            "Le message système"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le plan de rollback définit les étapes pour revenir à un état précédent en cas d'incident."
+        },
+        {
+          "question": "Que doit inclure un plan de réponse aux incidents ?",
+          "options": [
+            "Des estimations du temps nécessaire pour répondre aux incidents imprévus",
+            "Le code source du modèle",
+            "La liste des tokens consommés",
+            "Les hyperparamètres du fine-tuning"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le plan de réponse aux incidents comprend des estimations du temps de réponse aux incidents non anticipés."
+        },
+        {
+          "question": "En cas de mauvais usage du système, que doit-on pouvoir bloquer ?",
+          "options": [
+            "Le portail Azure entier",
+            "Uniquement le modèle",
+            "La télémétrie",
+            "Des utilisateurs, des applications ou des adresses IP clientes précis"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Il faut pouvoir bloquer des utilisateurs, applications ou adresses IP précis, et bloquer immédiatement les réponses nuisibles découvertes."
+        },
+        {
+          "question": "Que doivent pouvoir signaler les utilisateurs à propos du contenu généré ?",
+          "options": [
+            "Uniquement les fautes d'orthographe",
+            "Un contenu inexact, incomplet, nuisible, offensant ou autrement problématique",
+            "Rien, le signalement est déconseillé",
+            "Le prix de l'abonnement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On met en place un moyen de retour permettant de signaler un contenu inexact, incomplet, nuisible, offensant ou problématique."
+        },
+        {
+          "question": "Quelle contrainte s'applique à la télémétrie collectée ?",
+          "options": [
+            "Elle doit contenir toutes les données personnelles possibles",
+            "Elle doit être publique",
+            "Elle doit respecter les lois sur la vie privée et les politiques et engagements de l'organisation",
+            "Elle est interdite"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La télémétrie sert à mesurer la satisfaction et repérer les manques, mais doit respecter les lois sur la vie privée et les engagements de l'organisation."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-lab",
+      "title": "Lab — appliquer des guardrails",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Comment le cours décrit-il le guardrail par défaut appliqué à un modèle déployé ?",
+          "options": [
+            "Un ensemble équilibré de filtres qui interdit la plupart des contenus nuisibles tout en autorisant un langage jugé raisonnablement sûr",
+            "Aucun filtre n'est appliqué par défaut",
+            "Tous les prompts sont bloqués par défaut",
+            "Il ne filtre que les réponses, jamais les prompts"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle déployé a un guardrail par défaut avec un ensemble équilibré de filtres."
+        },
+        {
+          "question": "Dans le lab, quel prompt le filtre par défaut peut-il bloquer, par référence possible à l'automutilation ?",
+          "options": [
+            "I'm planning to rob a bank. Help me plan a getaway.",
+            "Tell me an offensive joke about Scotsmen.",
+            "What can you do?",
+            "What should I do if I cut myself?"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Ce prompt peut être interprété comme une référence à l'automutilation. Pour les deux autres, le modèle peut s'autocensurer sans blocage par le filtre."
+        },
+        {
+          "question": "Pour quelles catégories le lab règle-t-il le seuil de blocage au niveau le plus strict ?",
+          "options": [
+            "Coût et latence",
+            "Hate, Violence, Sexual et Self-harm",
+            "Qualité et performance",
+            "Uniquement Hate"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On configure Hate, puis Violence, Sexual et Self-harm au niveau Highest blocking."
+        },
+        {
+          "question": "À quoi s'appliquent les filtres d'un guardrail ?",
+          "options": [
+            "Aux réponses seulement",
+            "Aux prompts seulement",
+            "Aux prompts et aux complétions",
+            "Aux fichiers du vector store seulement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les filtres s'appliquent aux prompts et aux complétions, selon des seuils de blocage."
+        },
+        {
+          "question": "Dans le portail, à quoi peut-on appliquer un guardrail personnalisé ?",
+          "options": [
+            "À des agents et à des modèles",
+            "Uniquement à des groupes de ressources",
+            "Uniquement à des régions",
+            "Uniquement à des utilisateurs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La section Select agents and models permet d'appliquer le guardrail ; le lab choisit Models puis le modèle gpt-5.2."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-rai-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 7,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Pourquoi envisager de créer une évaluation d'impact de l'IA (AI Impact Assessment) lors de la conception d'une solution générative ?",
+          "options": [
+            "Pour constituer un dossier juridique qui te dégage de toute responsabilité pour les préjudices causés par la solution",
+            "Pour documenter l'objectif, l'usage prévu et les préjudices potentiels de la solution",
+            "Pour évaluer le coût des services cloud nécessaires à la solution"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Le guide et le modèle d'évaluation d'impact servent à documenter les préjudices potentiels."
+        },
+        {
+          "question": "Quelle capacité de Microsoft Foundry aide à atténuer la génération de contenu nuisible au niveau du système de sécurité ?",
+          "options": [
+            "La prise en charge du modèle DALL-E",
+            "Le fine-tuning",
+            "Les guardrails"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Les guardrails appliquent des filtres de contenu ; le fine-tuning relève de la couche modèle."
+        },
+        {
+          "question": "Pourquoi envisager un plan de livraison par phases pour une solution d'IA générative ?",
+          "options": [
+            "Pour recueillir des retours et repérer les problèmes avant de diffuser la solution plus largement",
+            "Pour supprimer le besoin de cartographier, mesurer, atténuer et gérer les préjudices potentiels",
+            "Pour pouvoir facturer la solution plus cher"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. On sort d'abord pour un groupe restreint d'utilisateurs."
+        },
+        {
+          "question": "À quelle étape du processus appartient le red teaming ?",
+          "options": [
+            "Manage",
+            "Mitigate",
+            "Measure",
+            "Map"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le red teaming fait partie de la sous-étape « tester et vérifier » de Map."
+        },
+        {
+          "question": "Un champ de saisie limité à des sujets précis dans l'application relève de quelle couche d'atténuation ?",
+          "options": [
+            "Modèle",
+            "Expérience utilisateur",
+            "Système de sécurité",
+            "Message système et ancrage"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Concevoir l'interface pour contraindre les entrées et valider entrées et sorties relève de la couche expérience utilisateur."
+        },
+        {
+          "question": "Pourquoi le filtrage de contenu ne suffit-il pas à lui seul ?",
+          "options": [
+            "Parce qu'il est payant",
+            "Parce qu'il ne fonctionne qu'en anglais",
+            "Parce qu'il n'est qu'un élément d'une approche d'IA responsable, qui repose sur plusieurs couches et étapes",
+            "Parce qu'il ralentit trop le modèle"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les filtres de contenu ne sont qu'un élément d'une solution d'IA responsable complète."
+        }
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ const learningPaths: LearningPath[] = [
       { title: "Develop a generative AI chat app with Microsoft Foundry", learn: "foundry-sdk", site: "ai103-foundry-chat-app" },
       { title: "Develop generative AI apps that use tools", learn: "use-generative-ai-tools", site: "ai103-generative-ai-tools" },
       { title: "Optimize generative AI model performance with Microsoft Foundry", learn: "optimize-generative-ai-model-performance", site: "ai103-optimize-model-performance" },
-      { title: "Implement a responsible generative AI solution in Microsoft Foundry", learn: "responsible-ai-studio" },
+      { title: "Implement a responsible generative AI solution in Microsoft Foundry", learn: "responsible-ai-studio", site: "ai103-responsible-generative-ai" },
     ],
   },
   {
