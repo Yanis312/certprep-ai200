@@ -51,9 +51,24 @@ L'utilisateur doit-il avoir une vraie conversation orale, en temps réel ?
     └── J'ai du texte et je veux de l'audio → text-to-speech
 ```
 
-## À propos de l'évaluation
+## Les questions officielles du module
 
-Tu ne m'as pas collé le knowledge check de ce module. Le quiz de cette unité est donc entièrement de moi, construit à partir du cours et du résumé officiel. Colle-moi les questions de Microsoft si tu veux que je les ajoute.
+| Question | Réponse |
+|---|---|
+| Pourquoi utiliser le SDK Speech-to-Text au lieu du seul playground Foundry ? | Le SDK permet d'**ajouter la reconnaissance vocale directement dans le code** de l'application |
+| Que prend en charge le SDK Text-to-Speech pour les développeurs ? | L'**authentification**, la **communication réseau** et la **génération audio** |
+| Quel rôle joue le SDK Python Voice Live (`azure-ai-voicelive`) dans un agent vocal ? | Il **ouvre une connexion en temps réel**, **diffuse l'audio en flux** et gère les **réponses parlées** et les **interruptions** |
+
+Le texte fourni ne contenait pas le corrigé de Microsoft ; ces réponses découlent directement du cours.
+
+Les mauvaises réponses à écarter : aucun SDK ne remplace les modèles Azure Speech, ni les micros et haut-parleurs. Le SDK n'est pas nécessaire pour charger un fichier dans le playground. Et aucun de ces SDK ne stocke l'audio de façon permanente dans Azure Storage.
+
+### Playground ou SDK
+
+| | Playground | SDK |
+|---|---|---|
+| Sert à | Expérimenter, écouter des voix, tester un fichier | Intégrer la fonction dans une application |
+| Code à écrire | Aucun | Oui |
 
 #### Point examen : le guide d'étude cite « Identifier les fonctionnalités de la reconnaissance et de la synthèse vocales » côté concepts, et « Créer une application légère avec Azure Speech dans Foundry Tools » côté mise en œuvre. Sache lire un extrait avec SpeechRecognizer ou SpeechSynthesizer.
 

@@ -325,10 +325,40 @@
     },
     {
       "slug": "ai901-speech-bilan",
-      "title": "Bilan du module",
+      "title": "Bilan et évaluation du module",
       "order": 5,
       "isLab": false,
       "questions": [
+        {
+          "question": "Pourquoi un développeur utiliserait-il le SDK Azure Speech-to-Text au lieu de se limiter au playground Foundry ?",
+          "options": [
+            "Le SDK remplace le besoin des modèles Azure Speech.",
+            "Le SDK est nécessaire pour charger des fichiers audio dans le portail Foundry.",
+            "Le SDK permet d'ajouter la reconnaissance vocale directement dans le code de l'application."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Le playground sert à expérimenter ; pour intégrer la fonction dans une application, il faut écrire du code avec le SDK."
+        },
+        {
+          "question": "Que prend en charge le SDK Azure Text-to-Speech pour les développeurs ?",
+          "options": [
+            "Uniquement le choix de la voix et l'écriture manuelle des fichiers audio",
+            "L'authentification, la communication réseau et la génération audio",
+            "Le stockage permanent de l'audio synthétisé dans Azure Storage"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Le SDK gère l'authentification, la communication réseau, la mise en forme audio et la lecture."
+        },
+        {
+          "question": "Quel rôle joue le SDK Python Voice Live (azure-ai-voicelive) dans un agent vocal ?",
+          "options": [
+            "Il stocke les enregistrements audio de façon permanente dans Azure Storage",
+            "Il remplace le besoin de micros et de haut-parleurs sur l'appareil de l'utilisateur",
+            "Il ouvre une connexion en temps réel, diffuse l'audio en flux et gère les réponses parlées et les interruptions"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Le code Voice Live ouvre la session, se connecte aux périphériques audio, traite les flux et gère les interruptions."
+        },
         {
           "question": "Une application doit convertir des messages vocaux enregistrés en texte. Quelle capacité d'Azure Speech ?",
           "options": [

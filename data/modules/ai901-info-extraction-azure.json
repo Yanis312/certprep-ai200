@@ -1,7 +1,7 @@
 {
   "slug": "ai901-info-extraction-azure",
   "title": "Get started with AI-powered information extraction in Azure",
-  "description": "LP2 · Module 6 — Azure Content Understanding : schémas, analyseurs, documents, audio (module incomplet)",
+  "description": "LP2 · Module 6 — Azure Content Understanding : schémas, analyseurs, documents, audio, vidéo, lab",
   "category": "AI-901",
   "order": 13,
   "units": [
@@ -125,7 +125,7 @@
     },
     {
       "slug": "ai901-cu-audio-video",
-      "title": "Extraire de l'audio et de la vidéo (incomplet)",
+      "title": "Extract information from audio and video",
       "order": 2,
       "isLab": false,
       "questions": [
@@ -183,6 +183,173 @@
           ],
           "correctAnswer": 0,
           "explanation": "L'exemple du cours : analyser une visioconférence enregistrée pour en extraire la présence, le lieu et d'autres informations."
+        },
+        {
+          "question": "Dans l'exemple de la salle de réunion, que renvoie Content Understanding après application du schéma à l'image ?",
+          "options": [
+            "Uniquement une légende de la photo",
+            "La transcription de la réunion",
+            "Des données structurées : lieu, participants sur place, participants à distance et total",
+            "Le nom du fabricant de la caméra"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Résultat du cours : Location Conference room, In-person attendees 1, Remote attendees 3, Total attendees 4."
+        },
+        {
+          "question": "Quel identifiant d'analyseur préconstruit le code d'exemple utilise-t-il pour analyser un fichier audio ?",
+          "options": [
+            "prebuilt-invoice",
+            "prebuilt-receipt",
+            "prebuilt-imageSearch",
+            "prebuilt-audioSearch"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'analyseur préconstruit pour l'audio est identifié par prebuilt-audioSearch ; prebuilt-videoSearch existe pour la vidéo."
+        },
+        {
+          "question": "Dans le code d'analyse audio, que fait poller.result() ?",
+          "options": [
+            "Il supprime le fichier audio",
+            "Il attend la fin de l'analyse ; le SDK interroge le service en coulisses",
+            "Il lance une seconde analyse",
+            "Il convertit l'audio en vidéo"
+          ],
+          "correctAnswer": 1,
+          "explanation": "begin_analyze démarre l'opération longue asynchrone ; poller.result() attend son achèvement."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-cu-lab",
+      "title": "Lab — extraction avec Content Understanding",
+      "order": 3,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans le lab, que fait l'analyseur OCR/Read ?",
+          "options": [
+            "Il extrait le texte brut des documents, sans interpréter la structure ni le sens",
+            "Il associe les valeurs à des champs de reçu",
+            "Il génère une image",
+            "Il transcrit un fichier audio"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Read extrait le texte brut. Layout capture en plus la structure ; Receipt associe les valeurs à des champs."
+        },
+        {
+          "question": "Qu'apporte l'analyseur Layout par rapport à Read ?",
+          "options": [
+            "Il traduit le document",
+            "Il capture la structure et la hiérarchie, par exemple les tableaux",
+            "Il supprime le texte",
+            "Il crée un index vectoriel"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Layout va un cran plus loin en capturant structure et hiérarchie ; un onglet Tables apparaît dans les résultats."
+        },
+        {
+          "question": "Quel analyseur du lab associe les valeurs de texte à des champs de données ?",
+          "options": [
+            "OCR/Read",
+            "Layout",
+            "Receipt",
+            "Language detection"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Receipt est un analyseur propre à un type de document, qui extrait les valeurs et les associe à des champs."
+        },
+        {
+          "question": "Dans le playground, quelle différence entre les onglets Fields et Result ?",
+          "options": [
+            "Fields contient le code Python, Result les images",
+            "Il n'y a aucune différence",
+            "Fields n'apparaît que pour l'audio",
+            "Fields affiche une version lisible ; Result contient le JSON brut que recevrait une application cliente"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'onglet Fields présente de façon lisible l'information du JSON brut de l'onglet Result."
+        },
+        {
+          "question": "Dans le code du lab, quelles méthodes d'authentification sont prévues ?",
+          "options": [
+            "Une clé d'API avec AzureKeyCredential, ou une identité Entra ID avec DefaultAzureCredential",
+            "Uniquement un mot de passe en clair",
+            "Aucune authentification",
+            "Uniquement une URI SAS"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le code utilise AzureKeyCredential si une clé est fournie, sinon DefaultAzureCredential."
+        },
+        {
+          "question": "Où ouvre-t-on le playground Content Understanding dans le portail Foundry ?",
+          "options": [
+            "Discover → Models",
+            "Build → Services → Content Understanding",
+            "Operate → Quota",
+            "Home → Docs"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ouvre Build, puis la page Services, puis on sélectionne Content Understanding."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-cu-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est l'avantage clé d'Azure Content Understanding par rapport à une reconnaissance optique de caractères (OCR) de base ?",
+          "options": [
+            "Azure Content Understanding extrait le texte plus vite en sautant le prétraitement de l'image.",
+            "Azure Content Understanding comprend la structure du document et associe les données extraites à un schéma défini.",
+            "Azure Content Understanding extrait des données structurées, alors que l'OCR extrait la relation entre les mots du texte."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. L'OCR de base ne comprend ni le sens ni les relations entre les mots."
+        },
+        {
+          "question": "Quel est le rôle principal d'un analyseur dans Azure Content Understanding ?",
+          "options": [
+            "Il définit comment le contenu est traité et quelles données structurées sont renvoyées.",
+            "Il stocke les données extraites dans une base de données.",
+            "Il convertit la sortie JSON en texte lisible par un humain."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. L'analyseur prend l'entrée, applique l'analyse par IA et produit des résultats structurés."
+        },
+        {
+          "question": "Quand tu utilises le SDK Python d'Azure Content Understanding, que se passe-t-il après l'envoi du contenu pour analyse ?",
+          "options": [
+            "Les résultats sont renvoyés immédiatement dans la même requête.",
+            "L'analyseur se réentraîne sur le contenu envoyé.",
+            "Il faut interroger une URL jusqu'à la fin du travail d'analyse."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. L'analyse est asynchrone ; le SDK gère l'interrogation avec poller.result()."
+        },
+        {
+          "question": "Dans quel ordre Content Understanding traite-t-il un contenu, quel que soit son type ?",
+          "options": [
+            "Analyse, ingestion, sortie",
+            "Sortie, analyse, ingestion",
+            "Entraînement, déploiement, évaluation",
+            "Ingestion du contenu, analyse par des modèles d'IA, renvoi de résultats structurés"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le résumé du module : le service ingère le contenu, l'analyse avec des modèles d'IA, puis renvoie des résultats structurés."
+        },
+        {
+          "question": "Avec quoi peut-on construire une application cliente pour Content Understanding ?",
+          "options": [
+            "Avec l'API REST ou le SDK Python de Content Understanding",
+            "Uniquement avec le portail Azure",
+            "Uniquement avec Excel",
+            "Avec le SDK Azure Speech"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On peut expérimenter dans le portail Foundry ou construire des applications avec l'API REST ou le SDK Python."
         }
       ]
     }
