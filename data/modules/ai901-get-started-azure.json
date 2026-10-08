@@ -451,6 +451,76 @@
           "explanation": "L'application utilise Azure Speech dans Foundry Tools pour la reconnaissance et la synthèse vocales."
         }
       ]
+    },
+    {
+      "slug": "ai901-azure-bilan",
+      "title": "Bilan et knowledge check",
+      "order": 6,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle affirmation explique le mieux la relation entre l'IA et le ML ?",
+          "options": [
+            "IA et ML sont des termes interchangeables ; tous deux désignent des systèmes qui imitent l'intelligence humaine, sans distinction.",
+            "Le ML se consacre exclusivement aux tâches génératives comme créer du texte et des images, alors que l'IA se limite à la prise de décision et à la planification.",
+            "L'IA est l'objectif global de créer des systèmes à l'intelligence proche de l'humain, tandis que le ML est une méthode fondée sur les données pour y parvenir en apprenant des schémas à partir des données."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Les applications d'IA sont propulsées par des modèles de machine learning entraînés à reconnaître des schémas dans les données."
+        },
+        {
+          "question": "Quel est le lien entre Microsoft Foundry et Azure ?",
+          "options": [
+            "Foundry est construit sur Azure et utilise des ressources Azure comme le calcul, le réseau, l'identité et la sécurité pour héberger et exploiter les applications d'IA.",
+            "Foundry fonctionne indépendamment d'Azure et n'a pas besoin de ressources Azure pour déployer des modèles ou des agents.",
+            "Foundry remplace entièrement les services Azure et sert de plateforme cloud autonome pour les charges de travail d'IA."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Une ressource Foundry est une ressource Azure ; Foundry s'appuie sur l'infrastructure d'Azure."
+        },
+        {
+          "question": "Quelle affirmation décrit le mieux la façon dont clés, secrets et endpoints fonctionnent ensemble dans une application d'IA sur Azure ?",
+          "options": [
+            "La clé est l'emplacement où sont stockées les réponses du modèle, et l'endpoint récupère ces réponses dans Azure Key Vault.",
+            "L'endpoint stocke les valeurs sensibles d'une application d'IA, et la clé détermine la quantité de données que l'endpoint peut renvoyer.",
+            "L'endpoint est une URL pour appeler un modèle déployé, et la clé (stockée comme secret dans Azure Key Vault) authentifie la requête envoyée à cet endpoint."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. L'application appelle l'endpoint, la requête inclut une clé, et cette clé est conservée comme secret dans Key Vault."
+        },
+        {
+          "question": "Quelle affirmation décrit le mieux une application cliente dans une solution d'IA construite avec Foundry ?",
+          "options": [
+            "Une application cliente est l'environnement qui héberge le modèle, exécute l'inférence et renvoie les résultats.",
+            "Une application cliente est un programme avec lequel l'utilisateur interagit, comme une application web ou mobile, qui envoie des requêtes à l'endpoint d'un modèle et affiche la réponse.",
+            "Une application cliente est un service Azure autonome qui génère automatiquement des clés d'API pour les déploiements de modèles."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Héberger le modèle et exécuter l'inférence, c'est le rôle du serveur, c'est-à-dire du déploiement de modèle."
+        },
+        {
+          "question": "Dans une solution Foundry, qui exécute l'inférence sur le modèle ?",
+          "options": [
+            "Le navigateur de l'utilisateur",
+            "Le fichier .env",
+            "Azure Key Vault",
+            "Le serveur, c'est-à-dire le déploiement de modèle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le serveur reçoit le prompt, exécute l'inférence, applique instructions système et sécurité, puis renvoie la sortie."
+        },
+        {
+          "question": "Selon le résumé du module, qu'apporte Foundry aux développeurs pour créer des solutions sûres, responsables et performantes ?",
+          "options": [
+            "Une collection de modèles prêts à l'emploi, des outils intégrés et des fonctions de gouvernance",
+            "Du matériel à installer sur site",
+            "Un langage de programmation propriétaire",
+            "Un moteur de base de données relationnelle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le résumé cite la collection de modèles prêts à l'emploi, les outils intégrés et les fonctionnalités de gouvernance de Foundry."
+        }
+      ]
     }
   ]
 }
