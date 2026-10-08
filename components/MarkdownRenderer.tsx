@@ -2,12 +2,15 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   return (
     <div className="markdown-body">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        // rehype-raw : autorise <details>/<summary> dans les fiches (corrigés repliables)
+        rehypePlugins={[rehypeRaw]}
         components={{
           h1: ({ children }) => (
             <h1 className="text-2xl font-bold text-slate-800 mt-8 mb-4 pb-2 border-b border-slate-100 first:mt-0">{children}</h1>
@@ -79,6 +82,12 @@ export default function MarkdownRenderer({ content }: { content: string }) {
             <tr className="hover:bg-slate-50 transition-colors">{children}</tr>
           ),
           hr: () => <hr className="border-slate-100 my-6" />,
+          details: ({ children }) => (
+            <details className="group mb-4 rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-3 open:pb-1">{children}</details>
+          ),
+          summary: ({ children }) => (
+            <summary className="cursor-pointer select-none text-sm font-semibold text-emerald-700 hover:text-emerald-900 group-open:mb-3">{children}</summary>
+          ),
           a: ({ children, href }) => (
             <a href={href} className="text-indigo-600 hover:text-indigo-800 underline underline-offset-2 transition-colors">{children}</a>
           ),

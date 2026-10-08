@@ -3,13 +3,15 @@
 import Link from "next/link";
 import type { ModuleSummary } from "@/lib/types";
 import { isDone, resetAll, useProgress, useTasksDone } from "@/lib/progress";
-import { domains, exam, learningPaths, method, weeks, type DomainId } from "@/data/plan";
+import CertTabs, { useCert } from "@/components/CertTabs";
 
 export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
   const progress = useProgress();
   const [tasksDone, toggleTask] = useTasksDone();
+  const [cert, setCert] = useCert();
+  const { exam, domains, learningPaths, method, weeks } = cert;
 
-  const taskId = (weekId: string, i: number) => `${weekId}-${i}`;
+  const taskId = (weekId: string, i: number) => `${cert.code}:${weekId}-${i}`;
   const weekChecked = (w: (typeof weeks)[number]) => w.tasks.filter((_, i) => tasksDone.includes(taskId(w.id, i))).length;
   const totalTasks = weeks.reduce((a, w) => a + w.tasks.length, 0);
   const checkedTasks = weeks.reduce((a, w) => a + weekChecked(w), 0);
@@ -35,11 +37,13 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
         <span className="text-slate-600 font-medium">Plan de révision</span>
       </div>
 
+      <CertTabs current={cert} onChange={setCert} />
+
       {/* En-tête */}
       <div className="rounded-2xl bg-linear-to-br from-indigo-600 to-purple-600 text-white p-6 sm:p-8 mb-8 shadow-lg shadow-indigo-100">
-        <p className="text-indigo-200 text-xs font-medium uppercase tracking-widest">Plan de révision · 10 semaines</p>
-        <h1 className="text-2xl font-bold mt-1">{exam.code} — {exam.title}</h1>
-        <p className="text-indigo-100 text-sm mt-2">Du 5 octobre au 13 décembre 2026 · environ 7 à 8 h par semaine</p>
+        <p className="text-indigo-200 text-xs font-medium uppercase tracking-widest">Plan de révision · {weeks.length} semaines</p>
+        <h1 className="text-2xl font-bold mt-1">{cert.code} — {cert.title}</h1>
+        <p className="text-indigo-100 text-sm mt-2">{cert.planSubtitle}</p>
         <div className="flex flex-wrap gap-x-6 gap-y-3 mt-6 pt-6 border-t border-white/20 text-sm">
           <div><p className="font-bold">{exam.duration}</p><p className="text-indigo-200 text-xs">Durée</p></div>
           <div><p className="font-bold">{exam.passScore}</p><p className="text-indigo-200 text-xs">Score requis</p></div>
@@ -61,9 +65,9 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
       <section className="mb-8">
         <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Ce que pèse chaque domaine à l&apos;examen</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {(Object.keys(domains) as unknown as DomainId[]).map((id) => {
+          {Object.keys(domains).map(Number).map((id) => {
             const d = domains[id];
-            const lps = learningPaths.filter((lp) => lp.domain === Number(id)).map((lp) => lp.id).join(", ");
+            const lps = learningPaths.filter((lp) => lp.domains.includes(id)).map((lp) => lp.id).join(", ");
             return (
               <div key={id} className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
                 <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${d.color}`}>{d.weight}</span>

@@ -9,6 +9,7 @@ export type ProgressMap = Record<string, Attempt>;
 
 const PROGRESS_KEY = "certprep-progress-v1";
 const TASKS_KEY = "certprep-tasks-v1";
+const CERT_KEY = "certprep-cert-v1";
 export const PASS_RATIO = 0.7;
 
 const listeners = new Set<() => void>();
@@ -76,7 +77,13 @@ export function pctOf(a: Attempt | undefined): number | null {
   return a && a.totalQ > 0 ? Math.round((a.score / a.totalQ) * 100) : null;
 }
 
-// Tâches du plan cochées à la main, identifiées par "<semaine>-<index>" (ex. "S1-0")
+// Certification affichée (onglet choisi sur l'accueil et le plan)
+export function useCertCode(fallback: string): [string, (code: string) => void] {
+  const code = useStored(CERT_KEY, fallback);
+  return [code, (c: string) => write(CERT_KEY, c)];
+}
+
+// Tâches du plan cochées à la main, identifiées par "<certif>:<semaine>-<index>" (ex. "AI-103:S1-0")
 export function useTasksDone(): [string[], (id: string) => void] {
   const tasks = useStored(TASKS_KEY, EMPTY_TASKS);
   const toggle = useCallback(

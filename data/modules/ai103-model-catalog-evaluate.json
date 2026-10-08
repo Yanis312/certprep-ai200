@@ -1,0 +1,568 @@
+{
+  "slug": "ai103-model-catalog-evaluate",
+  "title": "Select, deploy, and evaluate Microsoft Foundry models",
+  "description": "LP1 · Module 2 — catalogue de modèles, benchmarks, types de déploiement, évaluation",
+  "category": "AI-103",
+  "order": 2,
+  "units": [
+    {
+      "slug": "ai103-models-introduction",
+      "title": "Introduction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Dans quel ordre le portail Foundry te fait-il traiter un modèle ?",
+          "options": [
+            "Déployer, explorer, évaluer, comparer",
+            "Explorer, comparer, déployer, évaluer",
+            "Évaluer, déployer, comparer, explorer",
+            "Comparer, évaluer, explorer, déployer"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On explore le catalogue, on compare avec les benchmarks, on déploie sur un endpoint, puis on évalue les performances."
+        },
+        {
+          "question": "Sur quelles dimensions les benchmarks du portail Foundry comparent-ils les modèles ?",
+          "options": [
+            "Taille, couleur, poids, âge",
+            "Popularité, date de sortie, licence, langue",
+            "Qualité, sécurité, coût, performance",
+            "CPU, mémoire, disque, réseau"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les benchmarks standard portent sur la qualité, la sécurité, le coût et la performance."
+        },
+        {
+          "question": "Environ combien de modèles le catalogue Foundry permet-il d'explorer ?",
+          "options": [
+            "Plus de 1 900",
+            "Une vingtaine",
+            "Environ 200",
+            "Plus de 100 000"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le portail permet d'explorer plus de 1 900 modèles de fournisseurs comme Microsoft, Anthropic, OpenAI, Meta et Hugging Face."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-model-catalog",
+      "title": "Explore the model catalog",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle est la particularité des Foundry Models vendus directement par Azure ?",
+          "options": [
+            "Ils sont gratuits",
+            "Ils ont chacun leur propre licence et tarification",
+            "Ils ne peuvent pas être déployés",
+            "Ils sont facturés directement sur ton abonnement Azure"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les modèles vendus directement par Azure sont facturés via l'abonnement Azure. Ceux des partenaires et de la communauté ont chacun leur licence et leur tarification."
+        },
+        {
+          "question": "Quel type de modèle choisir pour une recherche sémantique ou un scénario RAG ?",
+          "options": [
+            "Un modèle d'embedding",
+            "Un modèle de génération vidéo",
+            "Un modèle text to speech",
+            "Un modèle de génération d'images"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les modèles d'embedding convertissent le texte en représentations numériques, ce qui permet de retrouver l'information par le sens plutôt que par mots-clés exacts."
+        },
+        {
+          "question": "Dans quel cas un Small Language Model (SLM) comme Phi-4 est-il le meilleur choix ?",
+          "options": [
+            "Quand il faut le raisonnement le plus poussé possible",
+            "Quand il faut générer des vidéos",
+            "Quand la vitesse et le coût comptent plus que le raisonnement le plus complexe, ou sur un appareil edge",
+            "Quand le contexte à traiter est gigantesque"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les SLM sont efficaces et économiques pour les tâches NLP courantes, et peuvent tourner sur du matériel modeste ou des appareils edge."
+        },
+        {
+          "question": "Pour quels types de tâches les modèles de raisonnement sont-ils indiqués ?",
+          "options": [
+            "La synthèse vocale",
+            "Les tâches complexes en mathématiques, code, sciences, stratégie et logistique",
+            "La conversion de texte en vecteurs",
+            "La génération d'images marketing"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles de raisonnement offrent de meilleures capacités de résolution pour les tâches complexes ; ils décomposent les problèmes et peuvent montrer leur raisonnement."
+        },
+        {
+          "question": "Quel filtre du catalogue permet de trouver les modèles qui prennent en charge le tool calling ou le traitement multimodal ?",
+          "options": [
+            "Industry",
+            "Collection",
+            "Fine-tuning methods",
+            "Capabilities"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le filtre Capabilities porte sur les capacités précises : raisonnement, tool calling, traitement multimodal."
+        },
+        {
+          "question": "Que contient la model card d'un modèle ?",
+          "options": [
+            "Le fournisseur, les capacités, les métriques de benchmark, les considérations d'IA responsable et les options de déploiement",
+            "Uniquement le prix",
+            "Le code source complet du modèle",
+            "La liste des clients qui l'utilisent"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La model card présente les informations clés : fournisseur, capacités, benchmarks, IA responsable et options de déploiement."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-model-benchmarks",
+      "title": "Select models using benchmarks",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Pour le benchmark HarmBench, comment interpréter l'Attack Success Rate (ASR) ?",
+          "options": [
+            "Plus la valeur est haute, plus le modèle est sûr",
+            "Plus la valeur est basse, plus le modèle est sûr et robuste",
+            "La valeur n'a aucun rapport avec la sécurité",
+            "Elle mesure la vitesse de réponse"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'ASR mesure le taux de réussite des attaques. Des valeurs basses indiquent des modèles plus sûrs et plus robustes."
+        },
+        {
+          "question": "Comment le coût estimé d'un modèle est-il calculé dans les benchmarks ?",
+          "options": [
+            "En additionnant le prix de 1 000 requêtes",
+            "En prenant uniquement le coût des tokens de sortie",
+            "En combinant les coûts d'entrée et de sortie selon un ratio typique de 3 tokens d'entrée pour 1 de sortie",
+            "En divisant le prix de la VM par le nombre d'utilisateurs"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le coût estimé combine les coûts d'entrée et de sortie avec un ratio typique de 3:1, pour donner un chiffre unique de comparaison. Plus bas = plus économique."
+        },
+        {
+          "question": "Que mesure le Time to first token (TTFT) ?",
+          "options": [
+            "Le temps avant l'arrivée du premier token en streaming",
+            "Le nombre de tokens générés par seconde",
+            "Le temps total d'entraînement du modèle",
+            "Le coût du premier token"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le TTFT est le temps écoulé jusqu'à l'arrivée du premier token lorsqu'on utilise le streaming. Plus bas est mieux."
+        },
+        {
+          "question": "Que signifie « Latency P95 = 3 secondes » ?",
+          "options": [
+            "95 % des requêtes prennent plus de 3 secondes",
+            "La latence moyenne est de 3 secondes",
+            "Le modèle traite 95 tokens en 3 secondes",
+            "95 % des requêtes se terminent en moins de 3 secondes"
+          ],
+          "correctAnswer": 3,
+          "explanation": "P95 : 95 % des requêtes se terminent plus vite que cette valeur."
+        },
+        {
+          "question": "Ton application est un assistant de programmation. Par quoi commencer pour choisir un modèle ?",
+          "options": [
+            "Uniquement par le Quality index global",
+            "Par le scenario leaderboard correspondant au code",
+            "Par le modèle le plus cher",
+            "Par le benchmark WMDP"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Si l'application correspond à un scénario précis, il vaut mieux commencer par le scenario leaderboard concerné plutôt que de se fier seulement au Quality index global."
+        },
+        {
+          "question": "Sur un trade-off chart, où se trouvent les modèles performants sur les deux métriques affichées ?",
+          "options": [
+            "Près du coin inférieur gauche",
+            "Au centre exact",
+            "Près du coin supérieur droit",
+            "Hors du graphique"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les modèles proches du coin supérieur droit obtiennent de bons résultats sur les deux métriques."
+        },
+        {
+          "question": "Que mesure le benchmark ToxiGen ?",
+          "options": [
+            "La capacité du modèle à détecter les discours de haine adverses et implicites",
+            "La vitesse de génération",
+            "Le coût par million de tokens",
+            "Les compétences en mathématiques"
+          ],
+          "correctAnswer": 0,
+          "explanation": "ToxiGen mesure la détection de contenu toxique. Un score F1 plus élevé indique une meilleure détection."
+        },
+        {
+          "question": "Où trouve-t-on les benchmarks détaillés d'un modèle précis ?",
+          "options": [
+            "Dans le portail Azure, section Facturation",
+            "Dans GitHub Copilot",
+            "Dans le playground uniquement",
+            "Dans l'onglet Benchmarks de sa model card"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le Model leaderboard donne le classement global ; l'onglet Benchmarks de la model card donne le détail d'un modèle."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-model-deploy",
+      "title": "Deploy models to endpoints",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel type de déploiement offre une réduction de 50 % pour de gros travaux asynchrones traités sous 24 heures ?",
+          "options": [
+            "Global Standard",
+            "Developer",
+            "Global Batch",
+            "Regional Provisioned"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les déploiements Global Batch utilisent n'importe quelle région Azure avec 50 % de réduction pour de gros travaux asynchrones sous 24 heures."
+        },
+        {
+          "question": "Les données doivent rester dans la zone de données UE, avec un paiement au token. Quel type de déploiement ?",
+          "options": [
+            "Data Zone Standard",
+            "Global Standard",
+            "Global Provisioned",
+            "Developer"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Data Zone Standard garantit que les données restent dans une zone de données précise, en paiement au token. C'est le choix quand la conformité de zone UE/US est exigée."
+        },
+        {
+          "question": "Sur quoi repose la facturation d'un déploiement Provisioned ?",
+          "options": [
+            "Le nombre d'utilisateurs connectés",
+            "Des unités de débit provisionné (PTU) réservées",
+            "Le nombre de lignes de code",
+            "Un forfait gratuit"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les déploiements Provisioned reposent sur des PTU réservées, pour un débit élevé et prévisible."
+        },
+        {
+          "question": "À quoi sert le type de déploiement Developer ?",
+          "options": [
+            "À la production à fort volume",
+            "Au traitement par lots",
+            "À garantir la résidence régionale des données",
+            "À l'évaluation de modèles fine-tunés uniquement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les déploiements Developer utilisent n'importe quelle région en paiement au token et servent uniquement à évaluer des modèles fine-tunés."
+        },
+        {
+          "question": "Dans ton code, quelle valeur mets-tu dans le paramètre model d'une requête ?",
+          "options": [
+            "L'URL de l'endpoint",
+            "La clé d'authentification",
+            "Le nom du déploiement",
+            "Le nom de la ressource Foundry"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Pendant l'inférence, le code utilise le nom du déploiement dans le paramètre model pour router la requête vers le bon déploiement."
+        },
+        {
+          "question": "Quelle méthode d'authentification est recommandée en production ?",
+          "options": [
+            "Microsoft Entra ID",
+            "Une clé écrite en dur dans le code",
+            "Aucune authentification",
+            "Un mot de passe partagé par e-mail"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On peut utiliser une clé, mais l'authentification Microsoft Entra ID, avec un jeton basé sur l'identité de l'application, est recommandée en production."
+        },
+        {
+          "question": "Quels modèles nécessitent souvent d'accepter des conditions Azure Marketplace avant le déploiement ?",
+          "options": [
+            "Les modèles Azure OpenAI comme GPT-4o-mini",
+            "Les modèles de partenaires et de la communauté",
+            "Aucun modèle",
+            "Tous les modèles sans exception"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un abonnement Azure Marketplace est courant pour les modèles de partenaires et de la communauté. Les modèles vendus directement par Azure n'en demandent pas."
+        },
+        {
+          "question": "Quel paramètre règle l'équilibre entre créativité et constance des réponses ?",
+          "options": [
+            "max tokens",
+            "instance count",
+            "deployment name",
+            "temperature"
+          ],
+          "correctAnswer": 3,
+          "explanation": "temperature règle créativité contre constance, max tokens limite la longueur, top-p contrôle le nucleus sampling."
+        },
+        {
+          "question": "Que faut-il configurer en plus pour un déploiement sur managed compute ?",
+          "options": [
+            "Le SKU de machine virtuelle et le nombre d'instances",
+            "Un nom de domaine personnalisé",
+            "Un cluster Kubernetes",
+            "Une base de données SQL"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Pour le managed compute, on choisit le SKU de VM (avec le quota de calcul Azure Machine Learning correspondant) et le nombre d'instances."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-model-evaluate",
+      "title": "Evaluate model performance",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle métrique détermine si une réponse s'appuie sur le contexte fourni plutôt que sur de la spéculation ?",
+          "options": [
+            "Fluency",
+            "Groundedness",
+            "Coherence",
+            "BLEU"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Groundedness vérifie que les réponses sont fondées sur le contexte fourni. Groundedness Pro donne un verdict binaire."
+        },
+        {
+          "question": "Quelle métrique NLP est particulièrement adaptée à l'évaluation de résumés ?",
+          "options": [
+            "ROUGE",
+            "BLEU",
+            "GLEU",
+            "Groundedness"
+          ],
+          "correctAnswer": 0,
+          "explanation": "ROUGE privilégie le rappel sur la précision, ce qui convient au résumé où couvrir les points clés compte le plus."
+        },
+        {
+          "question": "Quelle métrique NLP est couramment utilisée pour évaluer la traduction automatique en comparant des n-grammes ?",
+          "options": [
+            "F1-score",
+            "Fluency",
+            "BLEU",
+            "Relevance"
+          ],
+          "correctAnswer": 2,
+          "explanation": "BLEU compare les n-grammes entre texte généré et texte de référence. METEOR l'étend avec les synonymes, les racines et les paraphrases."
+        },
+        {
+          "question": "Qu'est-ce qui caractérise les métriques NLP par rapport aux métriques assistées par IA ?",
+          "options": [
+            "Elles nécessitent un modèle GPT évaluateur",
+            "Elles ne fonctionnent que sur des images",
+            "Elles sont réservées à l'évaluation manuelle",
+            "Elles reposent sur un calcul mathématique, sans modèle évaluateur, et demandent souvent une vérité terrain"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les métriques NLP sont mathématiques et n'ont pas besoin de modèle évaluateur, mais souvent de données de vérité terrain."
+        },
+        {
+          "question": "Comment les résultats des métriques de contenu nuisible sont-ils agrégés ?",
+          "options": [
+            "En score de 0 à 1 par mot",
+            "En taux de défaut : le pourcentage de réponses dépassant un seuil de gravité, en général Medium",
+            "En nombre de tokens générés",
+            "En temps moyen de réponse"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Pour les contenus nuisibles, les résultats s'agrègent en defect rate : pourcentage de réponses au-dessus d'un seuil de gravité, typiquement Medium."
+        },
+        {
+          "question": "Tu n'as pas de données de test. Que propose le portail Foundry ?",
+          "options": [
+            "Générer un jeu de données synthétique à partir d'une description du sujet",
+            "Annuler l'évaluation",
+            "Utiliser les données d'un autre client",
+            "Rien, c'est impossible"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'option Generate synthetic dataset crée des données d'exemple à partir d'une description : ressource, nombre de lignes, prompt, et éventuellement des fichiers."
+        },
+        {
+          "question": "Quels formats de fichier peut-on charger comme nouveau jeu de données d'évaluation ?",
+          "options": [
+            "PDF ou DOCX",
+            "MP4 ou WAV",
+            "CSV ou JSONL",
+            "EXE ou DLL"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On peut charger un fichier CSV ou JSONL contenant les cas de test."
+        },
+        {
+          "question": "Quelle est la particularité d'une évaluation basée sur un « Dataset » ?",
+          "options": [
+            "Le système génère les sorties pendant l'évaluation",
+            "Elle évalue uniquement les agents",
+            "Elle ne calcule aucune métrique",
+            "Elle évalue des sorties déjà générées et présentes dans le jeu de données"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Avec Dataset, on évalue des sorties pré-générées. Avec Model, les sorties sont produites pendant l'évaluation à partir des prompts."
+        },
+        {
+          "question": "Les métriques de sécurité révèlent des problèmes. Laquelle de ces actions est recommandée ?",
+          "options": [
+            "Augmenter la temperature",
+            "Mettre en place des filtres de contenu avec Azure AI Content Safety",
+            "Supprimer le message système",
+            "Passer à un déploiement Batch"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Face à des soucis de sécurité : filtres de contenu (Azure AI Content Safety), durcissement du prompt avec des consignes de sécurité, validation des sorties avant affichage."
+        },
+        {
+          "question": "Que capte l'évaluation manuelle que les métriques automatiques mesurent mal ?",
+          "options": [
+            "Les aspects subjectifs : satisfaction utilisateur, adéquation au contexte, alignement avec la marque",
+            "Le nombre de tokens",
+            "Le coût par requête",
+            "La latence P99"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'évaluation manuelle complète les approches automatiques en captant les aspects subjectifs de la qualité."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-models-lab",
+      "title": "Lab — choisir, déployer et évaluer un modèle",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans quelle section du portail Foundry gère-t-on la liste des modèles déjà déployés ?",
+          "options": [
+            "Discover → Models",
+            "Azure Marketplace",
+            "Build → Models",
+            "Evaluator library"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Après le déploiement, on gère les modèles depuis la section Build, puis Models. Discover → Models sert à parcourir le catalogue."
+        },
+        {
+          "question": "Quel état indique qu'un déploiement s'est bien terminé ?",
+          "options": [
+            "Pending",
+            "Succeeded",
+            "Queued",
+            "Draft"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Il faut vérifier que l'état du déploiement affiche Succeeded dans la liste."
+        },
+        {
+          "question": "À quoi sert l'onglet Code du playground ?",
+          "options": [
+            "À voir le code source du modèle",
+            "À modifier les poids du modèle",
+            "À écrire des tests unitaires",
+            "À obtenir des exemples d'appel du modèle déployé, avec authentification, endpoint et format de requête"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'onglet Code montre comment appeler le modèle déployé par programme, en Python, C# ou JavaScript, à copier dans ton application."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-models-bilan",
+      "title": "Bilan et knowledge check",
+      "order": 7,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel benchmark indique la capacité du modèle à traiter les prompts et à renvoyer des réponses complètes rapidement ?",
+          "options": [
+            "Quality index",
+            "Cost",
+            "Throughput"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Le débit (throughput) mesure les tokens traités ou générés par seconde."
+        },
+        {
+          "question": "Quel type de déploiement Microsoft Foundry convient le mieux à un usage général tout en offrant le plus grand quota ?",
+          "options": [
+            "Data Zone Batch",
+            "Global Standard",
+            "Developer"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Global Standard : toute région Azure, paiement au token, idéal pour les charges générales, quota le plus élevé."
+        },
+        {
+          "question": "Quelle métrique d'évaluation mesure la correction linguistique et la qualité du langage naturel ?",
+          "options": [
+            "Fluency",
+            "Groundedness",
+            "Relevance"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Fluency évalue la correction linguistique et la qualité de la langue."
+        },
+        {
+          "question": "Les scores de qualité sont trop bas. Quelle amélioration essaie-t-on en premier, car la plus simple ?",
+          "options": [
+            "Le fine-tuning",
+            "L'intégration du RAG",
+            "Changer d'abonnement Azure",
+            "Le prompt engineering"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les pistes vont en complexité croissante : prompt engineering, autre modèle, RAG, fine-tuning. On commence par affiner instructions et messages système."
+        },
+        {
+          "question": "Avec quels services Microsoft recommande-t-il de superviser les performances en production ?",
+          "options": [
+            "Azure Monitor et Application Insights",
+            "Azure DevTest Labs",
+            "Microsoft Excel",
+            "Azure Translator"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Azure Monitor et Application Insights suivent l'usage, la latence, les coûts et les erreurs."
+        },
+        {
+          "question": "Quelle technique ancre les réponses d'un modèle dans les données de ton organisation ?",
+          "options": [
+            "Le nucleus sampling",
+            "La génération d'images",
+            "Retrieval Augmented Generation (RAG)",
+            "Le déploiement Global Batch"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le RAG combine les modèles avec des capacités de recherche pour fournir des réponses exactes et pertinentes à partir de tes documents et bases de connaissances."
+        },
+        {
+          "question": "Quel type de modèle choisir pour un assistant qui doit tourner sur un appareil edge à faible puissance ?",
+          "options": [
+            "Un LLM comme GPT-5",
+            "Un SLM comme Phi-4",
+            "Un modèle de génération vidéo comme Sora 2",
+            "Un modèle d'embedding"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les SLM peuvent tourner sur du matériel modeste ou des appareils edge, et sont efficaces et économiques."
+        }
+      ]
+    }
+  ]
+}

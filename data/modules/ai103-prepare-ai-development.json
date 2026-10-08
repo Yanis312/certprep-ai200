@@ -1,0 +1,510 @@
+{
+  "slug": "ai103-prepare-ai-development",
+  "title": "Plan and prepare to develop AI solutions on Azure",
+  "description": "LP1 · Module 1 — capacités de l'IA, Microsoft Foundry, Foundry Tools, outils et SDK, IA responsable",
+  "category": "AI-103",
+  "order": 1,
+  "units": [
+    {
+      "slug": "ai103-prepare-introduction",
+      "title": "Introduction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quels éléments une solution d'IA complète doit-elle combiner ?",
+          "options": [
+            "Uniquement un grand modèle de langage",
+            "Des modèles de machine learning, des services d'IA, du prompt engineering et du code personnalisé",
+            "Une base de données, un site web et un pare-feu",
+            "Des machines virtuelles et des conteneurs"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Une solution d'IA complète combine des modèles de machine learning, des services d'IA, des solutions de prompt engineering et du code personnalisé."
+        },
+        {
+          "question": "Quelle plateforme ce module présente-t-il comme la plateforme complète de développement d'IA sur Azure ?",
+          "options": [
+            "Azure Machine Learning Studio",
+            "Azure DevOps",
+            "Microsoft Foundry",
+            "Microsoft Fabric"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Microsoft Foundry est la plateforme complète de développement d'IA sur Microsoft Azure."
+        },
+        {
+          "question": "Que faut-il faire avant de se lancer dans un projet de développement d'IA sur Azure ?",
+          "options": [
+            "Examiner les options de services, d'outils et de frameworks disponibles",
+            "Entraîner son propre LLM à partir de zéro",
+            "Acheter des GPU dédiés",
+            "Désactiver toute authentification pour aller plus vite"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Avant de démarrer, il est utile d'examiner les services, outils et frameworks disponibles ainsi que les principes et pratiques qui aident à réussir."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-what-is-ai",
+      "title": "What is AI? — les 5 capacités",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Une application doit extraire la date d'achat, les lignes et le total d'un ticket de caisse scanné. Quelle capacité d'IA est concernée ?",
+          "options": [
+            "Parole (computer speech)",
+            "IA générative",
+            "Extraction d'informations",
+            "Analyse de sentiment"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'extraction d'informations combine IA générative, NLP, vision et parole pour extraire les informations clés de documents, formulaires, images ou enregistrements. Le ticket de caisse est l'exemple du cours."
+        },
+        {
+          "question": "De quoi se compose un agent d'IA ?",
+          "options": [
+            "D'un LLM, d'instructions ciblées et d'outils",
+            "D'une base de données et d'une API REST",
+            "D'un modèle de vision et d'une caméra",
+            "D'un LLM seul, sans rien d'autre"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un agent combine un LLM, des instructions qui définissent ses responsabilités, et des outils pour trouver des connaissances et automatiser ses tâches."
+        },
+        {
+          "question": "Une caisse automatique identifie les produits dans le panier du client sans scanner de code-barres. Quelle capacité utilise-t-elle ?",
+          "options": [
+            "Traitement du langage naturel",
+            "Vision par ordinateur",
+            "Parole",
+            "Traduction"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La vision par ordinateur permet d'accepter, interpréter et traiter une entrée visuelle : images, vidéos, flux caméra. C'est l'exemple de la caisse automatique."
+        },
+        {
+          "question": "Pourquoi les techniques NLP statistiques restent-elles utiles alors que les LLM savent faire beaucoup de tâches de langage ?",
+          "options": [
+            "Parce que les LLM ne comprennent pas le texte",
+            "Parce que le NLP est le seul à pouvoir générer des images",
+            "Parce que le NLP est obligatoire pour utiliser Foundry",
+            "Parce que certains usages spécialisés d'analyse de texte profitent d'algorithmes de fréquence de termes et de modèles dédiés à une tâche"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Pour l'analyse de texte spécialisée, les techniques basées sur la fréquence des termes et les modèles dédiés (classification, sentiment, résumé) restent pertinents."
+        },
+        {
+          "question": "Que signifie « multimodal » pour un modèle génératif ?",
+          "options": [
+            "Il fonctionne dans plusieurs régions Azure",
+            "Il traite plusieurs types de contenu, par exemple du texte et des images, et peut générer des images ou des vidéos",
+            "Il parle plusieurs langues",
+            "Il est déployé plusieurs fois"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles génératifs sont de plus en plus multimodaux : ils traitent une entrée visuelle et peuvent aussi produire des images et des vidéos."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-microsoft-foundry",
+      "title": "Microsoft Foundry — ressource, projets, portail",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle relation existe entre un projet Foundry et une ressource Foundry ?",
+          "options": [
+            "Un projet peut appartenir à plusieurs ressources Foundry",
+            "Une ressource Foundry ne peut contenir qu'un seul projet",
+            "Un projet appartient à une seule ressource Foundry, qui peut avoir un ou plusieurs projets",
+            "Les projets n'ont pas besoin de ressource Foundry"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Chaque projet appartient à une seule ressource Foundry. Une ressource peut prendre en charge un ou plusieurs projets enfants, dont un est le projet par défaut."
+        },
+        {
+          "question": "Par quel endpoint les agents Foundry sont-ils développés et utilisés ?",
+          "options": [
+            "L'endpoint du projet, via le Foundry Agent Service",
+            "L'endpoint Azure OpenAI uniquement",
+            "L'endpoint du portail Azure",
+            "L'endpoint d'Azure Translator"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les agents sont développés et consommés avec le Microsoft Foundry Agent Service, par l'endpoint du projet."
+        },
+        {
+          "question": "Tu veux réutiliser du code écrit avec le SDK OpenAI pour appeler un modèle déployé dans Foundry. Quel endpoint utilises-tu ?",
+          "options": [
+            "L'endpoint Foundry IQ",
+            "L'endpoint du Foundry Agent Service",
+            "L'endpoint Azure Language",
+            "L'endpoint Azure OpenAI"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On accède aux modèles soit par l'endpoint du projet (API et SDK Foundry), soit par l'endpoint Azure OpenAI (API et SDK OpenAI)."
+        },
+        {
+          "question": "À quoi sert Foundry IQ dans un projet ?",
+          "options": [
+            "À mesurer le QI des modèles",
+            "À créer une connexion de connaissances unique et centralisée, basée sur MCP",
+            "À facturer l'utilisation des modèles",
+            "À traduire du texte"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Foundry IQ simplifie l'intégration de plusieurs sources de connaissances en créant une connexion de connaissances centrale basée sur MCP."
+        },
+        {
+          "question": "Comment automatiser la création et la gestion des éléments d'un projet Foundry dans un pipeline CI/CD ?",
+          "options": [
+            "En cliquant dans le portail Foundry",
+            "Ce n'est pas possible",
+            "Avec le SDK Microsoft Foundry",
+            "Avec GitHub Copilot uniquement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le SDK Foundry permet de créer et gérer les éléments par scripts ou par actions CI/CD automatisées dans des pipelines DevOps."
+        },
+        {
+          "question": "Sur quelle architecture peuvent reposer les anciens projets Foundry dits « classic » ?",
+          "options": [
+            "Une architecture à base de hub",
+            "Une architecture à base de conteneurs Kubernetes",
+            "Une architecture sans ressource Azure",
+            "Une architecture à base de machines virtuelles"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les projets Foundry classiques peuvent utiliser une architecture basée sur un hub. Le module porte sur la nouvelle architecture ressource Foundry + projets."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-foundry-tools",
+      "title": "Foundry Tools — services prêts à l'emploi",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel Foundry Tool utilises-tu pour extraire les champs de factures et de reçus avec des modèles préconstruits ou personnalisés ?",
+          "options": [
+            "Azure Speech",
+            "Azure Document Intelligence",
+            "Azure Translator",
+            "Azure Language"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Azure Document Intelligence extrait des champs de documents complexes comme les factures, reçus et formulaires."
+        },
+        {
+          "question": "Tu dois extraire des données à partir de vidéos et de flux audio. Quel outil est conçu pour cette analyse multimodale ?",
+          "options": [
+            "Azure Document Intelligence",
+            "Azure Translator",
+            "Azure Language",
+            "Azure Content Understanding"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Azure Content Understanding fournit une analyse de contenu multimodale : formulaires, documents, images, vidéos et flux audio."
+        },
+        {
+          "question": "Quel avantage les Foundry Tools apportent-ils par rapport à une solution reposant uniquement sur des agents génératifs ?",
+          "options": [
+            "Une solution plus économique et plus prévisible",
+            "Ils remplacent le besoin d'un abonnement Azure",
+            "Ils sont toujours plus créatifs",
+            "Ils ne nécessitent aucune authentification"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Utiliser ces outils préconstruits aide à créer une solution plus rentable et plus prévisible que de s'appuyer uniquement sur des agents génératifs."
+        },
+        {
+          "question": "Comment une application cliente utilise-t-elle un Foundry Tool ?",
+          "options": [
+            "Elle télécharge le modèle en local",
+            "Elle passe obligatoirement par le Foundry Agent Service",
+            "Elle se connecte à l'endpoint propre à l'outil dans la ressource Foundry, avec la clé du projet ou un jeton",
+            "Elle utilise l'endpoint Azure OpenAI"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On se connecte à l'endpoint spécifique de l'outil dans la ressource Foundry, en fournissant la clé d'authentification du projet ou une authentification par jeton, puis on utilise les API et SDK de l'outil."
+        },
+        {
+          "question": "Sous quels anciens noms les Foundry Tools apparaissent-ils encore dans certaines API et SDK ?",
+          "options": [
+            "Azure Bot Framework et LUIS",
+            "Azure AI Services et Azure Cognitive Services",
+            "Azure Machine Learning et Azure Databricks",
+            "Azure OpenAI et Azure Functions"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Ces outils s'appelaient Azure AI Services, et avant cela Azure Cognitive Services. Ces noms subsistent dans certaines API et SDK."
+        },
+        {
+          "question": "Quel outil choisis-tu pour l'analyse de sentiment et l'extraction d'entités dans du texte ?",
+          "options": [
+            "Azure Speech",
+            "Azure Content Understanding",
+            "Azure Translator",
+            "Azure Language"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Azure Language analyse le texte en langage naturel : extraction d'entités, analyse de sentiment, résumé."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-dev-tools-sdks",
+      "title": "Developer tools and SDKs",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel SDK permet de se connecter à un projet Foundry et d'accéder aux agents et aux bases de connaissances Foundry IQ ?",
+          "options": [
+            "Le SDK Microsoft Foundry",
+            "Le SDK Azure Storage",
+            "Le SDK Azure Translator",
+            "Le SDK Kubernetes"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le SDK Microsoft Foundry permet d'écrire du code qui se connecte aux projets Foundry et accède aux éléments propres à Foundry, comme les agents et Foundry IQ."
+        },
+        {
+          "question": "Laquelle de ces tâches l'extension Foundry Toolkit pour VS Code permet-elle ?",
+          "options": [
+            "Gérer la facturation de l'abonnement Azure",
+            "Créer des machines virtuelles",
+            "Tester des modèles et des agents dans des playgrounds intégrés",
+            "Écrire automatiquement tout le code de l'application"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Foundry Toolkit permet de parcourir les ressources du projet, déployer des modèles, tester modèles et agents dans des playgrounds, configurer des agents et générer du code d'intégration."
+        },
+        {
+          "question": "Avec Foundry Toolkit, comment configure-t-on des agents déclaratifs et hébergés ?",
+          "options": [
+            "Uniquement en ligne de commande",
+            "Avec un concepteur visuel et des fichiers YAML",
+            "Avec des fichiers Excel",
+            "Avec des scripts SQL"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'extension permet de configurer des agents déclaratifs et hébergés à l'aide d'un concepteur visuel et de fichiers YAML."
+        },
+        {
+          "question": "Quel est le rôle de l'API OpenAI dans une solution Foundry ?",
+          "options": [
+            "Gérer les accès utilisateurs du projet",
+            "Extraire les champs de documents",
+            "Remplacer GitHub pour le contrôle de source",
+            "Utiliser les SDK OpenAI pour créer des applications de chat sur des modèles Foundry compatibles avec la syntaxe OpenAI"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'API OpenAI permet d'utiliser les SDK OpenAI pour créer des applications de chat basées sur des modèles Foundry qui prennent en charge la syntaxe OpenAI."
+        },
+        {
+          "question": "Par quel autre moyen que leurs SDK peut-on utiliser les Foundry Tools ?",
+          "options": [
+            "Par leurs API REST",
+            "Par FTP",
+            "Uniquement depuis le portail Azure",
+            "Par e-mail"
+          ],
+          "correctAnswer": 0,
+          "explanation": "En plus des bibliothèques propres à chaque service, les Foundry Tools sont utilisables par leurs API REST."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-responsible-ai",
+      "title": "Responsible AI — les 6 principes",
+      "order": 6,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Un modèle d'approbation de prêts ne doit avantager ou désavantager aucun groupe de demandeurs selon le genre ou l'origine. De quel principe s'agit-il ?",
+          "options": [
+            "Transparence",
+            "Fiabilité et sécurité",
+            "Équité (fairness)",
+            "Responsabilité"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'équité : les systèmes d'IA doivent traiter toutes les personnes équitablement, sans biais. Le prêt bancaire est l'exemple du cours."
+        },
+        {
+          "question": "Les utilisateurs doivent connaître l'objectif du système, son fonctionnement et ses limites. Quel principe est décrit ?",
+          "options": [
+            "Transparence",
+            "Inclusion",
+            "Confidentialité et sécurité",
+            "Équité"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La transparence : les systèmes d'IA doivent être compréhensibles, et les utilisateurs informés de leur but, de leur fonctionnement et de leurs limites."
+        },
+        {
+          "question": "Appliquer des seuils appropriés aux scores de confiance des prédictions relève de quel principe ?",
+          "options": [
+            "Inclusion",
+            "Fiabilité et sécurité",
+            "Responsabilité",
+            "Équité"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Fiabilité et sécurité : il faut des tests rigoureux et tenir compte de la nature probabiliste des modèles en appliquant des seuils sur les scores de confiance."
+        },
+        {
+          "question": "Selon le principe de responsabilité (accountability), qui répond du comportement d'un système d'IA qui semble autonome ?",
+          "options": [
+            "Le système lui-même",
+            "L'utilisateur final uniquement",
+            "Personne, puisque le modèle est probabiliste",
+            "Les concepteurs et développeurs, dans un cadre de gouvernance"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les personnes doivent rendre des comptes : les développeurs qui ont entraîné et validé les modèles et défini la logique de décision, dans un cadre de gouvernance et de principes d'organisation."
+        },
+        {
+          "question": "Quelle pratique aide à optimiser l'inclusion (inclusiveness) ?",
+          "options": [
+            "Chiffrer toutes les données",
+            "Publier les scores de confiance",
+            "Faire participer un groupe de personnes aussi divers que possible à la conception, au développement et aux tests",
+            "Nommer un comité de gouvernance"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Pour l'inclusion, on s'assure que la conception, le développement et les tests intègrent les retours d'un groupe de personnes aussi divers que possible."
+        },
+        {
+          "question": "Pourquoi les questions d'IA responsable sont-elles particulièrement importantes pour une application dotée d'IA ?",
+          "options": [
+            "Parce que l'IA est toujours exacte",
+            "Parce que ces systèmes reposent souvent sur des modèles probabilistes, dépendants des données d'entraînement",
+            "Parce que l'IA n'utilise jamais de données personnelles",
+            "Parce que la loi interdit l'usage de l'IA"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les systèmes d'IA éclairent des décisions à partir de modèles probabilistes qui dépendent des données d'entraînement, et les utilisateurs leur accordent beaucoup de confiance."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-prepare-lab",
+      "title": "Lab — préparer un projet de développement d'IA",
+      "order": 7,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans quel portail trouves-tu les endpoints et les clés nécessaires pour accéder aux éléments d'un projet depuis une application cliente ?",
+          "options": [
+            "Le portail Microsoft Foundry",
+            "GitHub",
+            "Microsoft Learn",
+            "Microsoft 365 Admin Center"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Dans le portail Foundry, on trouve les endpoints et les clés nécessaires pour accéder aux éléments du projet depuis des applications clientes."
+        },
+        {
+          "question": "Que faut-il pour faire ce lab ?",
+          "options": [
+            "Une licence Visual Studio Enterprise",
+            "Un cluster Kubernetes",
+            "Un abonnement Azure, éventuellement un compte d'essai avec crédits",
+            "Un GPU local"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Il faut un abonnement Azure. Sans abonnement, on peut créer un compte qui inclut des crédits pour les 30 premiers jours."
+        },
+        {
+          "question": "Laquelle de ces actions fait-on dans le portail Foundry ?",
+          "options": [
+            "Créer des réseaux virtuels on-premises",
+            "Trouver, comparer, déployer et tester des modèles",
+            "Gérer les licences Windows",
+            "Compiler du code C#"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le portail Foundry permet notamment de trouver, comparer, déployer et tester des modèles, et de créer et tester des agents."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-prepare-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 8,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel portail web utiliser pour travailler avec les éléments d'un projet Microsoft Foundry ?",
+          "options": [
+            "Le portail Azure",
+            "Microsoft Copilot",
+            "Le portail Microsoft Foundry"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Le portail Microsoft Foundry est l'interface web pour travailler avec les projets d'IA."
+        },
+        {
+          "question": "Quel composant de Microsoft Foundry fournit des services préconstruits pour les tâches d'IA courantes ?",
+          "options": [
+            "Foundry Tools",
+            "Foundry Models",
+            "Foundry IQ"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Foundry Tools est un ensemble d'API et de modèles préconstruits. Foundry Models est le catalogue de modèles, Foundry IQ gère les connaissances."
+        },
+        {
+          "question": "Quelle extension utiliser dans Visual Studio Code pour travailler avec les projets Foundry ?",
+          "options": [
+            "L'extension Python pour Visual Studio Code",
+            "GitHub Copilot",
+            "Foundry Toolkit pour Visual Studio Code"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Foundry Toolkit simplifie les tâches clés du développement Foundry dans VS Code."
+        },
+        {
+          "question": "Quels sont les quatre types d'éléments gérés dans un projet Foundry ?",
+          "options": [
+            "Machines virtuelles, réseaux, disques, pare-feu",
+            "Models, Agents, Tools, Knowledge",
+            "Tables, vues, index, procédures",
+            "Pods, services, secrets, volumes"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un projet gère les modèles, les agents, les outils et les connaissances."
+        },
+        {
+          "question": "Une entreprise veut traduire de gros volumes de texte de façon économique et prévisible. Que recommandes-tu ?",
+          "options": [
+            "Un agent génératif avec un long prompt",
+            "Entraîner un modèle de traduction maison",
+            "Azure Document Intelligence",
+            "Azure Translator, un Foundry Tool"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Azure Translator traduit du texte entre un grand nombre de langues. Les Foundry Tools donnent une solution plus économique et prévisible que des agents génératifs seuls."
+        },
+        {
+          "question": "Quand Microsoft Foundry est-il la façon recommandée de construire une solution d'IA sur Azure ?",
+          "options": [
+            "Pour toutes les solutions sauf les plus simples",
+            "Uniquement pour les solutions de vision",
+            "Jamais, il vaut mieux créer chaque ressource à la main",
+            "Uniquement pour les projets .NET"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'organisation en projets, la gestion des ressources et les capacités de développement de Foundry en font la méthode recommandée pour tout sauf les solutions les plus simples."
+        }
+      ]
+    }
+  ]
+}

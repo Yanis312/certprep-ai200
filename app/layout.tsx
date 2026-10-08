@@ -25,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-1 text-sm">
               <Link href="/" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Accueil</Link>
               <Link href="/plan" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Plan</Link>
-              <span className="hidden sm:inline px-3 py-1.5 text-xs bg-indigo-50 text-indigo-600 rounded-lg font-semibold">AI-200</span>
             </div>
           </div>
         </nav>
@@ -35,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer */}
         <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-400">
-          CertPrep · Révision Microsoft AI-200
+          CertPrep · Révision Microsoft AI-103 et AI-200
         </footer>
       </body>
     </html>

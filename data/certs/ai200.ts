@@ -1,49 +1,12 @@
 // Plan officiel AI-200 (Microsoft Learn, vérifié le 5 octobre 2026) + plan de révision.
+import type { Cert, LearningPath, Week } from "./types";
 
-export const exam = {
-  code: "AI-200",
-  title: "Azure AI Cloud Developer Associate",
-  duration: "120 min",
-  passScore: "700 / 1000",
-  price: "165 USD",
-  status: "Disponible (sorti de beta en juillet 2026)",
-  languages: "Français disponible",
-  studyGuide: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200",
-};
-
-export type DomainId = 1 | 2 | 3 | 4;
-
-export const domains: Record<DomainId, { label: string; weight: string; color: string }> = {
-  1: { label: "Conteneurs", weight: "20–25 %", color: "bg-sky-100 text-sky-700 border-sky-200" },
-  2: { label: "Données IA", weight: "25–30 %", color: "bg-violet-100 text-violet-700 border-violet-200" },
-  3: { label: "Messagerie & Functions", weight: "20–25 %", color: "bg-amber-100 text-amber-700 border-amber-200" },
-  4: { label: "Sécurité & observabilité", weight: "20–25 %", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-};
-
-export type PlanModule = {
-  title: string;
-  /** slug du module sur Microsoft Learn */
-  learn: string;
-  /** slug du module sur ce site (data/modules/<slug>.json) quand la fiche existe */
-  site?: string;
-  /** module ajouté après coup, absent de la liste officielle des compétences */
-  bonus?: boolean;
-};
-
-export type LearningPath = {
-  id: string;
-  title: string;
-  duration: string;
-  domain: DomainId;
-  modules: PlanModule[];
-};
-
-export const learningPaths: LearningPath[] = [
+const learningPaths: LearningPath[] = [
   {
     id: "LP1",
     title: "Implement container application hosting on Azure",
     duration: "3h45",
-    domain: 1,
+    domains: [1],
     modules: [
       { title: "Store and manage containers in Azure Container Registry", learn: "store-manage-containers-azure-container-registry", site: "container-hosting" },
       { title: "Deploy containers to Azure App Service", learn: "deploy-containers-azure-app-service", site: "app-service-containers" },
@@ -54,7 +17,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP2",
     title: "Deploy and manage apps on Azure Container Apps",
     duration: "5h11",
-    domain: 1,
+    domains: [1],
     modules: [
       { title: "Deploy containers to Azure Container Apps", learn: "deploy-containers-azure-container-apps" },
       { title: "Manage containers in Azure Container Apps", learn: "manage-containers-azure-container-apps" },
@@ -66,7 +29,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP3",
     title: "Deploy and monitor applications on Azure Kubernetes Service",
     duration: "3h32",
-    domain: 1,
+    domains: [1],
     modules: [
       { title: "Deploy applications to Azure Kubernetes Service", learn: "deploy-apps-azure-kubernetes-service" },
       { title: "Configure applications on Azure Kubernetes Service", learn: "configure-apps-azure-kubernetes-service" },
@@ -77,7 +40,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP4",
     title: "Develop AI solutions with Azure Cosmos DB for NoSQL",
     duration: "4h12",
-    domain: 2,
+    domains: [2],
     modules: [
       { title: "Build queries for Azure Cosmos DB for NoSQL", learn: "build-query-azure-cosmos-db" },
       { title: "Implement vector search on Azure Cosmos DB for NoSQL", learn: "implement-vector-search-azure-cosmos-db" },
@@ -88,7 +51,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP5",
     title: "Develop AI solutions with Azure Database for PostgreSQL",
     duration: "4h54",
-    domain: 2,
+    domains: [2],
     modules: [
       { title: "Build and query with Azure Database for PostgreSQL", learn: "build-query-azure-database-postgresql" },
       { title: "Implement vector search with PostgreSQL (pgvector)", learn: "implement-vector-search-azure-database-postgresql" },
@@ -99,7 +62,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP6",
     title: "Enhance AI solutions with Azure Managed Redis",
     duration: "3h42",
-    domain: 2,
+    domains: [2],
     modules: [
       { title: "Implement data operations in Azure Managed Redis", learn: "implement-data-operations-azure-managed-redis" },
       { title: "Implement event messaging with Azure Managed Redis", learn: "implement-event-messaging-azure-managed-redis" },
@@ -110,7 +73,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP7",
     title: "Integrate backend services for AI solutions",
     duration: "5h40",
-    domain: 3,
+    domains: [3],
     modules: [
       { title: "Queue and process AI operations with Azure Service Bus", learn: "queue-process-operations-service-bus" },
       { title: "Develop event-driven AI workflows with Azure Event Grid", learn: "event-driven-workflows-event-grid" },
@@ -122,7 +85,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP8",
     title: "Manage application secrets and configuration for AI solutions",
     duration: "~2h33",
-    domain: 4,
+    domains: [4],
     modules: [
       { title: "Manage application secrets with Azure Key Vault", learn: "manage-app-secrets-key-vault" },
       { title: "Manage application settings with Azure App Configuration", learn: "manage-app-settings-app-config" },
@@ -132,7 +95,7 @@ export const learningPaths: LearningPath[] = [
     id: "LP9",
     title: "Observe and troubleshoot apps on Azure",
     duration: "~2h41",
-    domain: 4,
+    domains: [4],
     modules: [
       { title: "Instrument an app with OpenTelemetry", learn: "instrument-app-opentelemetry" },
       { title: "Analyze app telemetry with logs and metrics (KQL)", learn: "analyze-telemetry-logs-metrics" },
@@ -140,19 +103,9 @@ export const learningPaths: LearningPath[] = [
   },
 ];
 
-export const learnModuleUrl = (slug: string) => `https://learn.microsoft.com/fr-fr/training/modules/${slug}/`;
-
-export type Week = {
-  id: string;
-  dates: string;
-  title: string;
-  lps: string[];
-  tasks: string[];
-  focus: string;
-};
 
 // 10 semaines à ~7-8 h/semaine (≈ 36 h de contenu Learn + fiches, quiz et labs).
-export const weeks: Week[] = [
+const weeks: Week[] = [
   {
     id: "S1",
     dates: "5 – 11 oct.",
@@ -279,10 +232,36 @@ export const weeks: Week[] = [
   },
 ];
 
-export const method = [
+
+const method = [
   "Lire l'unité sur Microsoft Learn",
   "Coller le texte à Claude pour créer la fiche et le quiz",
   "Faire le quiz jusqu'à 70 % minimum",
   "Repasser les flashcards le lendemain",
   "Faire le lab à la main en fin de module",
 ];
+
+export const ai200: Cert = {
+  code: "AI-200",
+  title: "Azure AI Cloud Developer Associate",
+  icon: "☁️",
+  overviewHref: "/vue-globale",
+  exam: {
+    duration: "120 min",
+    passScore: "700 / 1000",
+    price: "165 USD",
+    status: "Disponible (sorti de beta en juillet 2026)",
+    languages: "Français disponible",
+    studyGuide: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200",
+  },
+  domains: {
+    1: { label: "Conteneurs", weight: "20–25 %", color: "bg-sky-100 text-sky-700 border-sky-200" },
+    2: { label: "Données IA", weight: "25–30 %", color: "bg-violet-100 text-violet-700 border-violet-200" },
+    3: { label: "Messagerie & Functions", weight: "20–25 %", color: "bg-amber-100 text-amber-700 border-amber-200" },
+    4: { label: "Sécurité & observabilité", weight: "20–25 %", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+  },
+  planSubtitle: "Du 5 octobre au 13 décembre 2026 · environ 7 à 8 h par semaine",
+  learningPaths,
+  weeks,
+  method,
+};

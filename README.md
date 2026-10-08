@@ -1,6 +1,6 @@
-# CertPrep — révision AI-200
+# CertPrep — révision AI-103 et AI-200
 
-Site de révision pour la certification **AI-200 — Azure AI Cloud Developer Associate** : fiches de cours, quiz, flashcards et plan de révision sur 10 semaines.
+Site de révision pour les certifications **AI-103 — Azure AI Apps and Agents Developer Associate** et **AI-200 — Azure AI Cloud Developer Associate** : fiches de cours, quiz, flashcards et plan de révision à cocher.
 
 Le site est **100 % statique** (export Next.js) et publié sur GitHub Pages à chaque push sur `main`. La progression est enregistrée dans le navigateur (localStorage), il n'y a ni serveur ni base de données.
 
@@ -18,12 +18,12 @@ npm run build    # génère le site statique dans out/
 |---|---|
 | Modules, unités et questions de quiz | `data/modules/<slug-du-module>.json` |
 | Texte des fiches de cours | `content/<catégorie>/<slug-de-l-unité>.md` |
-| Plan officiel (9 learning paths) et planning des semaines | `data/plan.ts` |
+| Une certification : examen, domaines, learning paths, planning des semaines | `data/certs/<certif>.ts` |
 | Lexique | `components/Lexique.tsx` |
 
 ## Ajouter une unité
 
-1. Écrire la fiche dans `content/AI-200/<slug>.md`.
+1. Écrire la fiche dans `content/<CERTIF>/<slug>.md` (par exemple `content/AI-103/`). Un corrigé repliable s'écrit avec `<details><summary>Voir le corrigé</summary>` suivi d'une ligne vide.
 2. Ajouter l'unité dans le JSON de son module :
 
 ```json
@@ -43,7 +43,7 @@ npm run build    # génère le site statique dans out/
 }
 ```
 
-3. Pour un nouveau module : créer `data/modules/<slug>.json` (`slug`, `title`, `description`, `category: "AI-200"`, `order`, `units`) puis renseigner `site: "<slug>"` sur la ligne correspondante de `data/plan.ts` pour qu'il remplace « Fiche à venir » sur l'accueil.
+3. Pour un nouveau module : créer `data/modules/<slug>.json` (`slug`, `title`, `description`, `category` égal au code de la certification, `order`, `units`) puis renseigner `site: "<slug>"` sur la ligne correspondante de `data/certs/<certif>.ts` pour qu'il remplace « Fiche à venir » sur l'accueil.
 
 Une unité est validée quand le dernier quiz atteint 70 %.
 

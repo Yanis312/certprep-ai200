@@ -15,10 +15,19 @@ type Cert = {
 
 const certs: Cert[] = [
   {
+    title: "AI-103 — Azure AI Apps and Agents Developer Associate",
+    provider: "Microsoft",
+    icon: "🤖",
+    status: "en-cours",
+    color: "text-indigo-700",
+    bg: "bg-indigo-50",
+    border: "border-indigo-200",
+  },
+  {
     title: "AI-200 — Azure AI Cloud Developer Associate",
     provider: "Microsoft",
     icon: "☁️",
-    status: "en-cours",
+    status: "planifie",
     color: "text-indigo-700",
     bg: "bg-indigo-50",
     border: "border-indigo-200",
