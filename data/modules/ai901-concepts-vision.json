@@ -1,0 +1,494 @@
+{
+  "slug": "ai901-concepts-vision",
+  "title": "Introduction to computer vision concepts",
+  "description": "LP1 · Module 5 — tâches de vision, pixels et filtres, CNN, vision transformers, modèles multimodaux, génération d'images par diffusion",
+  "category": "AI-901",
+  "order": 5,
+  "units": [
+    {
+      "slug": "ai901-c-vision-tasks",
+      "title": "Introduction et Computer vision tasks",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle tâche prédit une étiquette de texte d'après le contenu d'une image ?",
+          "options": [
+            "La segmentation sémantique",
+            "La classification d'image",
+            "La diffusion",
+            "Le filtrage convolutif"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La classification d'image utilise un modèle entraîné sur de nombreuses images étiquetées pour prédire le sujet principal d'une image."
+        },
+        {
+          "question": "Que renvoie un modèle de détection d'objets ?",
+          "options": [
+            "Une seule étiquette pour toute l'image",
+            "Une nouvelle image générée",
+            "Les objets détectés et les coordonnées de leur cadre englobant",
+            "La résolution de l'image"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La détection d'objets examine plusieurs régions de l'image et renvoie chaque objet avec son cadre englobant rectangulaire."
+        },
+        {
+          "question": "Quelle tâche classe chaque pixel selon l'objet auquel il appartient ?",
+          "options": [
+            "La segmentation sémantique",
+            "La classification d'image",
+            "La détection d'objets",
+            "L'analyse contextuelle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La segmentation sémantique classe les pixels individuellement, ce qui localise les objets de façon beaucoup plus précise."
+        },
+        {
+          "question": "Une caisse doit identifier plusieurs fruits posés ensemble et leur position. Quelle tâche convient ?",
+          "options": [
+            "La classification d'image",
+            "La génération d'image",
+            "Le filtre de Laplace",
+            "La détection d'objets"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Pour trouver plusieurs objets et leur emplacement dans une même image, on utilise la détection d'objets."
+        },
+        {
+          "question": "Quel type de modèle génère une description comme « A person eating an apple » ?",
+          "options": [
+            "Un filtre convolutif",
+            "Un modèle multimodal",
+            "Un classifieur Naive Bayes",
+            "Un vocodeur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles multimodaux apprennent les relations entre les objets d'une image et le texte qui les décrit, et peuvent générer des descriptions ou des tags."
+        },
+        {
+          "question": "De quoi a-t-on besoin pour entraîner un modèle de classification d'image ?",
+          "options": [
+            "D'un grand volume d'images étiquetées avec le bon nom",
+            "D'une seule image",
+            "D'un fichier audio",
+            "D'un prompt système"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle doit être entraîné avec un grand volume d'images, chacune étiquetée correctement."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-images-filters",
+      "title": "Images and image processing",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Pour un ordinateur, qu'est-ce qu'une image ?",
+          "options": [
+            "Une liste de mots",
+            "Un fichier audio",
+            "Un tableau de valeurs numériques de pixels",
+            "Un ensemble de phonèmes"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une image est un tableau de valeurs de pixels, organisé en lignes et en colonnes."
+        },
+        {
+          "question": "En niveaux de gris, que représentent les valeurs 0 et 255 ?",
+          "options": [
+            "0 = blanc, 255 = noir",
+            "0 = rouge, 255 = bleu",
+            "0 = transparent, 255 = opaque",
+            "0 = noir, 255 = blanc"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Chaque pixel va de 0 (noir) à 255 (blanc), les valeurs intermédiaires étant des nuances de gris."
+        },
+        {
+          "question": "Combien de canaux compose une image couleur classique ?",
+          "options": [
+            "3 : rouge, vert, bleu",
+            "1",
+            "2",
+            "7"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La plupart des images numériques comportent trois couches appelées canaux : rouge, vert et bleu (RGB)."
+        },
+        {
+          "question": "Quelle couleur donne la combinaison Rouge 255, Vert 255, Bleu 0 ?",
+          "options": [
+            "Violet",
+            "Jaune",
+            "Noir",
+            "Bleu"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Dans l'exemple du cours, le carré jaune est défini par Rouge 255, Vert 255, Bleu 0 ; le violet par Rouge 150, Vert 0, Bleu 255."
+        },
+        {
+          "question": "Comment appelle-t-on le tableau de valeurs qui définit un filtre ?",
+          "options": [
+            "Un patch",
+            "Un token",
+            "Un noyau (kernel)",
+            "Un canal"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un filtre est défini par un ou plusieurs tableaux appelés noyaux, que l'on fait glisser sur l'image."
+        },
+        {
+          "question": "Avec le noyau de Laplace du cours, que vaut le résultat pour le bloc en haut à gauche, dont un seul pixel (pondéré par -1) vaut 255 ?",
+          "options": [
+            "255",
+            "0",
+            "-510",
+            "-255"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Tous les autres pixels valent 0 ; il reste 255 x -1 = -255."
+        },
+        {
+          "question": "Quel est l'effet du filtre de Laplace ?",
+          "options": [
+            "Il floute l'image",
+            "Il fait ressortir les contours des objets",
+            "Il inverse les couleurs",
+            "Il ajoute un canal de couleur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le filtre de Laplace met en évidence les bords des formes ; d'autres filtres produisent du flou, de la netteté ou une inversion des couleurs."
+        },
+        {
+          "question": "Pourquoi applique-t-on une valeur de remplissage (padding) ?",
+          "options": [
+            "Parce que le bord extérieur de l'image ne peut pas être calculé par le filtre",
+            "Pour ajouter des couleurs",
+            "Pour augmenter la résolution",
+            "Pour entraîner le modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "À cause de la forme du noyau, les pixels du bord ne sont pas calculés : on leur applique une valeur de remplissage, en général 0."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-cnn",
+      "title": "Convolutional neural networks",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que produisent les filtres d'un CNN ?",
+          "options": [
+            "Des phonèmes",
+            "Des cadres englobants",
+            "Des prompts",
+            "Des cartes de caractéristiques (feature maps)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les noyaux des filtres génèrent des tableaux de valeurs numériques appelés cartes de caractéristiques."
+        },
+        {
+          "question": "Quelle valeur ont les poids des filtres au début de l'entraînement d'un CNN ?",
+          "options": [
+            "Ils valent tous 255",
+            "Ils sont générés aléatoirement",
+            "Ils sont copiés d'un filtre de Laplace",
+            "Ils valent tous 0"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les noyaux démarrent avec des poids aléatoires, ajustés ensuite pour améliorer la précision."
+        },
+        {
+          "question": "À quoi servent les couches de pooling ?",
+          "options": [
+            "À réduire la taille des cartes de caractéristiques en gardant les caractéristiques essentielles",
+            "À ajouter des couleurs à l'image",
+            "À générer des descriptions",
+            "À convertir l'image en texte"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le pooling crée des tableaux plus petits qui mettent en avant les caractéristiques visuelles clés."
+        },
+        {
+          "question": "Que deviennent les cartes de caractéristiques avant d'entrer dans le réseau entièrement connecté ?",
+          "options": [
+            "Elles sont supprimées",
+            "Elles sont converties en audio",
+            "Elles sont aplaties en un tableau à une seule dimension",
+            "Elles sont traduites"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les cartes sont aplaties en un tableau unidimensionnel de valeurs, fourni au réseau entièrement connecté."
+        },
+        {
+          "question": "La sortie est [0.2, 0.5, 0.3] avec 0 : pomme, 1 : banane, 2 : orange. Que prédit le modèle ?",
+          "options": [
+            "Pomme",
+            "Banane",
+            "Orange",
+            "Rien"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La probabilité la plus élevée (0,5) est celle de la classe 1 : banane."
+        },
+        {
+          "question": "Quelle fonction de la couche de sortie donne une probabilité pour chaque classe ?",
+          "options": [
+            "Laplace",
+            "Fourier",
+            "TF-IDF",
+            "Softmax"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La couche de sortie utilise une fonction softmax, ou similaire, pour produire une probabilité par classe."
+        },
+        {
+          "question": "Qu'appelle-t-on la perte (loss) ?",
+          "options": [
+            "L'écart entre les probabilités prédites et la vraie classe",
+            "Le nombre d'images perdues",
+            "La taille du noyau",
+            "Le temps d'entraînement"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La différence entre scores prédits et scores réels sert à calculer la perte, que l'on réduit en ajustant les poids."
+        },
+        {
+          "question": "Quels poids sont modifiés pendant l'entraînement d'un CNN ?",
+          "options": [
+            "Aucun",
+            "Uniquement ceux de la couche de sortie",
+            "Ceux du réseau entièrement connecté et ceux des noyaux des filtres",
+            "Uniquement les valeurs des pixels"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les poids du réseau entièrement connecté et des noyaux des couches d'extraction sont ajustés pour réduire la perte, sur plusieurs époques."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-vit-multimodal",
+      "title": "Vision transformers and multimodal models",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que traite un vision transformer à la place des tokens de texte ?",
+          "options": [
+            "Des phonèmes",
+            "Des noms de fichiers",
+            "Des patchs de pixels",
+            "Des mots vides"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le ViT extrait des patchs de valeurs de pixels de l'image et génère un vecteur à partir de chacun."
+        },
+        {
+          "question": "Quelle technique des modèles de langage le ViT réutilise-t-il ?",
+          "options": [
+            "L'attention",
+            "Le stemming",
+            "Le beam search",
+            "Le pooling"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La même technique d'attention sert à déterminer les relations contextuelles entre les patchs."
+        },
+        {
+          "question": "Sur quoi reposent les valeurs des embeddings d'un ViT ?",
+          "options": [
+            "Sur la grammaire",
+            "Sur la fréquence des mots",
+            "Sur le nom des fichiers",
+            "Sur des caractéristiques visuelles : couleur, forme, contraste, texture"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Au lieu de caractéristiques linguistiques, les embeddings d'un ViT codent des caractéristiques visuelles."
+        },
+        {
+          "question": "Que montre l'exemple du chapeau et de la tête ?",
+          "options": [
+            "Que le modèle comprend ce qu'est un chapeau",
+            "Que le modèle déduit une relation entre des caractéristiques visuelles souvent vues ensemble",
+            "Que les CNN n'utilisent pas de filtres",
+            "Que les patchs sont inutiles"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le modèle ne sait pas ce qu'est un chapeau ou une tête, mais il infère une relation sémantique entre leurs caractéristiques visuelles."
+        },
+        {
+          "question": "Que combine un modèle multimodal ?",
+          "options": [
+            "Les encodeurs d'un transformer de langage et d'un vision transformer",
+            "Deux filtres de Laplace",
+            "Un micro et un haut-parleur",
+            "Deux bases de données"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Quand les données d'entraînement associent images et descriptions, on combine les deux encodeurs dans un modèle multimodal."
+        },
+        {
+          "question": "Quelle technique définit la représentation unifiée des embeddings dans un modèle multimodal ?",
+          "options": [
+            "Le padding",
+            "La lemmatisation",
+            "La cross-model attention",
+            "Le softmax"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La cross-model attention crée une représentation spatiale unifiée des embeddings de langage et de vision."
+        },
+        {
+          "question": "Sur quelle architecture les modèles de détection d'objets s'appuient-ils traditionnellement ?",
+          "options": [
+            "Naive Bayes",
+            "TextRank",
+            "Word2Vec",
+            "Les couches d'extraction de caractéristiques d'un CNN"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les modèles de détection combinent les couches d'extraction d'un CNN avec l'identification de régions d'intérêt."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-image-generation",
+      "title": "Image generation",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle technique la plupart des modèles récents de génération d'images utilisent-ils ?",
+          "options": [
+            "La convolution",
+            "La diffusion",
+            "Le pooling",
+            "La tokenisation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La plupart des modèles de génération d'images modernes reposent sur la diffusion."
+        },
+        {
+          "question": "De quoi part le processus de diffusion ?",
+          "options": [
+            "D'une photo existante",
+            "D'un fichier audio",
+            "D'un tableau de phonèmes",
+            "D'un ensemble aléatoire de valeurs de pixels"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'image est créée de façon itérative à partir de pixels aléatoires dont on retire le bruit."
+        },
+        {
+          "question": "Que fait le modèle après chaque itération de diffusion ?",
+          "options": [
+            "Il évalue l'image obtenue pour la comparer au prompt",
+            "Il supprime le prompt",
+            "Il ajoute davantage de bruit",
+            "Il convertit l'image en texte"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Après chaque itération, l'image est comparée au prompt, jusqu'à obtenir la scène demandée."
+        },
+        {
+          "question": "Que doit prendre en compte la génération de vidéo, en plus de la génération d'image ?",
+          "options": [
+            "La langue du prompt uniquement",
+            "Le format du fichier",
+            "Le comportement physique des objets et la progression dans le temps",
+            "La taille du noyau"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La vidéo doit respecter le comportement réel des objets (un chien marche les pattes au sol) et montrer une suite logique d'actions."
+        },
+        {
+          "question": "Quelle architecture permet à la fois de décrire une image et d'en créer une ?",
+          "options": [
+            "Le bag-of-words",
+            "L'architecture multimodale",
+            "Le filtre de Laplace",
+            "Le classifieur statistique"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La même architecture multimodale relie langage et caractéristiques visuelles, dans les deux sens."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-vision-lab-bilan",
+      "title": "Lab et bilan — concepts de vision",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "[Question officielle] La vision par ordinateur repose sur la manipulation et l'analyse de quel type de valeurs dans une image ?",
+          "options": [
+            "Les horodatages des métadonnées de la photo",
+            "Les noms de fichiers des images",
+            "Les pixels"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La vision par ordinateur est bâtie sur l'analyse et la manipulation des valeurs numériques des pixels."
+        },
+        {
+          "question": "[Question officielle] Quel est le rôle principal des filtres dans un CNN utilisé pour la classification d'image ?",
+          "options": [
+            "Extraire des caractéristiques numériques des images pour un réseau de neurones",
+            "Appliquer des effets visuels pour embellir l'image",
+            "Compresser l'image pour accélérer le traitement"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Dans un CNN, les filtres extraient des caractéristiques numériques, utilisées ensuite par le réseau pour prédire l'étiquette."
+        },
+        {
+          "question": "[Question officielle] Quelle description correspond le mieux à un Vision Transformer (ViT) ?",
+          "options": [
+            "Un outil qui applique des filtres aux images pour changer leur apparence",
+            "Un modèle qui utilise l'attention pour traiter des patchs d'image et créer des embeddings contextuels",
+            "Un agent IA qui convertit un grand modèle de langage en modèle de vision"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un ViT découpe l'image en patchs et applique l'attention pour créer des embeddings de caractéristiques visuelles."
+        },
+        {
+          "question": "Dans le lab, quel modèle détermine le sujet probable de l'image ?",
+          "options": [
+            "Phi 3.5 Mini",
+            "WaveNet",
+            "GloVe",
+            "MobileNetV2"
+          ],
+          "correctAnswer": 3,
+          "explanation": "MobileNetV2 classe l'image ; son résultat est ajouté au prompt envoyé au modèle de langage Phi."
+        },
+        {
+          "question": "Dans le lab, quelle option faut-il activer dans la section Vision ?",
+          "options": [
+            "Image analysis",
+            "Voice mode",
+            "Upload files",
+            "Text PII extraction"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Activer Image analysis charge le modèle de vision et affiche le bouton Upload image."
+        },
+        {
+          "question": "Quel est l'ordre d'évolution des modèles de vision ?",
+          "options": [
+            "Transformers multimodaux, CNN, classifieurs statistiques",
+            "Classifieurs statistiques, CNN, transformers multimodaux",
+            "CNN, classifieurs statistiques, transformers multimodaux",
+            "CNN, transformers multimodaux, classifieurs statistiques"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles ont évolué des classifieurs statistiques aux CNN, puis aux modèles multimodaux fondés sur les transformers."
+        }
+      ]
+    }
+  ]
+}

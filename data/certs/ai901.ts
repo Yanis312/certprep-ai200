@@ -13,7 +13,7 @@ const learningPaths: LearningPath[] = [
       { title: "Introduction to generative AI and agents", learn: "fundamentals-generative-ai", site: "ai901-concepts-genai" },
       { title: "Introduction to natural language processing concepts", learn: "introduction-language", site: "ai901-concepts-nlp" },
       { title: "Introduction to AI speech concepts", learn: "introduction-ai-speech", site: "ai901-concepts-speech" },
-      { title: "Introduction to computer vision concepts", learn: "introduction-computer-vision" },
+      { title: "Introduction to computer vision concepts", learn: "introduction-computer-vision", site: "ai901-concepts-vision" },
       { title: "Introduction to AI-powered information extraction concepts", learn: "introduction-information-extraction" },
       { title: "Introduction to retrieval-augmented generation concepts", learn: "rag-fundamentals" },
     ],
