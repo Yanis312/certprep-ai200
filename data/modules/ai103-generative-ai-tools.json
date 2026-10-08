@@ -1,0 +1,565 @@
+{
+  "slug": "ai103-generative-ai-tools",
+  "title": "Develop generative AI apps that use tools",
+  "description": "LP1 · Module 4 — outils de l'API Responses : code_interpreter, web_search, file_search, function",
+  "category": "AI-103",
+  "order": 4,
+  "units": [
+    {
+      "slug": "ai103-tools-introduction",
+      "title": "Introduction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle limite d'un modèle génératif les outils permettent-ils de dépasser ?",
+          "options": [
+            "Sa vitesse de génération",
+            "Sa frontière de connaissances : il ne raisonne que sur les informations de ses données d'entraînement",
+            "Son coût par token",
+            "Sa taille en gigaoctets"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles ne raisonnent que sur les informations de leurs données d'entraînement. Les outils débloquent des capacités bien au-delà."
+        },
+        {
+          "question": "Qu'est-ce qui distingue les outils de ce module des Foundry Tools ?",
+          "options": [
+            "Rien, ce sont deux noms pour la même chose",
+            "Les outils de modèle sont payants, les Foundry Tools gratuits",
+            "Les Foundry Tools ne fonctionnent qu'en C#",
+            "Les Foundry Tools sont des API d'IA Azure ; les outils de ce module sont spécifiés dans les prompts envoyés à un modèle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'usage d'outils dans les prompts ne doit pas être confondu avec Foundry Tools, des API d'IA Azure utilisables dans les applications et agents."
+        },
+        {
+          "question": "Dans les solutions de ce module, qui gère la configuration des outils ?",
+          "options": [
+            "L'application cliente, qui les indique dans le prompt",
+            "Un agent nommé et persisté",
+            "Le portail Azure",
+            "Le fournisseur du modèle"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La configuration des outils est gérée par l'application cliente. Dans une solution agentique, modèle, instructions et outils sont encapsulés et persistés dans un agent nommé."
+        },
+        {
+          "question": "Lequel de ces bénéfices les outils apportent-ils ?",
+          "options": [
+            "Réduire la taille du modèle",
+            "Supprimer le besoin d'authentification",
+            "Accéder à des informations en temps réel absentes des données d'entraînement",
+            "Garantir des réponses toujours exactes"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les outils donnent accès à l'information en temps réel, permettent d'agir, d'ancrer les réponses dans des faits, d'étendre les fonctionnalités et de construire des workflows."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tools-what-are-tools",
+      "title": "What are tools?",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Dans quel paramètre de responses.create() indique-t-on les outils que le modèle peut utiliser ?",
+          "options": [
+            "functions",
+            "plugins",
+            "tools",
+            "extensions"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les outils disponibles se déclarent dans le paramètre tools, sous forme de liste JSON de définitions."
+        },
+        {
+          "question": "Par défaut, qui décide d'utiliser un outil et lequel ?",
+          "options": [
+            "Le modèle, d'après le prompt",
+            "L'utilisateur final",
+            "Le portail Foundry",
+            "Le premier outil de la liste est toujours appelé"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Par défaut, le modèle choisit quand utiliser un outil et lequel. On peut configurer des règles de sélection et guider ce choix avec les instructions."
+        },
+        {
+          "question": "Quel outil fournit un environnement Python dans lequel le modèle peut générer et exécuter du code ?",
+          "options": [
+            "web_search",
+            "code_interpreter",
+            "file_search",
+            "function"
+          ],
+          "correctAnswer": 1,
+          "explanation": "code_interpreter est un environnement Python où le modèle génère et exécute du code."
+        },
+        {
+          "question": "Quelle capacité un modèle doit-il avoir pour être utilisé avec des outils ?",
+          "options": [
+            "La génération d'images",
+            "Le fine-tuning",
+            "La synthèse vocale",
+            "Le tool calling"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On cherche dans Foundry Models un modèle doté de capacités de tool calling, puis on le déploie."
+        },
+        {
+          "question": "Quelle clé retrouve-t-on dans chaque définition d'outil de la liste tools ?",
+          "options": [
+            "type",
+            "id",
+            "version",
+            "endpoint"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Chaque définition contient une clé type, suivie éventuellement de réglages propres à l'outil."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tool-code-interpreter",
+      "title": "Use the code_interpreter tool",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle limite s'applique à l'exécution du code par code_interpreter ?",
+          "options": [
+            "Il ne peut pas faire de calculs",
+            "Il n'accepte aucun fichier",
+            "Il s'exécute dans un bac à sable sans accès réseau externe",
+            "Il ne prend en charge que JavaScript"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les exécutions se font dans un environnement isolé sans accès réseau externe, avec des délais d'expiration et des contraintes de mémoire."
+        },
+        {
+          "question": "Quelle définition active l'outil code_interpreter ?",
+          "options": [
+            "{\"type\": \"python\"}",
+            "{\"type\": \"code_interpreter\", \"container\": {\"type\": \"auto\"}}",
+            "{\"type\": \"function\", \"name\": \"python\"}",
+            "{\"type\": \"code\", \"language\": \"python\"}"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La définition du cours est {\"type\": \"code_interpreter\", \"container\": {\"type\": \"auto\"}}."
+        },
+        {
+          "question": "Pourquoi parler de « python tool » dans les instructions ?",
+          "options": [
+            "Parce que beaucoup de modèles désignent code_interpreter par ce nom en interne",
+            "Parce que code_interpreter n'existe pas",
+            "Parce que c'est obligatoire pour l'authentification",
+            "Parce que cela réduit le coût"
+          ],
+          "correctAnswer": 0,
+          "explanation": "De nombreux modèles utilisent en interne le nom python tool pour identifier code_interpreter ; reprendre ce terme dans les instructions aide."
+        },
+        {
+          "question": "Que se passe-t-il si le code généré par le modèle provoque une erreur ?",
+          "options": [
+            "La conversation s'arrête définitivement",
+            "L'erreur est ignorée en silence",
+            "Ton application doit corriger le code",
+            "Le modèle voit l'erreur et tente de la corriger automatiquement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le modèle voit les résultats et les erreurs d'exécution ; il peut itérer et tentera de corriger automatiquement."
+        },
+        {
+          "question": "Lequel de ces cas d'usage convient à code_interpreter ?",
+          "options": [
+            "Connaître les actualités du jour",
+            "Créer un ticket dans ton système de support",
+            "Lire un fichier CSV et produire des statistiques de synthèse",
+            "Répondre à partir d'un contrat PDF interne indexé"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'analyse de données, comme lire un CSV et générer des statistiques, est un cas d'usage type. Les autres relèvent de web_search, function et file_search."
+        },
+        {
+          "question": "Quelles bibliothèques sont préinstallées dans l'environnement de code_interpreter ?",
+          "options": [
+            "React et Angular",
+            "pandas, numpy et matplotlib",
+            "Spring et Hibernate",
+            "Aucune"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les paquets courants comme pandas, numpy et matplotlib sont préinstallés."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tool-web-search",
+      "title": "Use the web_search tool",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Dans quel cas l'outil web_search est-il particulièrement utile ?",
+          "options": [
+            "Quand les faits changent souvent : prix, sorties de produits, réglementation, actualité",
+            "Quand il faut lire un document interne confidentiel",
+            "Quand il faut exécuter un calcul statistique",
+            "Quand il faut appeler une API interne"
+          ],
+          "correctAnswer": 0,
+          "explanation": "web_search donne accès à une information externe et actuelle, utile quand les faits changent fréquemment."
+        },
+        {
+          "question": "Quelle définition active la recherche web ?",
+          "options": [
+            "{\"type\": \"internet\"}",
+            "{\"type\": \"search\", \"engine\": \"bing\"}",
+            "{\"type\": \"browser\"}",
+            "{\"type\": \"web_search\"}"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'exemple minimal du cours est tools=[{\"type\": \"web_search\"}]."
+        },
+        {
+          "question": "Pourquoi deux exécutions du même prompt avec web_search peuvent-elles donner des réponses différentes ?",
+          "options": [
+            "Parce que la temperature est forcément à 2",
+            "Parce que le modèle est réentraîné entre les deux",
+            "Parce que le contenu récupéré sur le web peut changer dans le temps",
+            "Parce que l'outil est désactivé une fois sur deux"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le contenu récupéré peut changer avec le temps, donc des exécutions répétées peuvent produire des réponses différentes."
+        },
+        {
+          "question": "Quelle contrepartie faut-il surveiller avec web_search ?",
+          "options": [
+            "Il supprime le message système",
+            "La récupération web peut augmenter le temps de réponse et l'usage de tokens",
+            "Il empêche le streaming",
+            "Il nécessite un vector store"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Il faut suivre l'usage et la latence : la récupération web peut allonger le temps de réponse et consommer plus de tokens."
+        },
+        {
+          "question": "Comment améliorer un prompt qui s'appuie sur web_search pour une question d'actualité ?",
+          "options": [
+            "En précisant clairement le moment, avec des mots comme « latest » ou une plage de dates",
+            "En supprimant toute instruction",
+            "En demandant la réponse la plus longue possible",
+            "En interdisant les sources officielles"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Bonnes pratiques : formuler clairement la dimension temporelle, demander des sources réputées, des sorties concises, et vérifier les faits critiques."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tool-file-search",
+      "title": "Use the file_search tool",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Où faut-il charger les documents pour que file_search puisse les interroger ?",
+          "options": [
+            "Dans un compte GitHub",
+            "Dans le message système",
+            "Dans un fichier .env",
+            "Dans un vector store"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On prépare les fichiers en les chargeant dans un vector store, que l'outil interroge ensuite."
+        },
+        {
+          "question": "Quel réglage indique à l'outil file_search où chercher ?",
+          "options": [
+            "container",
+            "vector_store_ids",
+            "file_path",
+            "index_name"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La définition est {\"type\": \"file_search\", \"vector_store_ids\": [vector_store.id]}."
+        },
+        {
+          "question": "Comment file_search retrouve-t-il les passages pertinents ?",
+          "options": [
+            "Par recherche sémantique, c'est-à-dire par le sens et pas seulement par mots-clés exacts",
+            "En lisant tous les fichiers à chaque question",
+            "Par ordre alphabétique",
+            "En demandant à l'utilisateur la page concernée"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La récupération sémantique trouve les passages pertinents par leur sens, pas uniquement par correspondance exacte de mots-clés."
+        },
+        {
+          "question": "À quoi sert include=[\"file_search_call.results\"] dans la requête ?",
+          "options": [
+            "À supprimer les fichiers après usage",
+            "À activer le streaming",
+            "À inclure les résultats trouvés, pour le dépannage et la traçabilité",
+            "À créer le vector store"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Inclure les résultats de récupération aide au débogage et à la traçabilité pendant le développement."
+        },
+        {
+          "question": "Tu as mis à jour un fichier source mais les réponses citent encore l'ancien contenu. Quelle est la cause la plus probable ?",
+          "options": [
+            "La temperature est trop basse",
+            "Le modèle refuse les mises à jour",
+            "Le fichier est trop récent pour Azure",
+            "Le fichier mis à jour doit être réindexé avant que le nouveau contenu soit trouvable"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les fichiers sources mis à jour peuvent nécessiter une réindexation avant que le nouveau contenu soit recherchable."
+        },
+        {
+          "question": "Que recommande Microsoft pour des agents d'entreprise qui doivent accéder à de grandes quantités de données dans plusieurs magasins ?",
+          "options": [
+            "Charger tous les fichiers dans le prompt",
+            "Utiliser Foundry IQ avec un agent Microsoft Foundry",
+            "Utiliser web_search",
+            "Fine-tuner le modèle chaque semaine"
+          ],
+          "correctAnswer": 1,
+          "explanation": "file_search convient pour ancrer un modèle dans un ensemble précis de documents ; à l'échelle de l'entreprise, on envisage Foundry IQ avec un agent Foundry."
+        },
+        {
+          "question": "Quelle méthode charge un fichier dans un vector store et attend la fin du traitement ?",
+          "options": [
+            "client.vector_stores.files.upload_and_poll()",
+            "client.files.send()",
+            "client.responses.upload()",
+            "client.vector_stores.index()"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le cours utilise client.vector_stores.files.upload_and_poll(vector_store_id=..., file=...). Le lab utilise file_batches.upload_and_poll pour plusieurs fichiers."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tool-function",
+      "title": "Use the function tool",
+      "order": 6,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Avec l'outil function, qui exécute réellement la fonction ?",
+          "options": [
+            "Le modèle, dans un bac à sable",
+            "Le portail Foundry",
+            "Ton application",
+            "Le navigateur de l'utilisateur"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le modèle n'exécute pas ta logique métier : il renvoie un appel de fonction structuré, ton code exécute la fonction, puis tu renvoies la sortie au modèle."
+        },
+        {
+          "question": "Quel élément ton application renvoie-t-elle au modèle après avoir exécuté la fonction ?",
+          "options": [
+            "Un élément de type function_call_output",
+            "Un élément de type tool_result",
+            "Un message de rôle system",
+            "Un nouveau vector store"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On ajoute un élément {\"type\": \"function_call_output\", \"call_id\": ..., \"output\": ...} puis on rappelle le modèle."
+        },
+        {
+          "question": "Quel champ relie la sortie de la fonction à la demande d'appel du modèle ?",
+          "options": [
+            "name",
+            "description",
+            "response_id",
+            "call_id"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On recopie item.call_id dans le function_call_output pour relier le résultat à la demande."
+        },
+        {
+          "question": "Comment ton code repère-t-il que le modèle demande l'appel d'une fonction ?",
+          "options": [
+            "response.status vaut \"failed\"",
+            "Un élément de response.output a le type \"function_call\"",
+            "response.output_text est vide",
+            "Une exception est levée"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On parcourt response.output et on teste item.type == \"function_call\", puis item.name pour savoir quelle fonction."
+        },
+        {
+          "question": "Dans l'exemple get_time, que se passe-t-il quand l'utilisateur écrit « Hello » ?",
+          "options": [
+            "Le modèle appelle get_time quand même",
+            "L'application plante",
+            "Le modèle répond normalement, sans appeler la fonction",
+            "Le modèle lance une recherche web"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le premier prompt ne nécessite pas l'outil, donc le modèle répond normalement. C'est le modèle qui détermine quand la fonction est nécessaire."
+        },
+        {
+          "question": "Quelle bonne pratique s'applique aux arguments d'outil reçus du modèle ?",
+          "options": [
+            "Les valider : ne jamais faire confiance aveuglément aux arguments en production",
+            "Les exécuter tels quels pour gagner du temps",
+            "Les ignorer systématiquement",
+            "Les envoyer à l'utilisateur pour correction"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Des arguments incorrects ou inattendus peuvent survenir : il faut valider les entrées des fonctions."
+        },
+        {
+          "question": "Que recommande le cours pour les opérations sensibles ou à fort impact déclenchées par un outil ?",
+          "options": [
+            "Les laisser sans contrôle",
+            "Les interdire dans toutes les applications",
+            "Les exécuter deux fois par sécurité",
+            "Exiger une autorisation explicite"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Limiter les opérations sensibles : exiger une autorisation explicite pour les actions à fort impact, et journaliser l'usage des outils."
+        },
+        {
+          "question": "Quelle définition déclare correctement la fonction get_time ?",
+          "options": [
+            "{\"type\": \"get_time\"}",
+            "{\"type\": \"function\", \"name\": \"get_time\", \"description\": \"Get the current time\"}",
+            "{\"function\": \"get_time\"}",
+            "{\"type\": \"code_interpreter\", \"name\": \"get_time\"}"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Une définition de fonction contient type: function, name et description."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tools-lab",
+      "title": "Lab — une application de chat qui utilise des outils",
+      "order": 7,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quels outils l'application du lab combine-t-elle ?",
+          "options": [
+            "code_interpreter et function",
+            "function et web_search",
+            "file_search et web_search",
+            "code_interpreter et file_search"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'application déclare file_search (brochures de Margie's Travel dans un vector store) et web_search (information générale)."
+        },
+        {
+          "question": "Dans le playground, avant d'ajouter web_search, comment est la réponse sur les activités à New York le mois prochain ?",
+          "options": [
+            "Générique, fondée sur les données d'entraînement, sans information actuelle",
+            "Très précise avec les événements du mois prochain",
+            "Une erreur d'authentification",
+            "Vide"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Sans outil, le modèle donne des connaissances générales issues de son entraînement et n'a pas accès à l'information actuelle."
+        },
+        {
+          "question": "Quelle méthode le lab utilise-t-il pour charger plusieurs brochures PDF d'un coup dans le vector store ?",
+          "options": [
+            "vector_stores.create_many()",
+            "files.upload_all()",
+            "responses.attach()",
+            "vector_stores.file_batches.upload_and_poll()"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le lab appelle openai_client.vector_stores.file_batches.upload_and_poll(vector_store_id=..., files=file_streams)."
+        },
+        {
+          "question": "Qu'est-ce qui indique au modèle d'utiliser les brochures pour les services de l'agence et le web pour l'information générale ?",
+          "options": [
+            "L'ordre alphabétique des outils",
+            "Les instructions (prompt système) de la requête",
+            "Le nom du vector store",
+            "La région Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les instructions précisent : répondre sur les services de Margie's Travel avec les brochures, chercher sur le web pour l'information générale sur les destinations."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-tools-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 8,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel outil utiliser quand un modèle doit répondre à des questions à partir de tes propres documents de politique chargés ?",
+          "options": [
+            "web_search",
+            "file_search",
+            "code_interpreter"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. file_search récupère l'information pertinente dans tes documents chargés et indexés."
+        },
+        {
+          "question": "Dans un workflow de function calling, que doit faire ton application après que le modèle a renvoyé un élément function_call ?",
+          "options": [
+            "Attendre que le modèle exécute la fonction automatiquement",
+            "Exécuter la fonction dans son code et renvoyer un function_call_output au modèle",
+            "Convertir l'appel de fonction en requête web_search"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Le modèle demande l'appel, mais c'est l'application qui exécute la fonction et renvoie le résultat."
+        },
+        {
+          "question": "Quelle affirmation sur l'outil code_interpreter est correcte ?",
+          "options": [
+            "Il peut exécuter du code Python dans un environnement isolé pour aider à résoudre des tâches",
+            "Il peut naviguer directement sur des sites externes pendant l'exécution du code",
+            "Il ne prend en charge que le chargement de fichiers et ne peut pas faire de calculs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Le bac à sable n'a pas d'accès réseau externe, et l'outil fait bien des calculs et de l'analyse de données."
+        },
+        {
+          "question": "Un assistant doit vérifier le stock d'un produit en interrogeant l'ERP de ton entreprise. Quel outil ?",
+          "options": [
+            "web_search",
+            "code_interpreter",
+            "file_search",
+            "function"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'outil function relie le raisonnement du modèle à tes systèmes : API, bases de données, workflows métier."
+        },
+        {
+          "question": "Quel est le schéma d'implémentation commun à tous les outils ?",
+          "options": [
+            "Entraîner le modèle, le déployer, le supprimer",
+            "Créer un agent, le publier, le facturer",
+            "Définir l'outil dans la requête, laisser le modèle décider de l'utiliser, renvoyer la sortie si nécessaire, valider les réponses",
+            "Écrire le prompt, augmenter la temperature, relancer"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le résumé du module : définir l'outil, laisser le modèle décider, renvoyer la sortie de l'outil quand c'est requis, valider exactitude et sécurité."
+        },
+        {
+          "question": "Vers quoi évolue-t-on en combinant ces techniques avec des instructions, des outils et une orchestration persistés ?",
+          "options": [
+            "Des solutions agentiques complètes",
+            "Des modèles fine-tunés",
+            "Des déploiements Batch",
+            "Des bases de données relationnelles"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'étape suivante consiste à évoluer vers des solutions agentiques avec instructions, outils et orchestration persistés."
+        }
+      ]
+    }
+  ]
+}
