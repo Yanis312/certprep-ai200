@@ -13,7 +13,7 @@ const learningPaths: LearningPath[] = [
     modules: [
       { title: "Plan and prepare to develop AI solutions on Azure", learn: "prepare-azure-ai-development", site: "ai103-prepare-ai-development" },
       { title: "Select, deploy, and evaluate Microsoft Foundry models", learn: "model-catalog-evaluate", site: "ai103-model-catalog-evaluate" },
-      { title: "Develop a generative AI chat app with Microsoft Foundry", learn: "foundry-sdk" },
+      { title: "Develop a generative AI chat app with Microsoft Foundry", learn: "foundry-sdk", site: "ai103-foundry-chat-app" },
       { title: "Develop generative AI apps that use tools", learn: "use-generative-ai-tools" },
       { title: "Optimize generative AI model performance with Microsoft Foundry", learn: "optimize-generative-ai-model-performance" },
       { title: "Implement a responsible generative AI solution in Microsoft Foundry", learn: "responsible-ai-studio" },

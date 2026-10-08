@@ -1,0 +1,546 @@
+{
+  "slug": "ai103-foundry-chat-app",
+  "title": "Develop a generative AI chat app with Microsoft Foundry",
+  "description": "LP1 · Module 3 — playground, endpoints, SDK Foundry et OpenAI, API Responses et ChatCompletions",
+  "category": "AI-103",
+  "order": 3,
+  "units": [
+    {
+      "slug": "ai103-chat-introduction",
+      "title": "Introduction",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quels choix ce module t'apprend-il à faire pour créer une application de chat générative ?",
+          "options": [
+            "La région, le SKU de VM, le réseau virtuel et le pare-feu",
+            "L'endpoint, le SDK, l'authentification et l'API de chat",
+            "Le langage, le framework web, la base de données et le cache",
+            "Le modèle, le jeu de données, les métriques et le budget"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le module apprend à choisir l'endpoint, le SDK, l'authentification et l'API de chat appropriés."
+        },
+        {
+          "question": "Quelles sont les deux API de chat prises en charge par le client OpenAI ?",
+          "options": [
+            "REST et GraphQL",
+            "Embeddings et Images",
+            "ChatCompletions et Responses",
+            "Assistants et Batch"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'API cliente OpenAI prend en charge deux API de chat : ChatCompletions et Responses."
+        },
+        {
+          "question": "Quelle authentification les applications de production devraient-elles utiliser en général ?",
+          "options": [
+            "Microsoft Entra ID",
+            "Une clé écrite dans le code source",
+            "Aucune",
+            "Un mot de passe administrateur partagé"
+          ],
+          "correctAnswer": 0,
+          "explanation": "En général, les applications de production doivent utiliser l'authentification Microsoft Entra ID, l'application s'exécutant dans le contexte d'une identité précise."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-chat-playground",
+      "title": "Explore with the model playground",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "À quoi sert le bouton Code du Model playground ?",
+          "options": [
+            "À modifier le code source du modèle",
+            "À déployer l'application en production",
+            "À lancer une évaluation automatique",
+            "À afficher des exemples de code qui reproduisent la session de chat dans ton application"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le bouton Code du volet de chat montre des exemples de code pour reproduire la session de chat dans ton application."
+        },
+        {
+          "question": "Avec quoi les exemples de code générés par le playground sont-ils pré-remplis ?",
+          "options": [
+            "L'endpoint du projet, le nom du déploiement et les réglages en cours",
+            "Le mot de passe de ton compte Azure",
+            "Le contenu de tes fichiers locaux",
+            "Les prompts des autres utilisateurs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les exemples sont pré-remplis avec l'endpoint du projet, le nom du déploiement du modèle et les réglages actuels."
+        },
+        {
+          "question": "Quels choix le bouton Code te propose-t-il pour l'exemple généré ?",
+          "options": [
+            "La région, le quota et le prix",
+            "L'API, le langage et le SDK",
+            "Le modèle, la VM et le réseau",
+            "Le thème, la police et la couleur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On choisit l'API (Responses ou une autre comme ChatCompletions), le langage de programmation et le SDK."
+        },
+        {
+          "question": "Quel est l'ordre du flux de travail typique avec Foundry ?",
+          "options": [
+            "Développer, explorer, itérer, générer le code",
+            "Générer le code, itérer, explorer, développer",
+            "Explorer dans le playground, générer des exemples de code, développer l'application, itérer",
+            "Itérer, développer, générer le code, explorer"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On explore dans le playground, on génère des exemples de code, on développe l'application, puis on itère."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-chat-endpoint-sdk",
+      "title": "Choose an endpoint and SDK",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel paquet Python installer pour utiliser le SDK Microsoft Foundry ?",
+          "options": [
+            "azure-foundry",
+            "microsoft-foundry-sdk",
+            "azure-ai-projects",
+            "foundry-toolkit"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On installe azure-ai-projects, avec azure-identity et openai comme paquets d'appui."
+        },
+        {
+          "question": "Quelle méthode de AIProjectClient renvoie un client compatible OpenAI pour discuter avec un modèle ?",
+          "options": [
+            "get_openai_client()",
+            "create_chat()",
+            "get_model()",
+            "connect_openai()"
+          ],
+          "correctAnswer": 0,
+          "explanation": "project_client.get_openai_client() renvoie un client compatible OpenAI pour envoyer des prompts aux modèles."
+        },
+        {
+          "question": "Laquelle de ces adresses a le format d'un endpoint de projet Foundry ?",
+          "options": [
+            "https://{resource-name}.openai.azure.com/openai/v1",
+            "https://{resource-name}.services.ai.azure.com/api/projects/<project-name>",
+            "https://portal.azure.com/{resource-name}",
+            "https://{resource-name}.blob.core.windows.net"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'endpoint du projet suit le format https://{resource-name}.services.ai.azure.com/api/projects/<project-name>. L'autre format, en openai.azure.com/openai/v1, est l'endpoint Azure OpenAI."
+        },
+        {
+          "question": "Pourquoi faut-il aussi installer le paquet openai quand on développe une application de chat avec le SDK Foundry ?",
+          "options": [
+            "Parce que le SDK Foundry est payant sans lui",
+            "Parce qu'il remplace azure-identity",
+            "Parce qu'il contient le portail Foundry",
+            "Parce que la fonctionnalité de client de chat du SDK Foundry est dérivée du SDK OpenAI"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le client de chat du SDK Foundry est dérivé du SDK OpenAI, il faut donc importer le paquet openai."
+        },
+        {
+          "question": "Dans quel cas utiliser le SDK Foundry plutôt que le SDK OpenAI ?",
+          "options": [
+            "Quand l'application a besoin d'agents, d'évaluations, de traçage ou de connexions du projet",
+            "Quand on veut une portabilité maximale entre OpenAI et Azure OpenAI",
+            "Quand on veut dépendre le moins possible de Foundry",
+            "Quand on veut réutiliser tel quel du code OpenAI existant"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le SDK Foundry est recommandé pour les applications avec agents, évaluations ou fonctionnalités propres à Foundry. Le SDK OpenAI vise la compatibilité et la portabilité."
+        },
+        {
+          "question": "Avec le client OpenAI et Entra ID, dans quel paramètre passe-t-on le fournisseur de jeton ?",
+          "options": [
+            "token",
+            "credential",
+            "api_key",
+            "azure_ad_token"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Dans l'exemple du cours, le token_provider créé par get_bearer_token_provider est passé au paramètre api_key du client OpenAI."
+        },
+        {
+          "question": "Où faut-il stocker les clés d'API ?",
+          "options": [
+            "Directement dans le code",
+            "Dans Azure Key Vault",
+            "Dans un fichier README public",
+            "Dans le nom du déploiement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les clés s'utilisent avec prudence : stockées de façon sûre dans Azure Key Vault, jamais directement dans le code."
+        },
+        {
+          "question": "Quand choisit-on un client AzureOpenAI plutôt que le client OpenAI ?",
+          "options": [
+            "Toujours, c'est obligatoire dans Foundry",
+            "Quand on ne veut pas s'authentifier",
+            "Quand on utilise l'API Responses",
+            "Quand on a besoin d'une fonctionnalité d'une version précise de l'API Azure OpenAI"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On utilise en général le client OpenAI avec l'endpoint v1. AzureOpenAI sert quand il faut une version précise de l'API ; on indique alors api_version et azure_endpoint."
+        },
+        {
+          "question": "À quoi sert AIProjectClient ?",
+          "options": [
+            "À accéder aux opérations propres à Foundry : connexions, configuration du projet, traçage, jeux de données et index",
+            "À générer des images",
+            "À créer des machines virtuelles",
+            "À remplacer Azure CLI"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le client de projet donne accès aux opérations natives Foundry sans équivalent OpenAI : récupérer les connexions, lire la configuration, activer le traçage, gérer datasets et index."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-responses-api",
+      "title": "Generate responses with the Responses API",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles anciennes API l'API Responses réunit-elle ?",
+          "options": [
+            "Embeddings et Images",
+            "ChatCompletions et Assistants",
+            "Batch et Fine-tuning",
+            "Speech et Translator"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'API Responses rassemble les capacités de deux API auparavant séparées, ChatCompletions et Assistants, dans une expérience unifiée."
+        },
+        {
+          "question": "Quel paramètre relie une réponse à la précédente pour conserver le contexte de la conversation ?",
+          "options": [
+            "conversation_id",
+            "history",
+            "context_window",
+            "previous_response_id"
+          ],
+          "correctAnswer": 3,
+          "explanation": "previous_response_id relie les réponses entre elles et maintient le contexte sur plusieurs appels."
+        },
+        {
+          "question": "Quelle propriété de l'objet réponse contient le texte généré ?",
+          "options": [
+            "output_text",
+            "choices[0].message.content",
+            "text",
+            "content"
+          ],
+          "correctAnswer": 0,
+          "explanation": "output_text contient le texte généré. choices[0].message.content appartient à l'API ChatCompletions."
+        },
+        {
+          "question": "Quel paramètre de responses.create() joue le rôle du prompt système ?",
+          "options": [
+            "system",
+            "messages",
+            "instructions",
+            "prompt"
+          ],
+          "correctAnswer": 2,
+          "explanation": "instructions fournit les consignes, souvent appelées prompt système, qui guident le comportement du modèle."
+        },
+        {
+          "question": "Quel paramètre limite le nombre de tokens de la réponse avec l'API Responses ?",
+          "options": [
+            "max_length",
+            "max_output_tokens",
+            "token_limit",
+            "top_p"
+          ],
+          "correctAnswer": 1,
+          "explanation": "max_output_tokens limite le nombre maximal de tokens de la réponse. temperature et top_p contrôlent l'aléa."
+        },
+        {
+          "question": "Dans quel cas gérer l'historique de conversation à la main plutôt qu'avec previous_response_id ?",
+          "options": [
+            "Quand on veut écrire le moins de code possible",
+            "Quand on ne veut aucun contexte",
+            "Quand on utilise le streaming",
+            "Quand on veut choisir les messages inclus, élaguer la conversation ou la stocker dans une base de données"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'approche manuelle sert à personnaliser les messages du contexte, à élaguer pour gérer les limites de tokens et à stocker ou restaurer l'historique."
+        },
+        {
+          "question": "Que faut-il savoir sur le coût en tokens quand on conserve l'historique ?",
+          "options": [
+            "L'historique est renvoyé au modèle à chaque requête : le SDK gère l'état mais ne rend pas l'usage des tokens moins cher",
+            "L'historique est gratuit",
+            "Seul le dernier message est facturé",
+            "Les tokens ne sont comptés qu'en sortie"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Instructions, prompt, historique, schémas et sorties d'outils, documents récupérés sont concaténés et envoyés ensemble à chaque requête."
+        },
+        {
+          "question": "En streaming, quel type d'événement contient un nouveau morceau de texte ?",
+          "options": [
+            "response.completed",
+            "response.created",
+            "response.output_text.delta",
+            "response.usage"
+          ],
+          "correctAnswer": 2,
+          "explanation": "response.output_text.delta porte le morceau de texte dans event.delta. response.completed signale la fin et donne l'id dans event.response.id."
+        },
+        {
+          "question": "Dans quel cas le client AsyncOpenAI apporte-t-il un vrai gain ?",
+          "options": [
+            "Pour un seul appel isolé",
+            "Quand plusieurs requêtes s'exécutent en même temps, par exemple avec asyncio.gather()",
+            "Quand on n'utilise pas await",
+            "Uniquement avec ChatCompletions"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le bénéfice apparaît avec des requêtes concurrentes. Un seul await dans asyncio.run() prend à peu près le même temps que le client synchrone."
+        },
+        {
+          "question": "Quelle méthode récupère une réponse antérieure à partir de son identifiant ?",
+          "options": [
+            "responses.list()",
+            "responses.get_history()",
+            "responses.previous()",
+            "responses.retrieve()"
+          ],
+          "correctAnswer": 3,
+          "explanation": "openai_client.responses.retrieve(response_id) récupère une réponse précédente, car l'API conserve l'historique des réponses."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-chatcompletions-api",
+      "title": "Generate responses with the ChatCompletions API",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Comment l'API ChatCompletions reçoit-elle les prompts ?",
+          "options": [
+            "Par une chaîne unique dans le paramètre input",
+            "Par un fichier CSV",
+            "Par une collection d'objets message au format JSON",
+            "Par des variables d'environnement"
+          ],
+          "correctAnswer": 2,
+          "explanation": "ChatCompletions utilise des collections d'objets message au format JSON, chacun avec un rôle et un contenu."
+        },
+        {
+          "question": "Comment conserver le contexte de la conversation avec l'API ChatCompletions ?",
+          "options": [
+            "En écrivant du code qui suit manuellement les prompts et réponses précédents",
+            "En passant previous_response_id",
+            "C'est automatique",
+            "En activant stream=True"
+          ],
+          "correctAnswer": 0,
+          "explanation": "ChatCompletions n'a pas de suivi d'état des réponses : il faut tenir soi-même la liste des messages et la renvoyer en entier à chaque tour."
+        },
+        {
+          "question": "Quel chemin donne le texte de la réponse avec ChatCompletions ?",
+          "options": [
+            "completion.output_text",
+            "completion.choices[0].message.content",
+            "completion.text",
+            "completion.response.content"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On lit completion.choices[0].message.content."
+        },
+        {
+          "question": "Avec quel rôle ajoute-t-on la réponse du modèle à l'historique ?",
+          "options": [
+            "system",
+            "user",
+            "tool",
+            "assistant"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On ajoute {\"role\": \"assistant\", \"content\": ...} à la conversation, puis le message user suivant."
+        },
+        {
+          "question": "Dans quels cas l'API ChatCompletions reste-t-elle utile ?",
+          "options": [
+            "Pour la maintenance de code et la compatibilité entre plateformes",
+            "Jamais, elle est supprimée",
+            "Uniquement pour générer des images",
+            "Uniquement pour les agents Foundry"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'API Responses est recommandée pour les nouveaux projets, mais ChatCompletions reste utile pour la maintenance de code ou la compatibilité multiplateforme."
+        },
+        {
+          "question": "Quelle méthode appelle l'API ChatCompletions ?",
+          "options": [
+            "client.responses.create()",
+            "client.completions.chat()",
+            "client.chat.completions.create()",
+            "client.chat.send()"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On appelle openai_client.chat.completions.create(model=..., messages=[...])."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-chat-lab",
+      "title": "Lab — créer une application de chat",
+      "order": 6,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quel endpoint le lab utilise-t-il pour connecter l'application au modèle ?",
+          "options": [
+            "L'endpoint du projet",
+            "L'endpoint Azure OpenAI",
+            "L'endpoint Foundry Tools",
+            "L'endpoint du portail Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le lab utilise le SDK OpenAI avec l'endpoint Azure OpenAI et l'authentification Entra ID, pas l'endpoint du projet."
+        },
+        {
+          "question": "Dans le lab, après le passage à l'API Responses, pourquoi la question « How does it compare to modern LLMs? » échoue-t-elle ?",
+          "options": [
+            "Le modèle ne connaît pas les LLM",
+            "L'authentification a expiré",
+            "Le streaming n'est pas activé",
+            "Le contexte de la conversation est perdu car l'id de la réponse précédente n'est pas transmis"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Sans previous_response_id, chaque appel est indépendant : le modèle ne sait pas à quoi « it » renvoie."
+        },
+        {
+          "question": "Quelle commande connecte ta session à Azure avant de lancer l'application ?",
+          "options": [
+            "az login",
+            "git clone",
+            "pip install",
+            "python --version"
+          ],
+          "correctAnswer": 0,
+          "explanation": "az login ouvre la session Azure dont DefaultAzureCredential se sert. Avec plusieurs tenants, on peut préciser --tenant."
+        },
+        {
+          "question": "Dans la version asynchrone du lab, de quel module importe-t-on DefaultAzureCredential ?",
+          "options": [
+            "azure.identity",
+            "openai.aio",
+            "azure.identity.aio",
+            "asyncio"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La version asynchrone importe DefaultAzureCredential et get_bearer_token_provider depuis azure.identity.aio, et ferme la session avec await credential.close()."
+        },
+        {
+          "question": "Comment éviter des coûts Azure inutiles à la fin du lab ?",
+          "options": [
+            "Fermer VS Code",
+            "Supprimer le groupe de ressources dans le portail Azure",
+            "Se déconnecter du portail Foundry",
+            "Désinstaller Python"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ouvre le groupe de ressources dans le portail Azure, on choisit Delete resource group et on confirme avec son nom."
+        }
+      ]
+    },
+    {
+      "slug": "ai103-chat-bilan",
+      "title": "Bilan et knowledge check",
+      "order": 7,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel endpoint offre la prise en charge la plus large des API OpenAI avec les Foundry Models ?",
+          "options": [
+            "L'endpoint du projet Foundry",
+            "L'endpoint Azure OpenAI",
+            "L'endpoint Foundry Tools"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. L'endpoint Azure OpenAI v1 est celui de la compatibilité large avec les API OpenAI. Le corrigé Microsoft n'était pas dans le texte fourni : à confirmer sur Learn."
+        },
+        {
+          "question": "Quel paquet faut-il installer pour utiliser le SDK Microsoft Foundry en Python ?",
+          "options": [
+            "Le paquet azure-foundry",
+            "Le paquet azure-ai-projects",
+            "Le paquet microsoft-foundry-sdk"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. pip install azure-ai-projects azure-identity openai."
+        },
+        {
+          "question": "Quelle méthode utilise-t-on pour générer des réponses avec l'API Responses ?",
+          "options": [
+            "client.chat.completions.create()",
+            "client.get_response_id()",
+            "client.responses.create()"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. client.responses.create() génère une réponse ; chat.completions.create() appartient à ChatCompletions."
+        },
+        {
+          "question": "Un extrait de code contient messages=[...] et choices[0].message.content. De quelle API s'agit-il ?",
+          "options": [
+            "ChatCompletions",
+            "Responses",
+            "Assistants",
+            "Embeddings"
+          ],
+          "correctAnswer": 0,
+          "explanation": "messages et choices[0].message.content sont propres à ChatCompletions. Responses utilise input et output_text."
+        },
+        {
+          "question": "Les utilisateurs se plaignent que l'application semble figée pendant les longues réponses. Que mets-tu en place ?",
+          "options": [
+            "Une temperature plus élevée",
+            "Un déploiement Batch",
+            "Un message système plus long",
+            "Le streaming avec stream=True"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le streaming renvoie la sortie au fur et à mesure : l'utilisateur voit la réponse partielle dès qu'elle est disponible."
+        },
+        {
+          "question": "Laquelle de ces affirmations sur les deux SDK est vraie ?",
+          "options": [
+            "On ne peut jamais les utiliser dans la même application",
+            "Le SDK OpenAI donne accès aux agents et aux évaluations Foundry",
+            "On peut les combiner : SDK Foundry pour les fonctions du projet, SDK OpenAI pour l'inférence",
+            "Le SDK Foundry n'existe que pour .NET"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les deux SDK peuvent être utilisés ensemble dans la même application. Le SDK OpenAI ne fournit pas les agents ni les évaluations."
+        },
+        {
+          "question": "Quelle API est recommandée pour la plupart des nouveaux projets de développement ?",
+          "options": [
+            "ChatCompletions",
+            "Responses",
+            "Assistants",
+            "Aucune des deux"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'API Responses est recommandée pour la plupart des nouveaux projets ; ChatCompletions reste bien établie et compatible avec de nombreux modèles et plateformes."
+        }
+      ]
+    }
+  ]
+}
