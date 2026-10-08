@@ -1,0 +1,462 @@
+{
+  "slug": "ai901-genai-agents-azure",
+  "title": "Get started with generative AI and agents in Azure",
+  "description": "LP2 · Module 2 — catalogue de modèles, déploiement et TPM, playground, client léger, création et appel d'un agent",
+  "category": "AI-901",
+  "order": 9,
+  "units": [
+    {
+      "slug": "ai901-genai-models",
+      "title": "Introduction et Generative AI models",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'une famille de modèles ?",
+          "options": [
+            "Un groupe de modèles déployés dans la même région",
+            "Un groupe de modèles apparentés, de même architecture ou lignée, qui diffèrent par la taille, les capacités, la spécialisation ou la version",
+            "Tous les modèles d'un même abonnement",
+            "Un ensemble de modèles gratuits"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Une famille regroupe des modèles liés par leur architecture ou leur lignée, avec des variantes de taille, de capacité ou de version."
+        },
+        {
+          "question": "Quel modèle le cours présente-t-il comme disponible pour tous les utilisateurs de Foundry et optimisé pour la vitesse et la faible latence ?",
+          "options": [
+            "GPT-5.x",
+            "Claude Opus 4.5",
+            "GPT-4.1",
+            "Sora 2"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La famille GPT-5 demande une inscription ; GPT-4.1 est utilisable par tous, idéal pour le chat en temps réel et les gros volumes."
+        },
+        {
+          "question": "Qu'est-ce qu'un token ?",
+          "options": [
+            "La plus petite unité de texte ou de données qu'un modèle génératif traite",
+            "Une clé d'API",
+            "Un type de déploiement",
+            "Un groupe de ressources"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les modèles découpent l'entrée en tokens : mots, sous-mots, caractères ou ponctuation."
+        },
+        {
+          "question": "Que détermine l'allocation de tokens par minute (TPM) d'un déploiement ?",
+          "options": [
+            "La langue des réponses",
+            "Le prix de l'abonnement Azure",
+            "La région du projet",
+            "La vitesse et l'échelle auxquelles le modèle traite les entrées, ainsi que les limites de débit"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le TPM fixe la capacité du déploiement à traiter du trafic de tokens par minute, et les limites comme les requêtes par minute."
+        },
+        {
+          "question": "Que faire dans le code si tu constates du throttling ?",
+          "options": [
+            "Augmenter max tokens",
+            "Baisser max tokens ou réduire le nombre de requêtes simultanées",
+            "Supprimer le prompt système",
+            "Changer de clé d'API"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Des prompts plus longs et un max output tokens plus élevé consomment plus de TPM ; on réduit l'un ou l'autre, ou la concurrence."
+        },
+        {
+          "question": "Que font, à eux seuls, les évaluateurs de Foundry ?",
+          "options": [
+            "Ils corrigent automatiquement les réponses",
+            "Ils réentraînent le modèle",
+            "Ils détectent, analysent et notent les problèmes, sans les résoudre",
+            "Ils déploient le modèle"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les évaluateurs mesurent la qualité, la sécurité et l'efficacité des sorties, mais ne résolvent pas activement les problèmes."
+        },
+        {
+          "question": "Qu'apportent les modèles vendus directement par Azure ?",
+          "options": [
+            "Une forte intégration à Azure, des SLA de niveau entreprise, une sécurité préconfigurée et un alignement de conformité",
+            "L'absence totale de facturation",
+            "Un hébergement sur ton ordinateur",
+            "Uniquement des modèles open source"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Ces modèles sont hébergés par Microsoft sous les Microsoft Product Terms."
+        },
+        {
+          "question": "Laquelle de ces choses se produit quand tu déploies un modèle dans Foundry ?",
+          "options": [
+            "Le modèle est téléchargé sur ton poste",
+            "Le modèle est réentraîné sur tes données",
+            "L'abonnement est supprimé",
+            "Un endpoint d'API est créé et la supervision devient active"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Au déploiement : ressources de calcul allouées, endpoint d'API créé, configuration figée, supervision et journalisation actives."
+        },
+        {
+          "question": "Quel type de modèle le cours recommande-t-il pour les embeddings ?",
+          "options": [
+            "GPT-5.1-codex",
+            "text-embedding-3-small ou d'autres modèles d'embedding",
+            "Sora",
+            "Claude Opus pour tout"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles d'embedding sont conçus pour les représentations vectorielles sémantiques."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-genai-using-model",
+      "title": "Using a generative AI model",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que fait le paramètre temperature ?",
+          "options": [
+            "Il limite la longueur de la réponse",
+            "Il choisit la région",
+            "Il contrôle la créativité par rapport au déterminisme",
+            "Il fixe le rôle du modèle"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Temperature règle créativité contre déterminisme ; max output tokens plafonne la longueur ; les instructions système fixent le rôle."
+        },
+        {
+          "question": "Quelle est la différence entre un prompt système et un prompt utilisateur ?",
+          "options": [
+            "Le prompt système fixe le comportement, le ton, les outils et les garde-fous ; le prompt utilisateur est la demande de l'utilisateur final",
+            "Ce sont deux noms pour la même chose",
+            "Le prompt utilisateur fixe le comportement ; le prompt système contient la question",
+            "Le prompt système est facultatif et ignoré"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Exemple de prompt système : « You are a helpful, step-by-step tutor. Cite sources. Decline medical advice. » Exemple utilisateur : « Where should I travel? »"
+        },
+        {
+          "question": "Qu'est-ce qu'un client léger ?",
+          "options": [
+            "Un serveur qui héberge le modèle",
+            "Une base de données vectorielle",
+            "Un outil de facturation",
+            "Une petite application dont le rôle est de recueillir l'entrée, d'appeler une API distante et d'afficher le résultat"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Un client léger garde l'état et le calcul côté serveur, avec peu de code et de configuration."
+        },
+        {
+          "question": "Dans le code du client de chat, que contient le paramètre model ?",
+          "options": [
+            "L'URL de l'endpoint",
+            "Le nom du déploiement",
+            "La clé d'API",
+            "Le prompt système"
+          ],
+          "correctAnswer": 1,
+          "explanation": "model=os.environ[\"DEPLOYMENT_NAME\"] : c'est le nom du déploiement."
+        },
+        {
+          "question": "Dans l'appel responses.create du client de chat, quelle partie porte le prompt système ?",
+          "options": [
+            "max_output_tokens=300",
+            "temperature=0.7",
+            "Le message {\"role\": \"system\", \"content\": ...}",
+            "base_url"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'entrée est une liste de messages ; celui de rôle system porte les instructions, celui de rôle user la demande."
+        },
+        {
+          "question": "Comment le cours résume-t-il la différence entre modèles et agents ?",
+          "options": [
+            "Modèles = intelligence brute ; agents = travailleurs empaquetés, orientés tâche, construits sur cette intelligence",
+            "Modèles = outils ; agents = bases de données",
+            "Il n'y a aucune différence",
+            "Agents = intelligence brute ; modèles = applications"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On utilise un modèle seul pour de l'inférence pure, pour expérimenter dans le playground ou via l'API Responses."
+        },
+        {
+          "question": "Pourquoi le playground est-il un « pont » entre Foundry et le code ?",
+          "options": [
+            "Parce qu'il compile le code Python",
+            "Parce qu'il remplace l'API",
+            "Parce qu'il supprime le besoin de déployer",
+            "Parce qu'on réutilise dans le code les mêmes prompts et valeurs de paramètres, et qu'il fournit le code d'appel du déploiement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le playground fournit du code qui appelle le déploiement par l'API Responses compatible OpenAI."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-genai-creating-agent",
+      "title": "Creating an agent",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quels trois éléments un agent Microsoft Foundry réunit-il ?",
+          "options": [
+            "Un endpoint, une clé et un quota",
+            "Un modèle, des instructions et des outils",
+            "Un tenant, un abonnement et une ressource",
+            "Un schéma, un analyseur et un index"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un agent est un composant empaqueté et réutilisable : modèle, instructions (prompt système) et outils."
+        },
+        {
+          "question": "Comment le cours distingue-t-il outils et connaissances ?",
+          "options": [
+            "Outils = contexte ; connaissances = actions",
+            "Les deux sont identiques",
+            "Outils = actions ; connaissances = contexte",
+            "Outils = modèles ; connaissances = endpoints"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les outils permettent d'agir ; les connaissances ancrent le modèle avec de l'information."
+        },
+        {
+          "question": "Par quelle technique les connaissances donnent-elles au modèle accès à du contenu externe ?",
+          "options": [
+            "La génération augmentée par récupération (RAG)",
+            "Le fine-tuning quotidien",
+            "La synthèse vocale",
+            "Le throttling"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les connaissances passent par le RAG : ingestion, indexation, recherche et ancrage des réponses."
+        },
+        {
+          "question": "Que contient la réponse d'un agent quand il a utilisé une source de connaissances ?",
+          "options": [
+            "Un fichier audio",
+            "Une clé d'API",
+            "Le code source de l'agent",
+            "Une citation de la source de connaissances utilisée"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Quand des connaissances sont utilisées, la réponse inclut une citation, ce qui la rend traçable."
+        },
+        {
+          "question": "Quelle ligne du code récupère un agent existant ?",
+          "options": [
+            "openai_client = project_client.get_openai_client()",
+            "agent = project_client.agents.get(agent_name=myAgent)",
+            "response = openai_client.responses.create(...)",
+            "print(response.output_text)"
+          ],
+          "correctAnswer": 1,
+          "explanation": "agents.get(agent_name=...) récupère l'agent ; c'est responses.create avec extra_body qui l'appelle."
+        },
+        {
+          "question": "Dans l'appel responses.create, qu'est-ce qui désigne l'agent à utiliser ?",
+          "options": [
+            "Le paramètre model",
+            "Le paramètre temperature",
+            "Le paramètre extra_body, avec une référence d'agent",
+            "Le paramètre max_output_tokens"
+          ],
+          "correctAnswer": 2,
+          "explanation": "extra_body={\"agent\": {\"name\": agent.name, \"type\": \"agent_reference\"}} référence l'agent."
+        },
+        {
+          "question": "Quel SDK et quelle API utilise-t-on pour appeler un agent depuis une application cliente ?",
+          "options": [
+            "Le SDK Foundry Projects et la Project API",
+            "Le SDK Azure Speech et l'API Voice Live",
+            "Le SDK Azure Language et MCP",
+            "Uniquement curl et REST Sora"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On se connecte au projet avec le SDK Foundry Projects et on appelle l'agent par la Project API."
+        },
+        {
+          "question": "Laquelle de ces capacités un agent possède-t-il ?",
+          "options": [
+            "Modifier la facturation Azure",
+            "Fonctionner sans modèle",
+            "Supprimer son propre projet",
+            "Appeler automatiquement des outils externes et garder une mémoire de travail pendant la conversation"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Un agent appelle des outils, découpe les objectifs en étapes, garde une mémoire de travail et produit des sorties structurées."
+        },
+        {
+          "question": "Où trouve-t-on l'identifiant de l'agent (agent-id) ?",
+          "options": [
+            "Dans le portail Azure, section Facturation",
+            "Dans le playground de l'agent, en vue code, parmi les variables .env",
+            "Dans le catalogue de modèles",
+            "Dans le fichier YAML du workflow GitHub"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On trouve l'agent-id dans la vue code du playground de l'agent, en ouvrant les variables .env."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-genai-lab",
+      "title": "Lab — un modèle génératif, puis un agent",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Dans le lab, pourquoi le modèle comprend-il « her » dans la deuxième question sur Ada Lovelace ?",
+          "options": [
+            "Parce qu'il devine au hasard",
+            "Parce que le fichier de connaissances le précise",
+            "Parce que l'historique de la conversation est inclus dans le prompt",
+            "Parce que web_search est activé"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les applications de chat génératif incluent souvent l'historique dans le prompt, ce qui conserve le contexte entre les messages."
+        },
+        {
+          "question": "Que permet d'enregistrer le modèle configuré comme agent ?",
+          "options": [
+            "Aux applications clientes de se connecter à son endpoint sans fournir de prompt système ni implémenter leur propre logique RAG",
+            "De supprimer le besoin d'un modèle",
+            "De rendre le projet public",
+            "D'éviter toute authentification"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'agent encapsule le modèle, ses instructions et sa configuration d'outils."
+        },
+        {
+          "question": "Pourquoi le code client de l'agent n'utilise-t-il pas une clé d'API ?",
+          "options": [
+            "Parce que les clés sont trop longues",
+            "Parce que l'agent est gratuit",
+            "Parce que le lab est en préversion",
+            "Parce que la connexion à un projet, qui peut contenir des ressources sensibles, ne prend pas en charge l'authentification par clé : il faut une identité Entra ID"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'application doit être authentifiée avec une identité Entra ID, d'où DefaultAzureCredential."
+        },
+        {
+          "question": "Que trouve-t-on dans la définition YAML de l'agent ?",
+          "options": [
+            "Uniquement son nom",
+            "Le modèle, ses réglages, les instructions et les outils",
+            "Les réponses qu'il a données",
+            "Le mot de passe de l'administrateur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La définition inclut model, instructions et tools (web_search, file_search avec ses vector_store_ids)."
+        },
+        {
+          "question": "Que fait le modèle si le fichier de connaissances ne contient pas l'information demandée ?",
+          "options": [
+            "Il s'arrête avec une erreur",
+            "Il supprime le fichier",
+            "Il utilise ses propres connaissances d'entraînement ou l'outil web_search",
+            "Il invente un fichier"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Quand il y a une information pertinente dans le fichier, le modèle l'utilise ; sinon il se rabat sur l'entraînement ou la recherche web."
+        },
+        {
+          "question": "Quel effet a le prompt système du lab sur la question « What's the capital of Spain? » ?",
+          "options": [
+            "L'agent reste dans son rôle et n'engage pas la conversation sur ce sujet hors périmètre",
+            "L'agent répond en détail sur l'Espagne",
+            "L'agent lance une génération d'image",
+            "L'agent supprime la conversation"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les instructions lui demandent de ne répondre que sur l'histoire de l'informatique."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-genai-bilan",
+      "title": "Bilan et knowledge check",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qui décrit le mieux le catalogue de modèles de Foundry ?",
+          "options": [
+            "Un catalogue composé uniquement de modèles de fondation exclusifs à Microsoft",
+            "Un point central pour découvrir, filtrer, comparer et tester de nombreux modèles d'IA générative de plusieurs fournisseurs",
+            "Un outil qui remplace le besoin d'un abonnement Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Quelle affirmation décrit le mieux un modèle de fondation dans Microsoft Foundry ?",
+          "options": [
+            "Un petit modèle spécifique à une tâche, qui doit être fine-tuné avant de pouvoir remplir une fonction utile",
+            "Un outil de benchmark utilisé pour comparer différentes familles de modèles",
+            "Un grand modèle préentraîné qui fournit des capacités générales et peut être utilisé immédiatement ou personnalisé"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Dans le portail Foundry, quel est le principal avantage d'utiliser le Model Playground avant d'écrire du code ?",
+          "options": [
+            "Il permet de tester des prompts, de comparer des modèles et de relever des réglages fonctionnels à réutiliser dans le code.",
+            "Il déploie le modèle pour toi et supprime le besoin d'utiliser une API.",
+            "Il remplace les instructions système en générant automatiquement le meilleur prompt système pour chaque scénario."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Quel est le résultat principal de la publication d'un agent dans Microsoft Foundry ?",
+          "options": [
+            "Elle convertit l'agent en ressource Azure managée avec un endpoint stable, que tu peux partager et intégrer sans exposer ton projet Foundry ni ton code source.",
+            "Elle réduit automatiquement les coûts en rendant l'agent gratuit, quels que soient les tokens, les outils ou les services de données connectés.",
+            "Elle remplace le besoin de la Project API en ne permettant d'appeler l'agent que par l'interface du portail Foundry."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Le résumé indique que les agents se publient comme ressources Azure avec des endpoints stables."
+        },
+        {
+          "question": "Dans l'exemple Python, quelle ligne appelle l'agent publié (plutôt qu'un déploiement de modèle directement) pour générer une réponse ?",
+          "options": [
+            "agent = project_client.agents.get(agent_name=myAgent)",
+            "openai_client = project_client.get_openai_client()",
+            "response = openai_client.responses.create(input=[...], extra_body={'agent': {'name': agent.name, 'type': 'agent_reference'}})"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. La première ligne récupère l'agent, la deuxième obtient le client ; seule la troisième fait l'appel."
+        },
+        {
+          "question": "Laquelle de ces consignes doit aller dans le prompt système plutôt que dans le prompt utilisateur ?",
+          "options": [
+            "« Quel temps fait-il à Paris ? »",
+            "« Résume ce paragraphe. »",
+            "« Traduis ce mot. »",
+            "« Tu es un tuteur patient ; cite tes sources et refuse les conseils médicaux. »"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une règle de comportement valable pour toute la conversation relève du prompt système."
+        },
+        {
+          "question": "Qu'est-ce qui différencie l'appel à un agent de l'appel à un modèle dans responses.create ?",
+          "options": [
+            "L'agent exige une clé d'API en plus",
+            "L'appel à l'agent passe une référence d'agent dans extra_body au lieu d'un nom de déploiement dans model",
+            "L'agent ne renvoie jamais de texte",
+            "L'agent n'utilise pas l'API Responses"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On utilise la même API Responses ; l'agent est désigné dans extra_body, car modèle, instructions et outils sont déjà dans l'agent."
+        }
+      ]
+    }
+  ]
+}
