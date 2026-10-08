@@ -1,0 +1,451 @@
+{
+  "slug": "ai901-concepts-rag",
+  "title": "Introduction to retrieval-augmented generation concepts",
+  "description": "LP1 · Module 7 — RAG, grounding, pipeline d'indexation, chunks, embeddings, recherche vectorielle et hybride, prompt augmenté, évaluation",
+  "category": "AI-901",
+  "order": 7,
+  "units": [
+    {
+      "slug": "ai901-c-rag-intro",
+      "title": "Introduction et Understand RAG",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que combine le RAG ?",
+          "options": [
+            "La vision et la parole",
+            "L'OCR et la traduction",
+            "La recherche et l'IA générative",
+            "Le réentraînement et la compression"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le RAG combine la recherche d'informations pertinentes et la génération par un modèle de langage."
+        },
+        {
+          "question": "Quelle limite d'un modèle de langage correspond au fait qu'il ignore les documents privés d'une organisation ?",
+          "options": [
+            "Les frontières de la connaissance",
+            "La fraîcheur",
+            "La latence",
+            "La prosodie"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle ne connaît pas automatiquement les informations privées : catalogue, articles de support, politiques."
+        },
+        {
+          "question": "Que désigne « augmented generation » ?",
+          "options": [
+            "Augmenter la taille du modèle",
+            "Ajouter l'information récupérée au prompt comme contexte, puis générer la réponse",
+            "Générer davantage de tokens",
+            "Entraîner le modèle sur plus de données"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'information récupérée est ajoutée au prompt et le modèle répond à partir de ce contexte."
+        },
+        {
+          "question": "Comment qualifie-t-on une réponse fondée sur un contenu source fourni ?",
+          "options": [
+            "Une réponse aléatoire",
+            "Une réponse compressée",
+            "Une réponse synthétique",
+            "Une réponse ancrée (grounded)"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La réponse est dite ancrée parce qu'elle repose sur le contenu source fourni ; elle peut s'accompagner de citations."
+        },
+        {
+          "question": "Le RAG modifie-t-il les paramètres appris par le modèle ?",
+          "options": [
+            "Non, il fournit la connaissance au moment de la requête",
+            "Oui, à chaque question",
+            "Oui, une fois par jour",
+            "Oui, quand les documents changent"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le RAG ne change pas les paramètres du modèle : il apporte la connaissance à l'exécution."
+        },
+        {
+          "question": "La politique de frais de l'entreprise change. Que faut-il faire dans une solution RAG ?",
+          "options": [
+            "Réentraîner le modèle",
+            "Changer de modèle",
+            "Mettre à jour la documentation et l'index",
+            "Rien du tout"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On met à jour les documents et l'index de recherche ; aucun réentraînement n'est nécessaire."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-rag-prepare",
+      "title": "Prepare data for retrieval",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est l'ordre des tâches du pipeline d'indexation ?",
+          "options": [
+            "Indexer, découper, extraire, embeddings",
+            "Extraire le texte, découper en chunks, créer les embeddings, créer l'index",
+            "Embeddings, extraire, indexer, découper",
+            "Découper, indexer, embeddings, extraire"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le pipeline extrait le texte, le découpe en chunks, encode en embeddings puis crée l'index."
+        },
+        {
+          "question": "Quelle métadonnée permet de ne montrer à un utilisateur que le contenu auquel il a droit ?",
+          "options": [
+            "Le titre",
+            "La catégorie",
+            "L'URL source",
+            "Les droits d'accès"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les contrôles d'accès sont essentiels : un utilisateur ne doit récupérer que le contenu qu'il est autorisé à voir."
+        },
+        {
+          "question": "Quel est le risque de chunks trop grands ?",
+          "options": [
+            "Ils contiennent de l'information hors sujet et consomment plus de fenêtre de contexte",
+            "Ils séparent une phrase de son titre",
+            "Ils ne peuvent pas être indexés",
+            "Ils suppriment les métadonnées"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Des chunks trop grands apportent du contenu inutile et occupent davantage la fenêtre de contexte du modèle."
+        },
+        {
+          "question": "Quel est le risque de chunks trop petits ?",
+          "options": [
+            "Ils coûtent trop cher à stocker",
+            "Ils contiennent trop de sujets",
+            "Ils séparent une affirmation des titres ou définitions nécessaires pour la comprendre",
+            "Ils empêchent la recherche par mots-clés"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Un chunk trop petit perd le contexte qui lui donne son sens."
+        },
+        {
+          "question": "Pourquoi les chunks se chevauchent-ils souvent légèrement ?",
+          "options": [
+            "Pour augmenter le coût",
+            "Pour ne pas perdre de contexte important à une frontière",
+            "Pour dupliquer l'index",
+            "Pour accélérer l'entraînement"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le chevauchement évite qu'une information importante soit coupée entre deux chunks."
+        },
+        {
+          "question": "Quelle recherche est efficace quand des mots exacts, des identifiants ou des codes produit comptent ?",
+          "options": [
+            "La recherche par mots-clés",
+            "La recherche vectorielle",
+            "La recherche aléatoire",
+            "La recherche par image"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La recherche par mots-clés convient aux termes exacts ; la recherche vectorielle trouve du contenu de sens proche."
+        },
+        {
+          "question": "Qu'est-ce que la recherche hybride ?",
+          "options": [
+            "Une recherche dans deux langues",
+            "Une recherche sans index",
+            "Une recherche par image et par audio",
+            "Une combinaison de la recherche par mots-clés et de la recherche vectorielle"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La recherche hybride combine mots-clés et vecteurs."
+        },
+        {
+          "question": "Que peut provoquer une source contenant des documents en double, périmés ou contradictoires ?",
+          "options": [
+            "Une meilleure couverture",
+            "Une latence nulle",
+            "Une mauvaise récupération et des réponses peu fiables",
+            "Un modèle plus petit"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La qualité des sources compte : de mauvaises sources dégradent la recherche et les réponses."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-rag-retrieve",
+      "title": "Retrieve information and generate a response",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quand se déroule la phase de récupération et de génération ?",
+          "options": [
+            "Pendant l'entraînement du modèle",
+            "À l'exécution, quand l'utilisateur pose sa question",
+            "Une seule fois, à l'installation",
+            "Avant l'indexation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Cette phase a lieu à l'exécution (run time), une fois le contenu indexé."
+        },
+        {
+          "question": "Pour une recherche vectorielle, comment la question est-elle préparée ?",
+          "options": [
+            "Elle est convertie en vecteur par le même type de modèle d'embedding qu'à l'indexation",
+            "Elle est traduite en SQL",
+            "Elle est découpée en chunks de 20 ms",
+            "Elle est convertie en image"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le vecteur de la question est ensuite comparé aux vecteurs des chunks pour trouver les plus proches."
+        },
+        {
+          "question": "Quel est le but de la récupération ?",
+          "options": [
+            "Récupérer le plus de contenu possible",
+            "Récupérer tous les documents de l'index",
+            "Récupérer un document au hasard",
+            "Récupérer le plus petit ensemble de contenu qui fournit une preuve suffisante et pertinente"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le but n'est pas la quantité : trop de contexte faible ou répétitif nuit à la réponse."
+        },
+        {
+          "question": "Laquelle de ces techniques affine la récupération ?",
+          "options": [
+            "Augmenter la température du modèle",
+            "Supprimer l'index",
+            "Appliquer des filtres de métadonnées, comme la région ou les droits de l'utilisateur",
+            "Réentraîner le modèle"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On peut filtrer par métadonnées, combiner mots-clés et vecteurs, classer les résultats et limiter leur nombre."
+        },
+        {
+          "question": "Quels éléments un prompt augmenté contient-il en général ?",
+          "options": [
+            "Uniquement la question",
+            "Instructions système, question de l'utilisateur, chunks récupérés et consignes de réponse",
+            "Uniquement les chunks",
+            "Les paramètres du modèle"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le prompt réunit les instructions, la question, le contexte d'ancrage et les consignes (répondre d'après le contexte, citer)."
+        },
+        {
+          "question": "Pourquoi faut-il traiter les documents récupérés comme des données et non comme des instructions ?",
+          "options": [
+            "Parce qu'un contenu source pourrait contenir un texte qui tente de détourner le modèle",
+            "Parce qu'ils sont trop longs",
+            "Parce qu'ils sont toujours faux",
+            "Parce qu'ils sont chiffrés"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le prompt doit distinguer les instructions de confiance de l'application du contenu récupéré."
+        },
+        {
+          "question": "À quoi servent les citations dans la réponse ?",
+          "options": [
+            "À allonger la réponse",
+            "À masquer les sources",
+            "À remplacer le modèle",
+            "À aider l'utilisateur à vérifier la réponse et à repérer une source périmée"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Les citations permettent de vérifier la réponse et de voir si une source est obsolète ou inadaptée."
+        },
+        {
+          "question": "Quelle affirmation sur le RAG est exacte ?",
+          "options": [
+            "Il élimine toutes les réponses non fondées",
+            "Il rend la vérification humaine inutile dans tous les cas",
+            "Il réduit la probabilité de réponses non fondées, sans les éliminer",
+            "Il garantit des réponses toujours complètes"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le modèle peut mal interpréter un bon contexte, ou la recherche fournir une information incomplète."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-rag-evaluate",
+      "title": "Evaluate a RAG solution",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que faut-il examiner pour évaluer une solution RAG ?",
+          "options": [
+            "Uniquement la fluidité de la réponse",
+            "Uniquement la vitesse",
+            "À la fois l'information récupérée et la réponse générée",
+            "Uniquement la taille de l'index"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une réponse qui sonne bien ne prouve pas que tout le pipeline fonctionne : on évalue récupération et génération."
+        },
+        {
+          "question": "Quel critère d'évaluation de la récupération vérifie que toute l'information nécessaire est présente ?",
+          "options": [
+            "La couverture",
+            "Le classement",
+            "La latence",
+            "La qualité des citations"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La couverture demande si toute l'information nécessaire à une réponse complète a été récupérée."
+        },
+        {
+          "question": "Que mesure l'ancrage (groundedness) ?",
+          "options": [
+            "La vitesse de la recherche",
+            "Si chaque affirmation est soutenue par le contenu récupéré",
+            "Le nombre de chunks",
+            "Le coût du prompt"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'ancrage vérifie que les affirmations de la réponse reposent sur le contexte fourni."
+        },
+        {
+          "question": "La bonne information n'est pas récupérée. Que faut-il améliorer ?",
+          "options": [
+            "Uniquement le prompt de génération",
+            "La longueur de la réponse",
+            "La voix de synthèse",
+            "Le contenu source, les frontières des chunks, les métadonnées, la recherche ou le classement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Changer seulement le prompt de génération ne résout pas un problème de récupération."
+        },
+        {
+          "question": "Quel cas difficile un bon jeu de test doit-il inclure ?",
+          "options": [
+            "Uniquement des questions faciles",
+            "Des questions sans réponse dans les données",
+            "Des questions identiques répétées",
+            "Aucun cas difficile"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Il faut aussi des questions ambiguës, des documents périmés et des tentatives d'accès non autorisé."
+        },
+        {
+          "question": "Quel effet a la récupération d'un plus grand nombre de chunks ?",
+          "options": [
+            "Elle peut améliorer la couverture, mais augmente la taille du prompt, le temps de réponse et le coût",
+            "Elle réduit toujours le coût",
+            "Elle supprime la latence",
+            "Elle n'a aucun effet"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Trop de contexte peut même gêner le modèle : il faut équilibrer qualité, latence et coût."
+        },
+        {
+          "question": "Quand faut-il réévaluer le pipeline RAG ?",
+          "options": [
+            "Jamais",
+            "Uniquement à la première mise en service",
+            "Chaque fois que changent les données, les modèles, les prompts ou les réglages de recherche",
+            "Uniquement quand le coût baisse"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Tout changement de données, de modèle, de prompt ou de réglage de recherche justifie une nouvelle évaluation."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-c-rag-lab-bilan",
+      "title": "Lab et bilan — concepts RAG",
+      "order": 5,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "[Question officielle] Quel est le but principal du retrieval-augmented generation (RAG) ?",
+          "options": [
+            "Réentraîner un modèle de langage chaque fois que l'information source change",
+            "Ancrer les réponses générées dans des informations pertinentes récupérées d'une source de données",
+            "Remplacer un modèle de langage par un moteur de recherche"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le RAG récupère l'information pertinente et l'ajoute au prompt pour produire une réponse ancrée, sans réentraînement."
+        },
+        {
+          "question": "[Question officielle] Pourquoi divise-t-on couramment les gros documents en chunks avant de les indexer ?",
+          "options": [
+            "Pour que chaque chunk serve à entraîner un modèle de langage distinct",
+            "Pour ne plus avoir à stocker les documents d'origine",
+            "Pour que la solution récupère des passages ciblés qui tiennent efficacement dans un prompt"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les chunks permettent de récupérer uniquement le passage utile, sans envoyer tout le document au modèle."
+        },
+        {
+          "question": "[Question officielle] Que représente un embedding dans une solution RAG ?",
+          "options": [
+            "Un vecteur numérique qui capture les caractéristiques sémantiques du contenu",
+            "Un ensemble d'instructions qui définit le comportement du modèle",
+            "Une réponse finale générée pour un utilisateur"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un embedding est un vecteur numérique ; des contenus de sens proche ont des embeddings proches."
+        },
+        {
+          "question": "[Question officielle] Quelle approche de recherche trouve un passage sur « company travel costs » quand la requête porte sur « business trip expenses », même si les mots diffèrent ?",
+          "options": [
+            "Une correspondance exacte de nom de fichier",
+            "La recherche vectorielle sémantique",
+            "Une sélection aléatoire de documents"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La recherche vectorielle compare le sens, pas les mots exacts."
+        },
+        {
+          "question": "[Question officielle] Une réponse RAG est fluide mais contient une limite de politique incorrecte. Que faut-il examiner en premier ?",
+          "options": [
+            "Si le modèle de langage peut produire une réponse plus longue",
+            "Si l'on peut ajouter au prompt davantage de documents sans rapport",
+            "Si le passage correct et à jour de la politique a été récupéré et fourni comme contexte"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On commence par vérifier la récupération : sans le bon passage à jour, la génération ne peut pas être correcte."
+        },
+        {
+          "question": "Dans le lab, que voit-on dans la réponse après avoir chargé expenses.txt ?",
+          "options": [
+            "Une citation de la source expenses.txt",
+            "Une image générée",
+            "Une transcription audio",
+            "Un message d'erreur"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La réponse s'appuie sur le fichier et inclut une citation vers la source."
+        },
+        {
+          "question": "Dans le lab, quel type d'index est créé au chargement du fichier ?",
+          "options": [
+            "Un index vectoriel complet",
+            "Aucun index",
+            "Un index d'images",
+            "Un simple index par mots-clés"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le lab crée un index par mots-clés ; une vraie solution RAG utilise le plus souvent un index vectoriel avec recherche sémantique."
+        },
+        {
+          "question": "Quel service Foundry est une couche de connaissances gérée pour le RAG à l'échelle de l'entreprise ?",
+          "options": [
+            "Voice Live",
+            "Foundry IQ",
+            "Azure Translator",
+            "Document Intelligence"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Foundry IQ facilite la création de solutions RAG avec plusieurs sources de connaissances partagées."
+        }
+      ]
+    }
+  ]
+}

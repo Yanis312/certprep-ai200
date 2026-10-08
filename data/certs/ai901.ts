@@ -15,7 +15,7 @@ const learningPaths: LearningPath[] = [
       { title: "Introduction to AI speech concepts", learn: "introduction-ai-speech", site: "ai901-concepts-speech" },
       { title: "Introduction to computer vision concepts", learn: "introduction-computer-vision", site: "ai901-concepts-vision" },
       { title: "Introduction to AI-powered information extraction concepts", learn: "introduction-information-extraction", site: "ai901-concepts-extraction" },
-      { title: "Introduction to retrieval-augmented generation concepts", learn: "rag-fundamentals" },
+      { title: "Introduction to retrieval-augmented generation concepts", learn: "rag-fundamentals", site: "ai901-concepts-rag" },
     ],
   },
   {
