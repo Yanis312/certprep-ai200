@@ -1,0 +1,409 @@
+{
+  "slug": "ai901-text-analysis",
+  "title": "Get started with text analysis in Azure",
+  "description": "LP2 · Module 3 — modèles généralistes ou Azure Language, client Python, serveur MCP Azure Language",
+  "category": "AI-901",
+  "order": 10,
+  "units": [
+    {
+      "slug": "ai901-text-foundry",
+      "title": "Introduction et Understand text analysis in Foundry",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les deux approches d'analyse de texte proposées dans le portail Foundry ?",
+          "options": [
+            "Des modèles d'IA généralistes pilotés par des prompts, et des outils de langage spécialisés qui renvoient des résultats structurés et déterministes",
+            "L'OCR et la synthèse vocale",
+            "Le fine-tuning et le RAG",
+            "Les machines virtuelles et les conteneurs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Foundry propose des modèles généralistes, qui traitent de nombreuses tâches par prompts, et des outils spécialisés aux résultats structurés et déterministes."
+        },
+        {
+          "question": "Quelle technique Azure Language utilise-t-il pour produire sa sortie ?",
+          "options": [
+            "La génération probabiliste de texte",
+            "Des techniques statistiques qui renvoient une sortie structurée et déterministe",
+            "La génération d'images",
+            "Le tirage aléatoire"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les analyseurs d'Azure Language utilisent des techniques statistiques, ce qui les rend adaptés aux pipelines automatisés."
+        },
+        {
+          "question": "Que fait l'extraction d'expressions clés ?",
+          "options": [
+            "Elle traduit le texte",
+            "Elle masque les données personnelles",
+            "Elle liste les principaux concepts d'un texte non structuré",
+            "Elle transcrit un fichier audio"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'extraction d'expressions clés identifie les points principaux d'un texte, utile pour l'indexation et la recherche."
+        },
+        {
+          "question": "Que renvoie la détection de langue d'Azure Language pour un texte ?",
+          "options": [
+            "Un résumé du texte",
+            "La liste des personnes citées",
+            "Une traduction en anglais",
+            "La langue principale, son code ISO et un score de confiance"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Pour « ¡Hola! Me llamo Josefina... », le résultat est Spanish, code es, confiance 1.00."
+        },
+        {
+          "question": "Que fait la détection des PII ?",
+          "options": [
+            "Elle identifie les détails personnels dans un texte, comme noms, téléphones et adresses, et peut les masquer",
+            "Elle calcule le sentiment d'un avis",
+            "Elle détecte la langue",
+            "Elle génère des expressions clés"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La détection des PII repère les informations personnelles, y compris de santé (PHI), et peut les masquer pour respecter les règles de confidentialité."
+        },
+        {
+          "question": "Pourquoi le résultat d'une analyse de sentiment par un modèle généraliste dépend-il de la formulation ?",
+          "options": [
+            "Parce que le modèle ne lit pas le texte",
+            "Parce que le modèle répond à des prompts en langage naturel : un prompt plus précis donne une réponse plus structurée et détaillée",
+            "Parce qu'il faut l'entraîner d'abord",
+            "Parce que le sentiment est aléatoire"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On peut demander une note globale ou un détail phrase par phrase ; la sortie suit la demande."
+        },
+        {
+          "question": "Quelle tâche identifie des entités connues avec un lien vers Wikipédia ?",
+          "options": [
+            "Le résumé",
+            "La détection de langue",
+            "La liaison d'entités (entity linking)",
+            "La détection des PII"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La liaison d'entités identifie des entités connues accompagnées d'un lien vers Wikipédia."
+        },
+        {
+          "question": "Dans le texte « John Smith visited New York », de quel type est l'entité « New York » ?",
+          "options": [
+            "Person",
+            "Organization",
+            "Quantity",
+            "Location"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Dans l'exemple du cours, John Smith est une Person, New York une Location et Microsoft une Organization."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-text-client-app",
+      "title": "Create a client application that analyzes text",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel paquet Python installe-t-on pour utiliser le SDK Azure Language ?",
+          "options": [
+            "azure-language",
+            "azure-ai-textanalytics",
+            "openai-language",
+            "azure-nlp"
+          ],
+          "correctAnswer": 1,
+          "explanation": "pip install azure-ai-textanalytics. Pour l'API OpenAI, c'est pip install openai."
+        },
+        {
+          "question": "À quoi sert un fichier .env dans ces exemples ?",
+          "options": [
+            "À stocker les variables d'environnement comme l'endpoint, la clé et le nom du déploiement",
+            "À stocker le code de l'application",
+            "À enregistrer les réponses du modèle",
+            "À installer les paquets"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le fichier de configuration .env contient les variables d'environnement ; load_dotenv() les charge et os.getenv() les lit."
+        },
+        {
+          "question": "Qu'est-ce que le nom du déploiement d'un modèle ?",
+          "options": [
+            "Le nom de la ressource Foundry",
+            "Le nom de ton abonnement",
+            "Le nom que tu donnes au modèle quand tu le déploies ; par défaut, celui du modèle",
+            "Le nom du fichier Python"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Si tu déploies gpt-4.1 sous le nom gpt-demo-model, le nom du déploiement est gpt-demo-model. Sans personnalisation, il correspond au nom du modèle."
+        },
+        {
+          "question": "Pourquoi les résultats de l'API OpenAI peuvent-ils varier entre deux appels avec le même prompt ?",
+          "options": [
+            "Parce que la clé change à chaque appel",
+            "Parce que l'endpoint est aléatoire",
+            "Parce que le fichier .env est relu",
+            "Parce que le modèle génère le texte de façon probabiliste"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le modèle génère du texte de manière probabiliste : formulation et mise en forme peuvent différer légèrement."
+        },
+        {
+          "question": "Quelle méthode du client Azure Language détecte la langue d'un texte ?",
+          "options": [
+            "client.detect_language()",
+            "client.responses.create()",
+            "client.find_language()",
+            "client.translate()"
+          ],
+          "correctAnswer": 0,
+          "explanation": "detect_language() prend une liste de textes et renvoie la langue détectée, son code ISO 639-1 et un score de confiance."
+        },
+        {
+          "question": "Que renvoie la méthode recognize_pii_entities() ?",
+          "options": [
+            "Uniquement un score de sentiment",
+            "La version masquée du texte et la liste des entités trouvées, avec catégorie et score de confiance",
+            "Une traduction",
+            "Un résumé en une phrase"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Elle identifie les détails personnels et renvoie le texte masqué (redacted_text) et les entités avec leur catégorie et leur confiance."
+        },
+        {
+          "question": "Quelle classe sert à créer le client du SDK Azure Language ?",
+          "options": [
+            "OpenAI",
+            "AIProjectClient",
+            "TextAnalyticsClient",
+            "LanguageClient"
+          ],
+          "correctAnswer": 2,
+          "explanation": "client = TextAnalyticsClient(endpoint=endpoint, credential=AzureKeyCredential(key))."
+        },
+        {
+          "question": "Que se passe-t-il si le nom d'une variable dans .env ne correspond pas à celui demandé dans le code ?",
+          "options": [
+            "Python corrige automatiquement",
+            "Le modèle devine la valeur",
+            "Rien, les noms sont indifférents",
+            "La valeur est manquante à l'exécution : les noms doivent correspondre exactement"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Chaque clé du fichier .env doit correspondre exactement au nom utilisé dans le code, sinon la valeur manque à l'exécution."
+        },
+        {
+          "question": "Dans quel cas le SDK Azure Language est-il un meilleur choix que l'API OpenAI ?",
+          "options": [
+            "Quand l'application a besoin de valeurs constantes et structurées, comme un code de langue, un score de confiance ou un texte masqué",
+            "Quand on veut une réponse créative",
+            "Quand on veut discuter librement avec le modèle",
+            "Quand on veut générer une image"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Pour des valeurs cohérentes et structurées, le SDK Azure Language est préférable."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-text-agent-mcp",
+      "title": "Use Azure Language with an agent",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce que le Model Context Protocol (MCP) ?",
+          "options": [
+            "Un modèle de langage",
+            "Un standard ouvert qui définit comment les agents IA se connectent à des outils et des sources de données externes",
+            "Un type de base de données",
+            "Un langage de programmation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "MCP est un standard ouvert, comparable à un adaptateur universel, qui évite d'écrire une intégration sur mesure pour chaque service."
+        },
+        {
+          "question": "Dans l'architecture MCP, quel rôle joue l'agent IA ?",
+          "options": [
+            "Le serveur MCP",
+            "La base de données",
+            "Le client MCP",
+            "Le pare-feu"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le client MCP est l'agent, ou l'application hôte qui le fait tourner. Le serveur MCP est le service qui expose outils, données ou actions."
+        },
+        {
+          "question": "Pourquoi ajouter Azure Language à un agent ?",
+          "options": [
+            "Pour lui donner une analyse de texte constante et prévisible, qu'un modèle génératif seul ne fournit pas",
+            "Pour remplacer son modèle de langage",
+            "Pour générer des vidéos",
+            "Pour supprimer l'authentification"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Un modèle génératif seul ne réalise pas d'analyse déterministe et structurée ; Azure Language apporte cette régularité."
+        },
+        {
+          "question": "Faut-il créer une ressource Azure Language séparée pour accéder au serveur MCP Azure Language ?",
+          "options": [
+            "Oui, toujours",
+            "Oui, une par agent",
+            "Oui, une par région",
+            "Non, une ressource Foundry inclut déjà l'accès aux outils Language"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Une ressource Foundry fournit un environnement unifié qui inclut déjà l'accès aux outils Language."
+        },
+        {
+          "question": "Avec quoi configure-t-on la connexion au serveur MCP Azure Language dans le portail Foundry ?",
+          "options": [
+            "Avec l'adresse IP de ton ordinateur",
+            "Avec le nom de ta ressource Foundry",
+            "Avec un numéro de carte bancaire",
+            "Avec le nom d'un fichier .env"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ajoute l'outil Azure Language in Foundry Tools et on configure la connexion avec le nom de la ressource Foundry."
+        },
+        {
+          "question": "Que peut faire un serveur MCP en réponse à une requête ?",
+          "options": [
+            "Uniquement afficher une page web",
+            "Uniquement redémarrer l'agent",
+            "Fournir des données, comme des scores de sentiment, ou exécuter une action, comme traiter un lot de documents",
+            "Uniquement facturer l'utilisateur"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le serveur peut fournir des données (scores, expressions clés, entités) ou accomplir une action."
+        },
+        {
+          "question": "Pour quelle tâche un agent équipé du serveur MCP Azure Language est-il bien adapté ?",
+          "options": [
+            "Router des tickets de support selon la langue détectée",
+            "Générer un logo",
+            "Compiler du code C#",
+            "Créer un réseau virtuel"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le cours cite le routage de tickets par langue détectée et l'identification puis le masquage de PII."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-text-lab",
+      "title": "Lab — analyse de texte dans Foundry",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quelle tâche le lab confie-t-il au modèle généraliste dans le chat playground ?",
+          "options": [
+            "La détection de PII",
+            "La génération d'images",
+            "La transcription audio",
+            "Le résumé d'un article"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On demande au modèle de résumer un article de magazine sur le Commodore 64 en un court paragraphe."
+        },
+        {
+          "question": "Dans le portail, où trouve-t-on les services Azure Language à tester pendant le lab ?",
+          "options": [
+            "Discover → Models",
+            "Build → Services",
+            "Home → Billing",
+            "Guardrails"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ouvre Build dans le menu du haut, puis la page Services dans le menu de gauche."
+        },
+        {
+          "question": "Quels analyseurs Azure Language le lab fait-il essayer ?",
+          "options": [
+            "Classification d'images et OCR",
+            "Synthèse vocale et traduction vidéo",
+            "Détection de langue et masquage des PII",
+            "Fine-tuning et évaluation"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le lab utilise Azure Language - Language detection puis Text PII Redaction."
+        },
+        {
+          "question": "Que faire si le quota régional ne permet pas de déployer gpt-5-mini ?",
+          "options": [
+            "Utiliser un autre modèle de chat GPT, comme gpt-5-nano, ou créer un projet dans une autre région",
+            "Abandonner le lab",
+            "Supprimer l'abonnement",
+            "Attendre un an"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les déploiements dépendent de quotas régionaux ; on peut prendre un autre modèle GPT de chat ou changer de région."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-text-bilan",
+      "title": "Bilan et évaluation du module",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Tu dois analyser du texte, et la même entrée doit renvoyer des résultats structurés fondés sur des techniques statistiques. Quelle approche est la plus appropriée ?",
+          "options": [
+            "L'API Responses d'OpenAI, car elle suit des instructions en langage naturel.",
+            "Le SDK Azure Language, car il renvoie une sortie déterministe et structurée.",
+            "Le chat playground de Foundry, car il accepte les questions de suivi."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Azure Language utilise des techniques statistiques et renvoie une sortie structurée et déterministe."
+        },
+        {
+          "question": "Quel est le rôle de l'objet client dans le SDK Azure Language ?",
+          "options": [
+            "Il stocke les réglages de l'interface utilisateur de l'application.",
+            "Il aide le code de l'application à communiquer avec le service Azure Language.",
+            "L'objet client stocke le texte à analyser."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. Un objet client authentifié fait des appels d'API autorisés vers le service."
+        },
+        {
+          "question": "Quel est le but principal du serveur MCP Azure Language ?",
+          "options": [
+            "Générer automatiquement des mises en page de sites web pour un agent.",
+            "Remplacer tous les modèles d'IA générative dans un agent.",
+            "Exposer les capacités d'Azure Language aux agents par le Model Context Protocol."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. Le serveur MCP fait le pont entre l'agent et les fonctionnalités d'Azure Language."
+        },
+        {
+          "question": "Quelle paire paquet / classe correspond au SDK Azure Language ?",
+          "options": [
+            "openai / OpenAI",
+            "azure-ai-projects / AIProjectClient",
+            "azure-cognitiveservices-speech / SpeechConfig",
+            "azure-ai-textanalytics / TextAnalyticsClient"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le SDK Azure Language s'installe avec azure-ai-textanalytics et utilise la classe TextAnalyticsClient."
+        },
+        {
+          "question": "Laquelle de ces affirmations est correcte ?",
+          "options": [
+            "Un modèle généraliste est piloté par des prompts ; Azure Language utilise des analyseurs spécialisés",
+            "Azure Language est piloté par des prompts créatifs",
+            "Un modèle généraliste renvoie toujours exactement le même texte",
+            "Azure Language sert à générer des images"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le modèle généraliste répond à des prompts en langage naturel ; Azure Language propose des analyseurs conçus pour des tâches précises."
+        }
+      ]
+    }
+  ]
+}

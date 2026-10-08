@@ -1,0 +1,390 @@
+{
+  "slug": "ai901-speech-azure",
+  "title": "Get started with speech in Azure",
+  "description": "LP2 · Module 4 — speech-to-text, text-to-speech, agent vocal avec Voice Live",
+  "category": "AI-901",
+  "order": 11,
+  "units": [
+    {
+      "slug": "ai901-stt",
+      "title": "Introduction et Speech recognition",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Dans un logiciel de speech-to-text, que fait le modèle acoustique ?",
+          "options": [
+            "Il traduit le texte",
+            "Il choisit la voix",
+            "Il convertit l'audio en phonèmes",
+            "Il découpe le texte en mots"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le modèle acoustique convertit l'audio en phonèmes ; le modèle de langage fait ensuite correspondre les phonèmes à des mots."
+        },
+        {
+          "question": "Quel paquet Python installe le SDK Azure Speech ?",
+          "options": [
+            "azure-cognitiveservices-speech",
+            "azure-ai-textanalytics",
+            "azure-speech-sdk",
+            "openai-speech"
+          ],
+          "correctAnswer": 0,
+          "explanation": "pip install azure-cognitiveservices-speech."
+        },
+        {
+          "question": "Quel objet du SDK réalise la transcription de la parole en texte ?",
+          "options": [
+            "SpeechSynthesizer",
+            "SpeechRecognizer",
+            "TextAnalyticsClient",
+            "AudioOutputConfig"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On crée un SpeechRecognizer avec une SpeechConfig et une AudioConfig, puis on écoute ses événements."
+        },
+        {
+          "question": "Dans quel cas utilise-t-on la transcription par lots (batch) ?",
+          "options": [
+            "Pour sous-titrer un orateur en direct",
+            "Pour une démonstration en temps réel",
+            "Pour une conversation avec un agent",
+            "Pour des enregistrements audio stockés, traités de façon asynchrone"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La transcription par lots vise des fichiers stockés, désignés par une URI SAS, avec un résultat reçu de façon asynchrone."
+        },
+        {
+          "question": "Comment indique-t-on les fichiers audio à traiter dans une transcription par lots ?",
+          "options": [
+            "En les dictant au micro",
+            "En les collant dans le prompt",
+            "Par une URI à signature d'accès partagé (SAS)",
+            "Par un e-mail"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On pointe vers les fichiers audio avec une URI SAS et on reçoit les résultats de façon asynchrone."
+        },
+        {
+          "question": "Quelles deux capacités un système d'IA doit-il prendre en charge pour une interaction vocale ?",
+          "options": [
+            "La reconnaissance vocale et la synthèse vocale",
+            "L'OCR et la classification d'images",
+            "Le fine-tuning et le RAG",
+            "La détection de langue et le masquage des PII"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Il faut pouvoir détecter et interpréter une entrée parlée, et générer une sortie parlée."
+        },
+        {
+          "question": "Que fournit l'application au SDK lors de l'initialisation ?",
+          "options": [
+            "Un numéro de téléphone",
+            "Un endpoint et une authentification, par clé ou Microsoft Entra ID",
+            "Un fichier vidéo",
+            "Un schéma JSON"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'application initialise le SDK avec l'endpoint et l'authentification de la ressource Foundry."
+        },
+        {
+          "question": "Lequel de ces scénarios illustre la reconnaissance vocale ?",
+          "options": [
+            "Lire un SMS à voix haute",
+            "Diffuser une annonce en gare",
+            "Générer une voix personnalisée",
+            "La dictée clinique : un médecin dicte ses notes, converties en texte"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La dictée clinique transforme l'audio en texte médical : c'est de la reconnaissance vocale."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-tts",
+      "title": "Speech synthesis",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "De quelles informations une solution text-to-speech a-t-elle typiquement besoin ?",
+          "options": [
+            "Un fichier audio et une langue",
+            "Le texte à prononcer et la voix à utiliser",
+            "Une image et une légende",
+            "Un schéma et un analyseur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Il faut le texte à dire et la voix qui le vocalise."
+        },
+        {
+          "question": "Quel objet du SDK génère la parole à partir d'un texte ?",
+          "options": [
+            "SpeechRecognizer",
+            "TextAnalyticsClient",
+            "SpeechSynthesizer",
+            "ContentUnderstandingClient"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le SpeechSynthesizer génère l'audio parlé, par exemple avec speak_text_async(text).get()."
+        },
+        {
+          "question": "Quel est l'avantage des voix neuronales ?",
+          "options": [
+            "Elles surmontent des limites comme les problèmes d'intonation, pour une voix plus naturelle",
+            "Elles sont toujours gratuites",
+            "Elles ne fonctionnent qu'en anglais",
+            "Elles transcrivent l'audio"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les voix neuronales utilisent des réseaux de neurones et donnent un rendu plus naturel."
+        },
+        {
+          "question": "Quelle est la première opération effectuée sur le texte lors de la synthèse ?",
+          "options": [
+            "L'ajout d'une voix",
+            "La compression audio",
+            "La traduction",
+            "La tokenisation, qui découpe le texte en mots"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le système tokenise le texte, attribue des sons phonétiques, découpe en unités prosodiques, crée des phonèmes puis synthétise l'audio."
+        },
+        {
+          "question": "Que peut-on faire de l'audio produit par l'API text-to-speech ?",
+          "options": [
+            "Uniquement l'afficher en texte",
+            "Le jouer directement sur un haut-parleur ou l'écrire dans un fichier audio",
+            "Uniquement l'envoyer par e-mail",
+            "Uniquement le traduire"
+          ],
+          "correctAnswer": 1,
+          "explanation": "L'audio peut être lu directement ou enregistré dans un fichier."
+        },
+        {
+          "question": "Quelle propriété de la configuration fixe la voix utilisée pour la synthèse ?",
+          "options": [
+            "audio_config",
+            "subscription",
+            "speech_synthesis_voice_name",
+            "use_default_microphone"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Par exemple speech_config.speech_synthesis_voice_name = 'en-US-Ava:DragonHDLatestNeural'."
+        },
+        {
+          "question": "Quels paramètres d'une voix synthétisée peut-on régler ?",
+          "options": [
+            "Le débit, la hauteur et le volume",
+            "La région Azure",
+            "Le nombre de tokens d'entrée",
+            "La taille de l'image"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'audio synthétisé peut recevoir une voix, un débit, une hauteur (pitch) et un volume particuliers."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-voice-live",
+      "title": "Creating a speech-capable agent",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelles sont les trois étapes du pipeline speech-to-speech ?",
+          "options": [
+            "Retrieve, Augment, Generate",
+            "OCR, analyse, extraction",
+            "Entraînement, déploiement, évaluation",
+            "Speech-to-text, traitement ou raisonnement, text-to-speech"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On convertit la voix en texte, on traite ou on raisonne, puis on reconvertit la réponse en voix."
+        },
+        {
+          "question": "Que fait l'API Voice Live ?",
+          "options": [
+            "Elle traduit des documents PDF",
+            "Elle combine speech-to-text, raisonnement et text-to-speech en un seul service pour des conversations vocales en temps réel",
+            "Elle génère des vidéos",
+            "Elle masque des PII"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Au lieu de relier plusieurs composants, Voice Live réunit tout dans un service."
+        },
+        {
+          "question": "Que signifie « Azure gère entièrement Voice Live » ?",
+          "options": [
+            "Tu n'as pas à mettre en place ni à maintenir les systèmes backend",
+            "Tu dois installer tes propres serveurs",
+            "Le service est réservé aux administrateurs",
+            "Il ne fonctionne que hors ligne"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Azure prend en charge les modèles et l'infrastructure ; tu te concentres sur l'expérience vocale."
+        },
+        {
+          "question": "Que faut-il choisir en créant une solution Voice Live dans le playground ?",
+          "options": [
+            "Un schéma de facture",
+            "Un index de recherche",
+            "Un modèle d'IA générative pour l'agent",
+            "Un fichier CSV"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Voice Live utilise le modèle génératif avec ses propres modèles acoustiques pour converser en direct."
+        },
+        {
+          "question": "Qu'apporte l'activation du Voice mode sur un agent Foundry ?",
+          "options": [
+            "Elle supprime les instructions de l'agent",
+            "Elle intègre Voice Live dans la définition de l'agent, ce qui réduit le code client nécessaire",
+            "Elle désactive le modèle",
+            "Elle transforme l'agent en base de données"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La configuration vocale est encapsulée dans l'agent lui-même."
+        },
+        {
+          "question": "Quel paquet Python installe-t-on pour créer une application Voice Live ?",
+          "options": [
+            "azure-ai-textanalytics",
+            "azure-ai-contentunderstanding",
+            "openai",
+            "azure-ai-voicelive"
+          ],
+          "correctAnswer": 3,
+          "explanation": "pip install azure-ai-voicelive, avec pyaudio, python-dotenv et azure-identity."
+        },
+        {
+          "question": "Lequel de ces scénarios relève du speech-to-speech ?",
+          "options": [
+            "Parler dans une langue et entendre la réponse dans une autre",
+            "Lire un numéro de série sur une photo",
+            "Résumer un article écrit",
+            "Classer des images"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La traduction vocale fait partie des scénarios speech-to-speech, avec les assistants vocaux, le mains libres, l'accessibilité et le support client."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-speech-lab",
+      "title": "Lab — un agent vocal avec Voice Live",
+      "order": 4,
+      "isLab": true,
+      "questions": [
+        {
+          "question": "Quel réglage de l'agent active Azure Speech Voice Live dans le lab ?",
+          "options": [
+            "Guardrails",
+            "Fine-tune",
+            "Voice mode",
+            "Batch mode"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Activer le Voice mode intègre Azure Speech Voice Live et ajoute des capacités vocales à l'agent."
+        },
+        {
+          "question": "Pendant la session vocale, à quelle capacité correspond l'état « Speaking… » ?",
+          "options": [
+            "La reconnaissance vocale",
+            "Le text-to-speech : l'agent vocalise la réponse du modèle",
+            "La détection de langue",
+            "L'OCR"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Listening = écoute, Processing = traitement, Speaking = synthèse vocale de la réponse."
+        },
+        {
+          "question": "Que gère le code d'exemple affiché par « Call agent » ?",
+          "options": [
+            "La facturation du projet",
+            "La création du groupe de ressources",
+            "L'entraînement d'un modèle",
+            "La connexion au projet, le streaming audio en entrée et en sortie, et l'usage du micro et des haut-parleurs"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le code client s'appuie sur le SDK Voice Live pour gérer la connectivité, les flux audio et les périphériques."
+        },
+        {
+          "question": "À quoi sert le bouton « cc » pendant la conversation vocale ?",
+          "options": [
+            "À voir le prompt et la réponse sous forme de texte",
+            "À couper le micro",
+            "À changer de modèle",
+            "À supprimer l'agent"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le bouton cc affiche les sous-titres : le prompt d'origine et la réponse en texte."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-speech-bilan",
+      "title": "Bilan du module",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Une application doit convertir des messages vocaux enregistrés en texte. Quelle capacité d'Azure Speech ?",
+          "options": [
+            "Text-to-speech",
+            "Speech-to-text",
+            "Voice Live",
+            "Voix personnalisée"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Convertir de l'audio parlé en texte écrit, c'est du speech-to-text."
+        },
+        {
+          "question": "Quelle association objet / rôle est correcte ?",
+          "options": [
+            "SpeechSynthesizer → transcrire l'audio",
+            "SpeechRecognizer → générer une voix",
+            "SpeechRecognizer → transcrire l'audio ; SpeechSynthesizer → générer la parole",
+            "AudioOutputConfig → détecter la langue"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le recognizer va de la voix au texte, le synthesizer du texte à la voix."
+        },
+        {
+          "question": "Pourquoi choisir Voice Live plutôt que d'assembler soi-même speech-to-text, raisonnement et text-to-speech ?",
+          "options": [
+            "Parce qu'il ne nécessite aucun modèle",
+            "Parce qu'il fonctionne sans Azure",
+            "Parce qu'il remplace le portail Foundry",
+            "Parce qu'il réunit ces composants dans un seul service entièrement managé, plus simple et rapide à mettre en œuvre"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Voice Live évite d'assembler plusieurs composants pour créer des agents vocaux réactifs."
+        },
+        {
+          "question": "Comment la synthèse vocale améliore-t-elle une application ?",
+          "options": [
+            "Elle lui permet de répondre de façon audible, ce qui aide l'accessibilité et l'usage mains libres",
+            "Elle réduit la taille des fichiers",
+            "Elle supprime le besoin d'un endpoint",
+            "Elle transcrit les réunions"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le résumé du module souligne que le text-to-speech améliore l'accessibilité, l'interaction mains libres et l'expérience utilisateur."
+        },
+        {
+          "question": "Où se situe le speech-to-text dans une application ?",
+          "options": [
+            "Uniquement dans le portail Azure",
+            "Dans une application cliente ou un service backend",
+            "Uniquement dans une base de données",
+            "Uniquement dans le navigateur"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le SDK s'utilise dans la couche cliente ou service d'une application ; il fait le pont avec Azure Speech."
+        }
+      ]
+    }
+  ]
+}

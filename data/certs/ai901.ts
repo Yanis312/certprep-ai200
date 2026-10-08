@@ -26,8 +26,8 @@ const learningPaths: LearningPath[] = [
     modules: [
       { title: "Get started with AI in Azure", learn: "get-started-with-ai-in-azure", site: "ai901-get-started-azure" },
       { title: "Get started with generative AI and agents in Azure", learn: "get-started-with-generative-ai-and-agents" },
-      { title: "Get started with text analysis in Azure", learn: "get-started-text-analysis-azure" },
-      { title: "Get started with speech in Azure", learn: "get-started-speech-azure" },
+      { title: "Get started with text analysis in Azure", learn: "get-started-text-analysis-azure", site: "ai901-text-analysis" },
+      { title: "Get started with speech in Azure", learn: "get-started-speech-azure", site: "ai901-speech-azure" },
       { title: "Get started with computer vision in Azure", learn: "get-started-vision-azure" },
       { title: "Get started with AI-powered information extraction in Azure", learn: "get-started-information-extraction" },
       { title: "Get started with Microsoft Foundry IQ", learn: "get-started-foundry-iq" },
