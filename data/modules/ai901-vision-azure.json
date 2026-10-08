@@ -1,0 +1,334 @@
+{
+  "slug": "ai901-vision-azure",
+  "title": "Get started with computer vision in Azure",
+  "description": "LP2 · Module 5 — modèles multimodaux, génération d'images (GPT-Image), génération de vidéos (Sora)",
+  "category": "AI-901",
+  "order": 12,
+  "units": [
+    {
+      "slug": "ai901-vision-multimodal",
+      "title": "Introduction et modèles multimodaux",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'un modèle multimodal ?",
+          "options": [
+            "Un modèle déployé dans plusieurs régions",
+            "Un modèle qui comprend et traite plus d'un type de données à la fois, comme le texte et les images",
+            "Un modèle qui ne traite que des images",
+            "Un modèle qui parle plusieurs langues"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les modèles multimodaux travaillent avec plusieurs types de données en même temps : texte, images, audio ou vidéo."
+        },
+        {
+          "question": "Sous quelles formes peut-on fournir une image à l'API Responses ?",
+          "options": [
+            "Uniquement par e-mail",
+            "Uniquement en PDF",
+            "Par URL ou en données encodées en base64",
+            "Uniquement en fichier ZIP"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les images sont fournies sous forme d'URL ou de données d'image encodées en base64."
+        },
+        {
+          "question": "Dans un message qui mêle texte et image, quels sont les deux types de contenu ?",
+          "options": [
+            "input_text et input_image",
+            "system et user",
+            "prompt et picture",
+            "text_in et image_in"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le contenu est une liste : {\"type\": \"input_text\", ...} et {\"type\": \"input_image\", \"image_url\": ...}."
+        },
+        {
+          "question": "Pourquoi les modèles multimodaux simplifient-ils les solutions de vision ?",
+          "options": [
+            "Parce qu'ils n'ont pas besoin d'endpoint",
+            "Parce qu'ils ne coûtent rien",
+            "Parce qu'ils fonctionnent sans déploiement",
+            "Parce qu'ils acceptent texte et images ensemble, ce qui réduit le besoin de pipelines de vision séparés"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Accepter texte et images dans le même modèle facilite la création d'expériences intelligentes de bout en bout."
+        },
+        {
+          "question": "Que sait faire un modèle GPT avec vision ?",
+          "options": [
+            "Uniquement générer des vidéos",
+            "Décrire le contenu d'une image et répondre à des questions sur les objets, le texte ou la scène",
+            "Uniquement transcrire de l'audio",
+            "Uniquement masquer des PII"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Ces modèles décrivent une image, répondent à des questions, extraient le sens de graphiques ou documents et combinent image et consignes textuelles."
+        },
+        {
+          "question": "Quelle valeur passe-t-on au paramètre model dans l'exemple d'analyse d'image ?",
+          "options": [
+            "Le nom de la ressource Foundry",
+            "L'URL de l'image",
+            "Le nom du déploiement du modèle",
+            "La clé d'API"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On passe le nom de déploiement que l'on a donné au modèle, par exemple my-vision-deploy pour un gpt-4.1-mini."
+        },
+        {
+          "question": "Quelle famille de modèles Foundry est décrite comme conçue pour l'entreprise et l'agentique, avec sorties structurées et usage d'outils ?",
+          "options": [
+            "La série GPT-5",
+            "Sora",
+            "GPT-Image-1-Mini",
+            "FLUX"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La série GPT-5 prend en charge les entrées multimodales, les sorties structurées, l'usage d'outils et le raisonnement sur un large contexte."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-image-generation",
+      "title": "Image generation models",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle famille de modèles Microsoft recommande-t-il pour débuter la plupart des nouveaux projets de génération d'images ?",
+          "options": [
+            "Sora",
+            "GPT-4.1",
+            "Phi-4",
+            "La famille GPT-Image-1, en particulier GPT-Image-1.5"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Microsoft recommande la famille GPT-Image-1, surtout GPT-Image-1.5, pour sa qualité, son support de l'édition et sa préparation pour l'entreprise."
+        },
+        {
+          "question": "Dans quel cas GPT-Image-1-Mini est-il un bon choix ?",
+          "options": [
+            "Quand la fidélité visuelle maximale est indispensable",
+            "Pour l'expérimentation, les outils internes ou la génération à gros volume, où coût et latence priment",
+            "Pour générer des vidéos",
+            "Pour transcrire de l'audio"
+          ],
+          "correctAnswer": 1,
+          "explanation": "GPT-Image-1-Mini est une version plus légère et économique, optimisée pour une latence ou un coût réduits."
+        },
+        {
+          "question": "Quelle définition d'outil demande une image avec l'API Responses ?",
+          "options": [
+            "{\"type\": \"web_search\"}",
+            "{\"type\": \"code_interpreter\"}",
+            "{\"type\": \"image_generation\"}",
+            "{\"type\": \"file_search\"}"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Dans l'exemple du cours : tools=[{\"type\": \"image_generation\"}]."
+        },
+        {
+          "question": "Pourquoi l'image générée doit-elle être décodée avec base64 ?",
+          "options": [
+            "Parce qu'une image est binaire et que JSON ne transporte que du texte : base64 convertit le binaire en texte",
+            "Parce qu'elle est chiffrée par mot de passe",
+            "Parce qu'elle est compressée en ZIP",
+            "Parce qu'elle est en noir et blanc"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'encodage base64 convertit des données binaires en texte ASCII, ce qui permet de les intégrer dans du JSON."
+        },
+        {
+          "question": "Dans la réponse de l'API Responses, quel type d'élément contient le résultat de l'image générée ?",
+          "options": [
+            "function_call",
+            "message",
+            "output_text",
+            "image_generation_call"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On cherche dans response.output l'élément dont le type est image_generation_call, puis on lit son result."
+        },
+        {
+          "question": "Quel modèle de génération d'images est décrit comme le successeur généraliste des modèles DALL-E ?",
+          "options": [
+            "Sora 2",
+            "GPT-Image-1",
+            "GPT-5.2",
+            "Phi-4"
+          ],
+          "correctAnswer": 1,
+          "explanation": "GPT-Image-1 est un modèle généraliste puissant qui s'appuie sur les capacités des modèles DALL-E précédents."
+        },
+        {
+          "question": "Quelle méthode de la classe images du SDK génère une image dans le code du lab ?",
+          "options": [
+            "client.responses.retrieve()",
+            "client.chat.completions.create()",
+            "client.images.generate()",
+            "client.videos.create()"
+          ],
+          "correctAnswer": 2,
+          "explanation": "client.images.generate(model=..., prompt=..., n=1, size=\"1024x1024\") renvoie l'image en base64 dans img.data[0].b64_json."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-video-generation",
+      "title": "Video generation models",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quels modèles sont les seuls modèles natifs de génération vidéo fournis directement par Foundry ?",
+          "options": [
+            "Les modèles Sora",
+            "Les modèles GPT-Image",
+            "Les modèles Phi",
+            "Les modèles FLUX"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les modèles Sora sont actuellement les seuls modèles natifs de génération vidéo dans Foundry."
+        },
+        {
+          "question": "Que signifie « asynchrone » pour un travail de génération vidéo ?",
+          "options": [
+            "La vidéo est renvoyée instantanément",
+            "Il faut rester connecté et cliquer pendant le rendu",
+            "La vidéo n'a pas de son",
+            "On crée un travail, on interroge son état, puis on télécharge la vidéo une fois terminé"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Asynchrone : créer le job, sonder son état, télécharger la vidéo quand le job est terminé."
+        },
+        {
+          "question": "Quelles nouveautés Sora 2 apporte-t-il par rapport à Sora 1 ?",
+          "options": [
+            "Uniquement une résolution plus basse",
+            "La génération audio, un réalisme amélioré et le remix (vidéo vers vidéo) pour des retouches ciblées",
+            "La transcription de réunions",
+            "La détection de PII"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Sora 2 prend en charge texte → vidéo, image → vidéo et vidéo → vidéo, et introduit l'audio et le remix."
+        },
+        {
+          "question": "Quelle interface le code d'exemple du playground utilise-t-il pour la génération vidéo ?",
+          "options": [
+            "Le SDK Azure Language",
+            "Le SDK Azure Speech",
+            "L'interface REST, avec curl",
+            "Une feuille Excel"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le code d'exemple utilise l'interface REST ; curl est un outil en ligne de commande pour faire des requêtes HTTP."
+        },
+        {
+          "question": "À quel moment peut-on télécharger la vidéo générée ?",
+          "options": [
+            "Dès la création du travail",
+            "Avant d'avoir un identifiant de vidéo",
+            "Pendant que l'état est en cours",
+            "Seulement après que l'état du travail est « completed »"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La vidéo n'est téléchargée qu'une fois l'état passé à completed."
+        },
+        {
+          "question": "Quelle requête HTTP lance un travail de rendu vidéo avec l'API v1 ?",
+          "options": [
+            "Un POST vers .../openai/v1/videos",
+            "Un GET vers .../openai/v1/images",
+            "Un DELETE vers .../openai/v1/videos",
+            "Un POST vers .../openai/v1/chat"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On envoie un POST à l'endpoint /videos avec le modèle, le prompt, la taille et la durée ; la réponse contient un identifiant à sonder."
+        },
+        {
+          "question": "Quelles restrictions d'IA responsable s'appliquent aux modèles Sora ?",
+          "options": [
+            "Aucune",
+            "Des limites sur les personnes réelles, les personnages protégés par le droit d'auteur et certains types de contenu",
+            "Uniquement une limite de couleurs",
+            "Uniquement une limite de langue"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Sora 1 et Sora 2 incluent des restrictions d'IA responsable sur ces types de contenu."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-vision-lab-bilan",
+      "title": "Lab, bilan et évaluation du module",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Qu'est-ce qu'un modèle multimodal ?",
+          "options": [
+            "Un modèle qui ne peut traiter que des images, pas du texte.",
+            "Un modèle qui peut comprendre et traiter plus d'un type de données, comme le texte et les images.",
+            "Un modèle qui génère uniquement du contenu vidéo."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module."
+        },
+        {
+          "question": "Comment les développeurs peuvent-ils générer des images par programme avec les modèles de génération d'images de Foundry ?",
+          "options": [
+            "En envoyant des prompts texte par l'API Responses d'OpenAI avec un modèle d'image déployé",
+            "En chargeant des images par l'interface du playground Foundry.",
+            "En appelant l'endpoint du modèle GPT-4.1."
+          ],
+          "correctAnswer": 0,
+          "explanation": "Question officielle du module. Charger des images dans le playground n'est pas une génération par programme."
+        },
+        {
+          "question": "Quand tu génères des images par programme avec le SDK Python OpenAI et Microsoft Foundry, quelle valeur passer au paramètre model ?",
+          "options": [
+            "Le nom d'origine du modèle de base (par exemple gpt-image-1.5).",
+            "Le nom du déploiement que tu as donné au modèle de génération d'images dans ta ressource Foundry.",
+            "Le nom que tu as donné à ta ressource Foundry."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Question officielle du module. C'est toujours le nom du déploiement."
+        },
+        {
+          "question": "Pourquoi la génération vidéo avec les modèles Sora dans Microsoft Foundry est-elle traitée comme un travail asynchrone ?",
+          "options": [
+            "Parce que la génération vidéo exige une interaction de l'utilisateur pendant le rendu.",
+            "Parce que l'API REST ne prend pas en charge les requêtes synchrones.",
+            "Parce que la génération vidéo est gourmande en ressources et prend du temps."
+          ],
+          "correctAnswer": 2,
+          "explanation": "Question officielle du module. La génération dure souvent 1 à 5 minutes."
+        },
+        {
+          "question": "Dans le lab, quels filtres du catalogue servent à trouver un modèle de génération d'images ?",
+          "options": [
+            "Industry : Health, et Source : Meta",
+            "Fine-tuning methods : Supervised",
+            "Capabilities : Tool calling",
+            "Collections : Direct from Azure, et Inference tasks : Text to image"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le lab filtre sur Direct from Azure et Text to image, puis déploie un modèle comme gpt-image-1-mini ou FLUX.2-pro."
+        },
+        {
+          "question": "Laquelle de ces associations est correcte ?",
+          "options": [
+            "Sora → génération de vidéos ; GPT-Image → génération d'images ; GPT-4.1 → analyse d'images",
+            "Sora → analyse de texte ; GPT-Image → vidéos ; GPT-4.1 → images",
+            "Sora → images ; GPT-Image → audio ; GPT-4.1 → vidéos",
+            "Sora → PII ; GPT-Image → langue ; GPT-4.1 → voix"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Sora génère des vidéos, la famille GPT-Image génère des images, et les modèles GPT multimodaux comme GPT-4.1 analysent des images."
+        }
+      ]
+    }
+  ]
+}

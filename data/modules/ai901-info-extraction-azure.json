@@ -1,0 +1,190 @@
+{
+  "slug": "ai901-info-extraction-azure",
+  "title": "Get started with AI-powered information extraction in Azure",
+  "description": "LP2 · Module 6 — Azure Content Understanding : schémas, analyseurs, documents, audio (module incomplet)",
+  "category": "AI-901",
+  "order": 13,
+  "units": [
+    {
+      "slug": "ai901-cu-documents",
+      "title": "Introduction et extraction depuis des documents",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que fait Azure Content Understanding ?",
+          "options": [
+            "Il génère des vidéos à partir de texte",
+            "Il utilise l'IA pour extraire de l'information structurée d'un contenu non structuré",
+            "Il héberge des machines virtuelles",
+            "Il traduit des documents"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Content Understanding transforme du contenu non structuré en données lisibles par une machine, que l'on peut chercher et analyser."
+        },
+        {
+          "question": "Quels types de contenu Content Understanding traite-t-il ?",
+          "options": [
+            "Uniquement des PDF",
+            "Uniquement des bases de données",
+            "Les documents et images, l'audio et la vidéo",
+            "Uniquement du code source"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Il extrait des données de documents et images (PDF, formulaires, factures), d'audio (enregistrements, appels) et de vidéo."
+        },
+        {
+          "question": "Qu'est-ce qu'un schéma dans Content Understanding ?",
+          "options": [
+            "La description de l'information à extraire et de la façon dont elle doit être structurée",
+            "Un type de machine virtuelle",
+            "Une clé d'API",
+            "Un format d'image"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le schéma liste les champs ou entités voulus et définit leur structure, y compris des champs imbriqués."
+        },
+        {
+          "question": "Qu'est-ce qui différencie Content Understanding d'un OCR de base ?",
+          "options": [
+            "Il ne lit pas le texte",
+            "Il ne fonctionne que sur l'audio",
+            "Il est plus lent par conception",
+            "L'extraction pilotée par un schéma : des champs et leurs valeurs, avec compréhension du sens et des relations"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'OCR de base extrait le texte sans comprendre le sens ; l'approche par schéma est ce qui distingue Content Understanding."
+        },
+        {
+          "question": "Qu'est-ce qu'un analyseur ?",
+          "options": [
+            "Un tableau de bord de facturation",
+            "L'unité qui prend une entrée, applique l'analyse par IA et produit des résultats structurés",
+            "Un modèle de génération d'images",
+            "Un fichier de configuration .env"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un analyseur applique la même logique d'extraction à tout le contenu et produit un JSON prévisible."
+        },
+        {
+          "question": "Que signifie « le schéma est appliqué de façon sémantique » ?",
+          "options": [
+            "Les champs doivent avoir exactement le même libellé dans chaque document",
+            "Le schéma ne fonctionne qu'en anglais",
+            "Les champs sont extraits même si les libellés diffèrent ou sont absents",
+            "Le schéma est ignoré"
+          ],
+          "correctAnswer": 2,
+          "explanation": "« Invoice No. », « Invoice # » ou un numéro sans libellé peuvent tous correspondre à InvoiceNumber."
+        },
+        {
+          "question": "Pourquoi faut-il interroger (poll) le résultat d'une analyse Content Understanding ?",
+          "options": [
+            "Parce que l'analyse est asynchrone : le résultat arrive plus tard, quand il est prêt",
+            "Parce que le service est hors ligne",
+            "Parce que la clé expire à chaque appel",
+            "Parce que le résultat est envoyé par e-mail"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'analyse étant asynchrone, on interroge l'URL Operation-Location jusqu'à la réussite ; le SDK s'en charge avec poller.result()."
+        },
+        {
+          "question": "Quel paquet Python installe le SDK Azure Content Understanding ?",
+          "options": [
+            "azure-ai-textanalytics",
+            "azure-cognitiveservices-speech",
+            "azure-ai-voicelive",
+            "azure-ai-contentunderstanding"
+          ],
+          "correctAnswer": 3,
+          "explanation": "python -m pip install azure-ai-contentunderstanding."
+        },
+        {
+          "question": "Quel identifiant d'analyseur préconstruit sert à analyser une facture ?",
+          "options": [
+            "prebuilt-audioSearch",
+            "prebuilt-invoice",
+            "prebuilt-videoSearch",
+            "prebuilt-imageSearch"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Les analyseurs préconstruits incluent prebuilt-invoice, prebuilt-imageSearch, prebuilt-audioSearch et prebuilt-videoSearch."
+        },
+        {
+          "question": "Dans le schéma de facture, pourquoi « Items » est-il un champ structuré ?",
+          "options": [
+            "Parce que c'est un simple texte",
+            "Parce qu'il est toujours vide",
+            "Parce que c'est une collection dont chaque élément a une description, un prix unitaire, une quantité et un total",
+            "Parce qu'il contient la clé d'API"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Les schémas acceptent des champs imbriqués ; cela permet de comprendre les relations entre les valeurs."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-cu-audio-video",
+      "title": "Extraire de l'audio et de la vidéo (incomplet)",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que fournit Content Understanding à partir d'un fichier audio ?",
+          "options": [
+            "Des transcriptions, des résumés et d'autres informations clés",
+            "Uniquement le volume sonore",
+            "Uniquement la durée du fichier",
+            "Une image générée"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Content Understanding fournit des transcriptions, des résumés et des informations clés à partir de fichiers audio."
+        },
+        {
+          "question": "Dans l'exemple de la messagerie vocale, lequel de ces éléments fait partie du schéma ?",
+          "options": [
+            "Invoice total",
+            "Vendor name",
+            "Star rating",
+            "Callback number"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le schéma comprend Caller, Message summary, Requested actions, Callback number et Alternative contact details."
+        },
+        {
+          "question": "À quoi sert d'utiliser Content Understanding dans le portail Foundry avant d'écrire du code ?",
+          "options": [
+            "À éviter de créer une ressource",
+            "À valider rapidement que l'analyseur renvoie les champs attendus avant d'automatiser",
+            "À supprimer les fichiers audio",
+            "À entraîner un modèle"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Le portail est un moyen rapide de valider l'analyseur avant d'automatiser le flux par le code."
+        },
+        {
+          "question": "Dans quel format les résultats d'une analyse audio sont-ils renvoyés pour un traitement en aval ?",
+          "options": [
+            "En MP3",
+            "En PDF",
+            "En JSON",
+            "En DOCX"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Comme pour les autres analyseurs, les résultats sont en JSON."
+        },
+        {
+          "question": "Que peut-on extraire d'une visioconférence enregistrée avec Content Understanding ?",
+          "options": [
+            "Des détails comme la présence et le lieu",
+            "Le mot de passe des participants",
+            "Le code source de l'application",
+            "Le prix de l'abonnement"
+          ],
+          "correctAnswer": 0,
+          "explanation": "L'exemple du cours : analyser une visioconférence enregistrée pour en extraire la présence, le lieu et d'autres informations."
+        }
+      ]
+    }
+  ]
+}
