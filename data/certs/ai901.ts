@@ -35,59 +35,61 @@ const learningPaths: LearningPath[] = [
   },
 ];
 
-// Plan de révision : les deux parcours sont déjà terminés sur Microsoft Learn (8 oct. 2026).
-// Il reste à consolider, s'entraîner à lire du code et passer l'examen.
+// Plan de révision en paires (décidé le 11 oct. 2026) : chaque module de concepts du LP1
+// est suivi de son jumeau pratique du LP2. Les identifiants E1–E3 remplacent S1–S3
+// pour que les anciennes cases cochées ne se reportent pas sur les nouvelles tâches.
 const weeks: Week[] = [
   {
-    id: "S1",
-    dates: "8 – 14 oct.",
-    title: "Consolider ce qui est déjà en fiches",
+    id: "E1",
+    dates: "11 – 15 oct.",
+    title: "Paires 4 à 7 : le concept, puis le service Azure",
     lps: [],
     tasks: [
-      "Quiz « Introduction to AI concepts » jusqu'à 70 % sur chaque unité",
-      "Quiz « Get started with AI in Azure » (hiérarchie Azure, Foundry, endpoints REST)",
-      "Quiz « Text analysis » et « Speech » : retenir les classes et paquets Python",
-      "Quiz « Computer vision » et « Information extraction »",
-      "Vérifier le statut étudiant dans le profil Learn pour obtenir le tarif étudiant",
+      "Paire 4 · Parole : « AI speech concepts » (LP1) puis « Speech in Azure » (LP2)",
+      "Paire 5 · Vision : « Computer vision concepts » (LP1) puis « Computer vision in Azure » (LP2)",
+      "Paire 6 · Extraction : « Information extraction concepts » (LP1) puis « Information extraction in Azure » (LP2)",
+      "Paire 7 · RAG : « Retrieval-augmented generation concepts » (LP1) puis « Microsoft Foundry IQ » (LP2)",
     ],
-    focus: "Les 6 principes d'IA responsable et la reconnaissance des charges de travail : c'est environ la moitié des questions d'après un retour d'expérience.",
+    focus: "Pour chaque module : lire « L'essentiel » et le « Point examen », faire le quiz, puis relire seulement ce qui a été raté.",
   },
   {
-    id: "S2",
-    dates: "15 – 21 oct.",
-    title: "Compléter les modules manquants",
+    id: "E2",
+    dates: "16 – 20 oct.",
+    title: "Paires 1 à 3 : rattraper la pratique Azure",
     lps: [],
     tasks: [
-      "Coller à Claude « Get started with generative AI and agents in Azure » (prompts, agent dans le portail, client léger)",
-      "Coller « Get started with Microsoft Foundry IQ » et la fin du module extraction d'informations",
-      "Coller les modules concepts restants : generative AI, NLP, speech, vision, extraction, RAG",
-      "Premier Practice Assessment officiel sur AI Skills Navigator, sans préparation",
+      "Paire 1 · Bases : refaire le quiz « Introduction to AI concepts » (LP1), puis « Get started with AI in Azure » (LP2)",
+      "Paire 2 · IA générative : refaire le quiz « Generative AI and agents » (LP1), puis « Generative AI and agents in Azure » (LP2)",
+      "Paire 3 · Texte : refaire le quiz « Natural language processing concepts » (LP1), puis « Text analysis in Azure » (LP2)",
+      "Premier Practice Assessment officiel sur AI Skills Navigator",
       "Noter les domaines faibles affichés à la fin du Practice Assessment",
     ],
-    focus: "Le domaine Foundry pèse 55–60 % et c'est là que la plupart des candidats perdent des points.",
+    focus: "Le domaine Foundry pèse 55–60 % : hiérarchie Azure, endpoints, nom du déploiement, classes et paquets Python.",
   },
   {
-    id: "S3",
-    dates: "22 – 28 oct.",
+    id: "E3",
+    dates: "21 – 28 oct.",
     title: "Lecture de code et examen",
     lps: [],
     tasks: [
-      "Relire les blocs de code des fiches et dire à voix haute ce que fait chaque ligne",
+      "Refaire les quiz des domaines faibles jusqu'à 80 %",
+      "Relire les blocs de code des fiches LP2 et dire à voix haute ce que fait chaque ligne",
       "S'entraîner aux pièges : nom du déploiement ≠ nom du modèle, ressource ≠ projet, rôle system ≠ user",
-      "Refaire le Practice Assessment jusqu'à 85 % ou plus, deux fois de suite",
+      "Refaire le Practice Assessment jusqu'à 80 % ou plus, deux fois de suite",
       "Essayer le bac à sable officiel (aka.ms/examdemo) pour connaître l'interface",
+      "Vérifier le statut étudiant dans le profil Learn pour obtenir le tarif étudiant",
       "Réserver l'examen avec un compte Microsoft personnel, puis le passer",
     ],
-    focus: "45 minutes pour 40 à 60 questions : moins d'une minute par question, et pas d'accès à Microsoft Learn pendant l'examen.",
+    focus: "45 minutes pour 40 à 60 questions à choix : moins d'une minute par question, et pas d'accès à Microsoft Learn pendant l'examen.",
   },
 ];
 
 const method = [
-  "Lire l'unité sur Microsoft Learn",
-  "Coller le texte à Claude pour créer la fiche, les exemples et le quiz",
-  "Lire la fiche puis faire les exercices rapides sans regarder le corrigé",
-  "Faire le quiz jusqu'à 70 % minimum",
-  "Repasser les flashcards le lendemain",
+  "Travailler en paires : un module de concepts (LP1), puis son jumeau Azure (LP2)",
+  "Lire « L'essentiel » et le « Point examen » de chaque fiche",
+  "Faire le quiz tout de suite",
+  "Relire seulement la partie de la fiche liée aux questions ratées",
+  "Viser 80 % avant de passer à la paire suivante",
 ];
 
 export const ai901: Cert = {
@@ -106,7 +108,7 @@ export const ai901: Cert = {
     1: { label: "Concepts et capacités de l'IA", weight: "40–45 %", color: "bg-sky-100 text-sky-700 border-sky-200" },
     2: { label: "Mettre en œuvre avec Microsoft Foundry", weight: "55–60 %", color: "bg-violet-100 text-violet-700 border-violet-200" },
   },
-  planSubtitle: "Du 8 au 28 octobre 2026 · parcours Learn déjà terminés, phase de consolidation",
+  planSubtitle: "Du 11 au 28 octobre 2026 · révision en paires : concept (LP1) puis pratique Azure (LP2)",
   learningPaths,
   weeks,
   method,
