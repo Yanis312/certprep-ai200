@@ -17,7 +17,7 @@ const categoryMeta: Record<string, { color: string; bg: string; border: string; 
 export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
   const progress = useProgress();
   const [cert, setCert] = useCert();
-  const { exam, domains, learningPaths } = cert;
+  const { exam, domains, learningPaths, pairs } = cert;
 
   const bySlug = new Map(modules.map((m) => [m.slug, m]));
   const moduleDone = (m: ModuleSummary | undefined) =>
@@ -30,6 +30,8 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
 
   const planModules = learningPaths.flatMap((lp) => lp.modules);
   const planDone = planModules.filter((pm) => pm.site && moduleDone(bySlug.get(pm.site))).length;
+
+  const lpBySite = new Map(learningPaths.flatMap((lp) => lp.modules.map((pm) => [pm.site, lp] as const)));
 
   const otherCategories = [...new Set(modules.filter((m) => !certCodes.includes(m.category)).map((m) => m.category))];
 
@@ -78,8 +80,44 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
 
       <div className="flex-1 min-w-0">
 
+        {/* Révision en paires : le concept, puis sa mise en pratique */}
+        {pairs?.map((pair, i) => {
+          const pairModules = pair.sites.map((slug) => bySlug.get(slug)).filter((m) => m !== undefined);
+          const pairDone = pairModules.filter((m) => moduleDone(m)).length;
+          return (
+            <section key={pair.title} className="mb-10">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 rounded-xl border mb-4 bg-indigo-50 border-indigo-100">
+                <span className="text-xs font-bold bg-indigo-600 text-white px-2 py-1 rounded-lg shrink-0">Paire {i + 1}</span>
+                <div className="flex-1 min-w-48">
+                  <h2 className="font-bold text-sm text-indigo-700 leading-snug">{pair.title}</h2>
+                  <p className="text-xs text-slate-400">{pairDone}/{pairModules.length} modules validés</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {pairModules.map((mod) => {
+                  const lp = lpBySite.get(mod.slug);
+                  return (
+                    <div key={mod.slug}>
+                      {lp && (
+                        <div className="flex flex-wrap gap-1.5 mb-1.5">
+                          <span className="text-xs font-bold text-indigo-700">{lp.id}</span>
+                          {lp.domains.map((id) => (
+                            <span key={id} className={`text-xs px-2 py-0.5 rounded-full border font-medium ${domains[id].color}`}>{domains[id].label} · {domains[id].weight}</span>
+                          ))}
+                        </div>
+                      )}
+                      <ModuleCard mod={mod} progress={progress} />
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+
         {/* Les learning paths officiels de la certification choisie */}
-        {learningPaths.map((lp) => {
+        {!pairs && learningPaths.map((lp) => {
           const lpDone = lp.modules.filter((pm) => pm.site && moduleDone(bySlug.get(pm.site))).length;
           return (
             <section key={lp.id} className="mb-10">

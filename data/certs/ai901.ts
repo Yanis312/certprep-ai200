@@ -1,6 +1,6 @@
 // Plan officiel AI-901 (Microsoft Learn, vérifié le 8 octobre 2026) + plan de révision.
 // Compétences mesurées : version du 15 avril 2026. AI-901 remplace AI-900.
-import type { Cert, LearningPath, Week } from "./types";
+import type { Cert, LearningPath, Pair, Week } from "./types";
 
 const learningPaths: LearningPath[] = [
   {
@@ -33,6 +33,17 @@ const learningPaths: LearningPath[] = [
       { title: "Get started with Microsoft Foundry IQ", learn: "get-started-foundry-iq", site: "ai901-foundry-iq" },
     ],
   },
+];
+
+// Les deux parcours se répondent module par module : le concept (LP1), puis le service Azure (LP2).
+const pairs: Pair[] = [
+  { title: "Les bases de l'IA et d'Azure", sites: ["ai901-ai-concepts", "ai901-get-started-azure"] },
+  { title: "IA générative et agents", sites: ["ai901-concepts-genai", "ai901-genai-agents-azure"] },
+  { title: "Texte et langage naturel", sites: ["ai901-concepts-nlp", "ai901-text-analysis"] },
+  { title: "Parole", sites: ["ai901-concepts-speech", "ai901-speech-azure"] },
+  { title: "Vision par ordinateur", sites: ["ai901-concepts-vision", "ai901-vision-azure"] },
+  { title: "Extraction d'informations", sites: ["ai901-concepts-extraction", "ai901-info-extraction-azure"] },
+  { title: "RAG et Foundry IQ", sites: ["ai901-concepts-rag", "ai901-foundry-iq"] },
 ];
 
 // Plan de révision en paires (décidé le 11 oct. 2026) : chaque module de concepts du LP1
@@ -111,6 +122,7 @@ export const ai901: Cert = {
   },
   planSubtitle: "Du 11 au 28 octobre 2026 · révision en paires : concept (LP1) puis pratique Azure (LP2)",
   learningPaths,
+  pairs,
   weeks,
   method,
 };

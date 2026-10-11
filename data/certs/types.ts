@@ -30,6 +30,13 @@ export type Week = {
   focus: string;
 };
 
+/** Modules à réviser ensemble : le concept, puis sa mise en pratique */
+export type Pair = {
+  title: string;
+  /** slugs des modules sur ce site, dans l'ordre de révision */
+  sites: string[];
+};
+
 export type Cert = {
   /** code de l'examen, identique au champ "category" des modules (ex. "AI-103") */
   code: string;
@@ -48,6 +55,8 @@ export type Cert = {
   domains: Record<number, Domain>;
   planSubtitle: string;
   learningPaths: LearningPath[];
+  /** si présent, l'accueil regroupe les modules par paires au lieu de les lister par learning path */
+  pairs?: Pair[];
   weeks: Week[];
   method: string[];
 };
