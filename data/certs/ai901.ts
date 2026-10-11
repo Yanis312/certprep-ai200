@@ -36,39 +36,40 @@ const learningPaths: LearningPath[] = [
 ];
 
 // Plan de révision en paires (décidé le 11 oct. 2026) : chaque module de concepts du LP1
-// est suivi de son jumeau pratique du LP2. Les identifiants E1–E3 remplacent S1–S3
-// pour que les anciennes cases cochées ne se reportent pas sur les nouvelles tâches.
+// est suivi de son jumeau pratique du LP2, dans l'ordre 1 à 7 depuis le début.
+// Les identifiants P1–P3 remplacent les anciens pour que les cases cochées ne se reportent pas.
 const weeks: Week[] = [
   {
-    id: "E1",
-    dates: "11 – 15 oct.",
-    title: "Paires 4 à 7 : le concept, puis le service Azure",
+    id: "P1",
+    dates: "11 – 16 oct.",
+    title: "Paires 1 à 4 : le concept, puis le service Azure",
     lps: [],
     tasks: [
+      "Paire 1 · Bases : « Introduction to AI concepts » (LP1) puis « Get started with AI in Azure » (LP2)",
+      "Paire 2 · IA générative : « Generative AI and agents » (LP1) puis « Generative AI and agents in Azure » (LP2)",
+      "Paire 3 · Texte : « Natural language processing concepts » (LP1) puis « Text analysis in Azure » (LP2)",
       "Paire 4 · Parole : « AI speech concepts » (LP1) puis « Speech in Azure » (LP2)",
-      "Paire 5 · Vision : « Computer vision concepts » (LP1) puis « Computer vision in Azure » (LP2)",
-      "Paire 6 · Extraction : « Information extraction concepts » (LP1) puis « Information extraction in Azure » (LP2)",
-      "Paire 7 · RAG : « Retrieval-augmented generation concepts » (LP1) puis « Microsoft Foundry IQ » (LP2)",
+      "Activer Azure for Students (crédit gratuit, sans carte bancaire) pour les labs du LP2",
     ],
     focus: "Pour chaque module : lire « L'essentiel » et le « Point examen », faire le quiz, puis relire seulement ce qui a été raté.",
   },
   {
-    id: "E2",
-    dates: "16 – 20 oct.",
-    title: "Paires 1 à 3 : rattraper la pratique Azure",
+    id: "P2",
+    dates: "17 – 21 oct.",
+    title: "Paires 5 à 7, puis premier test officiel",
     lps: [],
     tasks: [
-      "Paire 1 · Bases : refaire le quiz « Introduction to AI concepts » (LP1), puis « Get started with AI in Azure » (LP2)",
-      "Paire 2 · IA générative : refaire le quiz « Generative AI and agents » (LP1), puis « Generative AI and agents in Azure » (LP2)",
-      "Paire 3 · Texte : refaire le quiz « Natural language processing concepts » (LP1), puis « Text analysis in Azure » (LP2)",
+      "Paire 5 · Vision : « Computer vision concepts » (LP1) puis « Computer vision in Azure » (LP2)",
+      "Paire 6 · Extraction : « Information extraction concepts » (LP1) puis « Information extraction in Azure » (LP2)",
+      "Paire 7 · RAG : « Retrieval-augmented generation concepts » (LP1) puis « Microsoft Foundry IQ » (LP2)",
       "Premier Practice Assessment officiel sur AI Skills Navigator",
       "Noter les domaines faibles affichés à la fin du Practice Assessment",
     ],
     focus: "Le domaine Foundry pèse 55–60 % : hiérarchie Azure, endpoints, nom du déploiement, classes et paquets Python.",
   },
   {
-    id: "E3",
-    dates: "21 – 28 oct.",
+    id: "P3",
+    dates: "22 – 28 oct.",
     title: "Lecture de code et examen",
     lps: [],
     tasks: [
@@ -77,6 +78,7 @@ const weeks: Week[] = [
       "S'entraîner aux pièges : nom du déploiement ≠ nom du modèle, ressource ≠ projet, rôle system ≠ user",
       "Refaire le Practice Assessment jusqu'à 80 % ou plus, deux fois de suite",
       "Essayer le bac à sable officiel (aka.ms/examdemo) pour connaître l'interface",
+      "Supprimer les ressources Azure créées pendant les labs",
       "Vérifier le statut étudiant dans le profil Learn pour obtenir le tarif étudiant",
       "Réserver l'examen avec un compte Microsoft personnel, puis le passer",
     ],
