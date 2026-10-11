@@ -12,7 +12,7 @@ Certaines étapes peuvent expirer ou sembler tourner indéfiniment. Les technolo
 
 ## Avant de te lancer : le coût
 
-Ce lab est le **plus coûteux** du parcours : le fine-tuning facture l'entraînement, puis l'hébergement du modèle personnalisé **à l'heure**. Avec un crédit étudiant limité, lis d'abord tout le lab, fais-le d'une traite, et **supprime le groupe de ressources dès la fin**.
+Ce lab est le **plus coûteux** du parcours : le fine-tuning facture l'entraînement, puis l'hébergement du modèle personnalisé **à l'heure**. Avec un crédit gratuit limité, lis d'abord tout le lab, fais-le d'une traite, et **supprime le groupe de ressources dès la fin**.
 
 ## Étape 1 — Projet
 

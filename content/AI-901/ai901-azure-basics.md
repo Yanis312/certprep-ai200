@@ -78,7 +78,7 @@ En configurant une ressource, tu choisis notamment :
 - le **niveau de performance** (lié au coût) ;
 - les **permissions et la sécurité**.
 
-> **Exemple.** Pour un lab : ton compte étudiant est dans un **tenant**. Ton crédit de 100 $ est rattaché à un **abonnement**. Tu crées un **groupe de ressources** `rg-ai901-lab`, et dedans une **ressource** Foundry. À la fin, tu supprimes le groupe de ressources : tout ce qu'il contient disparaît d'un coup.
+> **Exemple.** Pour un lab : ton compte est dans un **tenant**. Ton crédit gratuit est rattaché à un **abonnement**. Tu crées un **groupe de ressources** `rg-ai901-lab`, et dedans une **ressource** Foundry. À la fin, tu supprimes le groupe de ressources : tout ce qu'il contient disparaît d'un coup.
 
 ## Le portail Azure
 

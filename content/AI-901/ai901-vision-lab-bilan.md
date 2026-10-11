@@ -6,7 +6,7 @@ Utiliser des modèles génératifs de Foundry pour **analyser** des images, puis
 
 - **Durée** : environ 30 minutes.
 - Tout se fait dans le **portail Foundry**.
-- La seconde partie demande un abonnement qui a **accès aux modèles de génération d'images**. Avec un abonnement étudiant, ce n'est pas garanti.
+- La seconde partie demande un abonnement qui a **accès aux modèles de génération d'images**. Avec un compte gratuit, ce n'est pas garanti.
 
 ### Étape 1 — Projet
 
