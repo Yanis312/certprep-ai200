@@ -5,7 +5,9 @@ import Link from "next/link";
 import { saveAttempt } from "@/lib/progress";
 import type { Question } from "@/lib/types";
 
-export default function QuizClient({ questions, unitSlug }: { questions: Question[]; unitSlug: string }) {
+type NextStep = { slug: string; title: string } | null;
+
+export default function QuizClient({ questions, unitSlug, next }: { questions: Question[]; unitSlug: string; next: NextStep }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<boolean[]>([]);
@@ -43,6 +45,11 @@ export default function QuizClient({ questions, unitSlug }: { questions: Questio
         <p className={`text-sm mb-8 font-medium ${isGood ? "text-emerald-500" : "text-amber-500"}`}>
           {pct === 100 ? "🏆 Parfait !" : pct >= 70 ? "✅ Bien joué !" : "📚 Continue de réviser !"}
         </p>
+        {next && (
+          <Link href={`/unit/${next.slug}`} className={`block w-full sm:w-auto sm:inline-block mb-4 px-6 py-3 rounded-xl font-semibold text-sm transition-colors ${isGood ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
+            Unité suivante : {next.title} →
+          </Link>
+        )}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button onClick={() => { setCurrent(0); setSelected(null); setAnswers([]); setFinished(false); }}
             className="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors">
@@ -72,7 +79,7 @@ export default function QuizClient({ questions, unitSlug }: { questions: Questio
       </div>
 
       {/* Question */}
-      <h2 className="text-base font-semibold text-slate-800 mb-5 leading-relaxed">{q.question}</h2>
+      <QuestionText text={q.question} />
 
       {/* Options */}
       <div className="space-y-3 mb-6">
@@ -118,6 +125,21 @@ export default function QuizClient({ questions, unitSlug }: { questions: Questio
         <button onClick={handleNext} className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-xl transition-colors font-semibold text-sm">
           {current + 1 >= questions.length ? "Voir mes résultats →" : "Question suivante →"}
         </button>
+      )}
+    </div>
+  );
+}
+
+// Une question peut contenir un extrait de code après une ligne vide : il s'affiche en bloc de code.
+function QuestionText({ text }: { text: string }) {
+  const cut = text.indexOf("\n\n");
+  const title = cut >= 0 ? text.slice(0, cut) : text;
+  const code = cut >= 0 ? text.slice(cut + 2) : null;
+  return (
+    <div className="mb-5">
+      <h2 className="text-base font-semibold text-slate-800 leading-relaxed">{title}</h2>
+      {code && (
+        <pre className="mt-3 bg-slate-900 text-slate-100 text-xs leading-relaxed rounded-xl p-4 overflow-x-auto"><code>{code}</code></pre>
       )}
     </div>
   );

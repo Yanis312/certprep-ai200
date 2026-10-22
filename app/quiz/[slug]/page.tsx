@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllUnitSlugs, getUnit } from "@/lib/course";
+import { getAllUnitSlugs, getModules, getUnit } from "@/lib/course";
+import { certOf, unitSteps } from "@/lib/path";
 import QuizClient from "@/components/QuizClient";
 
 export const dynamicParams = false;
@@ -16,6 +17,9 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
   const unit = { ...found.unit, module: found.module };
 
   const questions = unit.questions;
+  const cert = certOf(unit.module.category);
+  const steps = cert ? unitSteps(getModules(), cert) : [];
+  const nextStep = steps[steps.findIndex((s) => s.slug === slug) + 1] ?? null;
 
   if (questions.length === 0) {
     return (
@@ -46,7 +50,7 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
           <p className="text-violet-200 text-xs mt-1">{questions.length} questions · 70 % pour valider</p>
         </div>
         <div className="px-5 sm:px-8 py-8">
-          <QuizClient questions={questions} unitSlug={slug} />
+          <QuizClient questions={questions} unitSlug={slug} next={nextStep && { slug: nextStep.slug, title: nextStep.title }} />
         </div>
       </div>
     </div>

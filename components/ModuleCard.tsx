@@ -32,12 +32,12 @@ export default function ModuleCard({ mod, progress }: { mod: ModuleSummary; prog
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${done ? "bg-emerald-100 text-emerald-600" : unit.isLab ? "bg-emerald-200 text-emerald-700" : "bg-slate-200 text-slate-400"}`}>
                   {done ? "✓" : unit.isLab ? "🔬" : unit.order}
                 </div>
-                <span className={`text-sm flex-1 min-w-40 leading-tight ${unit.isLab ? "text-emerald-800 font-medium" : "text-slate-700"}`}>{unit.title}</span>
+                <Link href={`/unit/${unit.slug}`} className={`text-sm flex-1 min-w-40 leading-tight hover:underline ${unit.isLab ? "text-emerald-800 font-medium" : "text-slate-700"}`}>{unit.title}</Link>
                 {unit.isLab && <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-medium shrink-0">Lab</span>}
                 {unitPct !== null && (
                   <span className={`text-xs font-semibold ${unitPct >= 70 ? "text-emerald-500" : "text-amber-500"}`}>{unitPct}%</span>
                 )}
-                <div className="flex gap-1.5 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1.5">
                   <Link href={`/unit/${unit.slug}`} className="text-xs bg-indigo-600 text-white px-2 py-1 rounded-lg hover:bg-indigo-700 transition-colors">Cours</Link>
                   {unit.qCount > 0 && (
                     <>

@@ -44,6 +44,7 @@ const pairs: Pair[] = [
   { title: "Vision par ordinateur", sites: ["ai901-concepts-vision", "ai901-vision-azure"] },
   { title: "Extraction d'informations", sites: ["ai901-concepts-extraction", "ai901-info-extraction-azure"] },
   { title: "RAG et Foundry IQ", sites: ["ai901-concepts-rag", "ai901-foundry-iq"] },
+  { title: "Entraînement examen : code Python et étapes", badge: "Final", sites: ["ai901-entrainement"] },
 ];
 
 // Plan de révision en paires (décidé le 11 oct. 2026) : chaque module de concepts du LP1
@@ -52,7 +53,7 @@ const pairs: Pair[] = [
 const weeks: Week[] = [
   {
     id: "P1",
-    dates: "11 – 16 oct.",
+    dates: "11 – 23 oct.",
     title: "Paires 1 à 4 : le concept, puis le service Azure",
     lps: [],
     tasks: [
@@ -66,7 +67,7 @@ const weeks: Week[] = [
   },
   {
     id: "P2",
-    dates: "17 – 21 oct.",
+    dates: "24 – 27 oct.",
     title: "Paires 5 à 7, puis premier test officiel",
     lps: [],
     tasks: [
@@ -79,20 +80,33 @@ const weeks: Week[] = [
     focus: "Le domaine Foundry pèse 55–60 % : hiérarchie Azure, endpoints, nom du déploiement, classes et paquets Python.",
   },
   {
-    id: "P3",
-    dates: "22 – 28 oct.",
-    title: "Lecture de code et examen",
+    id: "F1",
+    dates: "28 – 30 oct.",
+    title: "Entraînement final : code Python et étapes",
     lps: [],
     tasks: [
-      "Refaire les quiz des domaines faibles jusqu'à 80 %",
-      "Relire les blocs de code des fiches LP2 et dire à voix haute ce que fait chaque ligne",
-      "S'entraîner aux pièges : nom du déploiement ≠ nom du modèle, ressource ≠ projet, rôle system ≠ user",
-      "Refaire le Practice Assessment jusqu'à 80 % ou plus, deux fois de suite",
+      "Lecture de code 1 : paquets, clients et endpoints (fiche + quiz à 80 %)",
+      "Lecture de code 2 : modèles, agents, images (fiche + quiz à 80 %)",
+      "Lecture de code 3 : texte, parole, extraction (fiche + quiz à 80 %)",
+      "Remets dans l'ordre : toutes les séquences (fiche + quiz à 80 %)",
+      "Refaire les quiz des modules notés comme faibles au Practice Assessment",
+      "Deuxième Practice Assessment officiel : viser 80 % ou plus",
+    ],
+    focus: "Les deux points qui surprennent le plus à l'examen : la lecture de code Python et les questions où il faut remettre des étapes dans l'ordre.",
+  },
+  {
+    id: "F2",
+    dates: "31 oct. – 2 nov.",
+    title: "Derniers réglages et examen",
+    lps: [],
+    tasks: [
+      "Practice Assessment encore une fois : 80 % ou plus deux fois de suite",
       "Essayer le bac à sable officiel (aka.ms/examdemo) pour connaître l'interface",
+      "Regarder la vidéo de Tim Warner « AI-901 Exam Review » (12 min)",
       "Supprimer les ressources Azure créées pendant les labs",
       "Réserver l'examen avec un compte Microsoft personnel, puis le passer",
     ],
-    focus: "45 minutes pour 40 à 60 questions à choix : moins d'une minute par question, et pas d'accès à Microsoft Learn pendant l'examen.",
+    focus: "45 minutes pour 40 à 60 questions à choix : moins d'une minute par question. Marque les questions difficiles et reviens-y à la fin, sauf les séries Oui / Non.",
   },
 ];
 
@@ -120,7 +134,7 @@ export const ai901: Cert = {
     1: { label: "Concepts et capacités de l'IA", weight: "40–45 %", color: "bg-sky-100 text-sky-700 border-sky-200" },
     2: { label: "Mettre en œuvre avec Microsoft Foundry", weight: "55–60 %", color: "bg-violet-100 text-violet-700 border-violet-200" },
   },
-  planSubtitle: "Du 11 au 28 octobre 2026 · révision en paires : concept (LP1) puis pratique Azure (LP2)",
+  planSubtitle: "Du 11 octobre au 2 novembre 2026 · paires concept (LP1) + Azure (LP2), puis entraînement final et examen",
   learningPaths,
   pairs,
   weeks,

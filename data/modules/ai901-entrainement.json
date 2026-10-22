@@ -1,0 +1,437 @@
+{
+  "slug": "ai901-entrainement",
+  "title": "Entraînement examen — code Python et étapes",
+  "description": "Lire du code Python SDK (clients, responses.create, agents, Speech, Language, Content Understanding) et remettre les étapes dans l'ordre",
+  "category": "AI-901",
+  "order": 15,
+  "units": [
+    {
+      "slug": "ai901-x-code-clients",
+      "title": "Lecture de code 1 — paquets, clients et endpoints",
+      "order": 1,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel paquet installer pour détecter la langue d'un texte avec Azure Language ?",
+          "options": [
+            "azure-cognitiveservices-speech",
+            "azure-ai-textanalytics",
+            "azure-ai-contentunderstanding",
+            "azure-ai-voicelive"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Azure Language s'utilise avec le paquet azure-ai-textanalytics et la classe TextAnalyticsClient."
+        },
+        {
+          "question": "Quel client sert à récupérer un agent dans un projet Foundry ?",
+          "options": [
+            "TextAnalyticsClient",
+            "SpeechRecognizer",
+            "AIProjectClient",
+            "ContentUnderstandingClient"
+          ],
+          "correctAnswer": 2,
+          "explanation": "AIProjectClient, du paquet azure-ai-projects, donne accès au projet et à ses agents (project_client.agents.get)."
+        },
+        {
+          "question": "Que fait DefaultAzureCredential() ?",
+          "options": [
+            "Elle authentifie avec une identité Microsoft Entra, sans clé dans le code",
+            "Elle crée une nouvelle clé d'API",
+            "Elle choisit le modèle par défaut",
+            "Elle désactive l'authentification"
+          ],
+          "correctAnswer": 0,
+          "explanation": "DefaultAzureCredential utilise l'identité de l'utilisateur ou de l'application ; AzureKeyCredential utilise une clé."
+        },
+        {
+          "question": "Quel import permet d'écrire `client = ContentUnderstandingClient(...)` ?",
+          "options": [
+            "from openai import ContentUnderstandingClient",
+            "import azure.cognitiveservices.speech as speechsdk",
+            "from azure.ai.projects import ContentUnderstandingClient",
+            "from azure.ai.contentunderstanding import ContentUnderstandingClient"
+          ],
+          "correctAnswer": 3,
+          "explanation": "La classe vient du paquet azure-ai-contentunderstanding, importé sous azure.ai.contentunderstanding."
+        },
+        {
+          "question": "À quoi sert `load_dotenv()` dans les exemples ?",
+          "options": [
+            "À installer les paquets",
+            "À charger les variables du fichier .env, comme l'endpoint et la clé",
+            "À envoyer la requête au modèle",
+            "À supprimer les ressources Azure"
+          ],
+          "correctAnswer": 1,
+          "explanation": "On ne met pas les secrets dans le code : load_dotenv charge le fichier .env, puis os.getenv lit chaque variable."
+        },
+        {
+          "question": "Dans l'URL https://contoso.services.ai.azure.com/api/projects/support/openai/responses, que désigne « support » ?",
+          "options": [
+            "La ressource",
+            "Le modèle",
+            "Le projet",
+            "La version de l'API"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le segment après /api/projects/ est le nom du projet ; contoso est la ressource."
+        },
+        {
+          "question": "Quel paquet faut-il pour transcrire un appel en texte ?",
+          "options": [
+            "azure-cognitiveservices-speech",
+            "openai",
+            "azure-ai-textanalytics",
+            "azure-ai-projects"
+          ],
+          "correctAnswer": 0,
+          "explanation": "La reconnaissance vocale passe par le SDK Speech : azure-cognitiveservices-speech."
+        },
+        {
+          "question": "Ce code veut analyser du texte avec Azure Language. Quelle est l'erreur ?\n\nfrom openai import OpenAI\nclient = TextAnalyticsClient(endpoint=endpoint, credential=AzureKeyCredential(key))",
+          "options": [
+            "L'endpoint est inutile",
+            "Il faut une clé plus longue",
+            "Il manque un appel à print",
+            "Le mauvais import : il faut importer TextAnalyticsClient depuis azure.ai.textanalytics"
+          ],
+          "correctAnswer": 3,
+          "explanation": "TextAnalyticsClient vient de azure.ai.textanalytics, et AzureKeyCredential de azure.core.credentials."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-x-code-responses",
+      "title": "Lecture de code 2 — modèles, agents, images",
+      "order": 2,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Que contient `response.output_text` ?",
+          "options": [
+            "Le nom du déploiement",
+            "Le texte de la réponse du modèle",
+            "La clé d'API",
+            "Le nombre de tokens"
+          ],
+          "correctAnswer": 1,
+          "explanation": "output_text donne directement le texte généré par le modèle ou l'agent."
+        },
+        {
+          "question": "Tu as déployé gpt-4.1 sous le nom « assistant-v2 ». Que mets-tu dans model= ?",
+          "options": [
+            "\"assistant-v2\"",
+            "\"gpt-4.1\"",
+            "\"openai\"",
+            "Rien, le paramètre est facultatif"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le paramètre model reçoit le nom du déploiement, pas le nom du modèle."
+        },
+        {
+          "question": "Dans une liste de messages, quel rôle porte les instructions de comportement ?",
+          "options": [
+            "user",
+            "assistant",
+            "tool",
+            "system"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Le message system définit le comportement, le ton et les limites ; le message user porte la question."
+        },
+        {
+          "question": "Tu veux des réponses plus prévisibles et moins variées. Que fais-tu ?",
+          "options": [
+            "Augmenter max_output_tokens",
+            "Augmenter temperature",
+            "Baisser temperature",
+            "Supprimer le message system"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une température basse rend les réponses plus prévisibles ; une température haute les rend plus variées."
+        },
+        {
+          "question": "Que fait ce code ?\n\nclient.responses.create(input=[...], extra_body={\"agent\": {\"name\": \"hr-bot\", \"type\": \"agent_reference\"}})",
+          "options": [
+            "Il crée un nouveau modèle",
+            "Il appelle l'agent hr-bot",
+            "Il supprime l'agent hr-bot",
+            "Il déploie un modèle nommé hr-bot"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Un agent s'appelle sans model=, avec une référence d'agent dans extra_body."
+        },
+        {
+          "question": "Quel type de contenu permet de joindre une photo à la question ?",
+          "options": [
+            "input_image",
+            "output_text",
+            "image_generation",
+            "agent_reference"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le contenu multimodal combine un input_text (la question) et un input_image (l'image)."
+        },
+        {
+          "question": "Quel élément donne au modèle la capacité de générer une image dans responses.create ?",
+          "options": [
+            "temperature=0",
+            "max_output_tokens=1024",
+            "role=\"system\"",
+            "tools=[{\"type\": \"image_generation\"}]"
+          ],
+          "correctAnswer": 3,
+          "explanation": "L'outil image_generation permet au modèle de produire une image ; on peut aussi utiliser client.images.generate."
+        },
+        {
+          "question": "Pourquoi appelle-t-on base64.b64decode après une génération d'image ?",
+          "options": [
+            "Pour compresser l'image",
+            "Pour traduire le prompt",
+            "Parce que l'image revient encodée en base64",
+            "Pour choisir la taille de l'image"
+          ],
+          "correctAnswer": 2,
+          "explanation": "L'image est renvoyée sous forme de texte base64 ; on la décode pour obtenir les octets du fichier PNG."
+        },
+        {
+          "question": "On veut appeler l'agent « hr-bot ». Quelle est l'erreur ?\n\nclient.responses.create(model=\"hr-bot\", input=[{\"role\": \"user\", \"content\": \"Hi\"}])",
+          "options": [
+            "Le rôle doit être system",
+            "Un agent ne s'appelle pas avec model= mais avec une référence d'agent dans extra_body",
+            "Il manque temperature",
+            "input ne peut pas être une liste"
+          ],
+          "correctAnswer": 1,
+          "explanation": "model= sert aux déploiements de modèles ; un agent se référence avec {\"type\": \"agent_reference\"}."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-x-code-services",
+      "title": "Lecture de code 3 — texte, parole, extraction",
+      "order": 3,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quelle méthode de TextAnalyticsClient masque les données personnelles ?",
+          "options": [
+            "detect_language",
+            "begin_analyze",
+            "recognize_pii_entities",
+            "speak_text_async"
+          ],
+          "correctAnswer": 2,
+          "explanation": "recognize_pii_entities repère les PII et renvoie redacted_text, le texte masqué."
+        },
+        {
+          "question": "Pourquoi écrit-on client.detect_language([text])[0] ?",
+          "options": [
+            "La méthode reçoit une liste de documents et renvoie une liste ; [0] prend le premier résultat",
+            "Pour choisir la première langue de l'alphabet",
+            "Pour ne garder que le premier mot",
+            "Parce que [0] désigne l'anglais"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les méthodes d'Azure Language traitent des lots de documents : une liste en entrée, une liste en sortie."
+        },
+        {
+          "question": "Que fait cette ligne ?\n\naudio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)",
+          "options": [
+            "Elle écoute le micro",
+            "Elle enregistre un fichier texte",
+            "Elle choisit la langue",
+            "Elle envoie le son vers le haut-parleur"
+          ],
+          "correctAnswer": 3,
+          "explanation": "AudioOutputConfig est une sortie audio, utilisée pour la synthèse vocale ; AudioConfig avec le micro sert à la reconnaissance."
+        },
+        {
+          "question": "Quel événement donne le résultat final d'une phrase reconnue ?",
+          "options": [
+            "recognizing",
+            "recognized",
+            "canceled",
+            "speaking"
+          ],
+          "correctAnswer": 1,
+          "explanation": "recognizing donne des résultats partiels pendant la parole ; recognized donne la phrase finale."
+        },
+        {
+          "question": "Quelle classe transforme un texte en parole ?",
+          "options": [
+            "SpeechSynthesizer",
+            "SpeechRecognizer",
+            "TextAnalyticsClient",
+            "AIProjectClient"
+          ],
+          "correctAnswer": 0,
+          "explanation": "SpeechSynthesizer fait la synthèse (texte → parole) ; SpeechRecognizer fait la reconnaissance (parole → texte)."
+        },
+        {
+          "question": "Quelle ligne choisit la voix de synthèse ?",
+          "options": [
+            "speech_recognizer.start_continuous_recognition()",
+            "audio_config = AudioConfig(use_default_microphone=True)",
+            "speech_config.speech_synthesis_voice_name = 'en-US-Ava:DragonHDLatestNeural'",
+            "result.reason == ResultReason.Canceled"
+          ],
+          "correctAnswer": 2,
+          "explanation": "La voix se définit sur la SpeechConfig avec speech_synthesis_voice_name."
+        },
+        {
+          "question": "Que signale le préfixe begin_ dans client.begin_analyze(...) ?",
+          "options": [
+            "Que l'analyse est gratuite",
+            "Que l'analyse est terminée",
+            "Que le client est créé",
+            "Une opération longue, dont on attend le résultat avec poller.result()"
+          ],
+          "correctAnswer": 3,
+          "explanation": "begin_analyze lance une opération longue (LRO) ; poller.result() attend la fin."
+        },
+        {
+          "question": "Quel analyzer_id utiliser pour extraire les champs d'une facture ?",
+          "options": [
+            "prebuilt-audioSearch",
+            "prebuilt-invoice",
+            "gpt-4.1-mini",
+            "image_generation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "prebuilt-invoice est l'analyseur préconstruit pour les factures ; prebuilt-audioSearch sert à l'audio."
+        },
+        {
+          "question": "On veut lire du texte à voix haute. Quelle est l'erreur ?\n\naudio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)\nsynth = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)",
+          "options": [
+            "SpeechSynthesizer n'existe pas",
+            "Il manque une clé",
+            "La synthèse a besoin d'une sortie audio : AudioOutputConfig(use_default_speaker=True)",
+            "Il faut utiliser TextAnalyticsClient"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Le micro est une entrée ; pour jouer la voix, il faut une configuration de sortie vers le haut-parleur."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-x-ordre",
+      "title": "Remets dans l'ordre — les étapes à connaître",
+      "order": 4,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Quel est l'ordre de la hiérarchie Azure, du plus large au plus précis ?",
+          "options": [
+            "Abonnement, tenant, ressource, groupe de ressources",
+            "Tenant, abonnement, groupe de ressources, ressource",
+            "Groupe de ressources, tenant, abonnement, ressource",
+            "Ressource, groupe de ressources, abonnement, tenant"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Tenant (identité), abonnement (facturation), groupe de ressources (dossier), ressource."
+        },
+        {
+          "question": "Quel est l'ordre de la reconnaissance vocale ?",
+          "options": [
+            "Capture, prétraitement, modèle acoustique, modèle de langage, décodage, post-traitement",
+            "Capture, modèle de langage, prétraitement, décodage, modèle acoustique, post-traitement",
+            "Prétraitement, capture, décodage, modèle acoustique, modèle de langage, post-traitement",
+            "Capture, décodage, prétraitement, post-traitement, modèle acoustique, modèle de langage"
+          ],
+          "correctAnswer": 0,
+          "explanation": "On capte le son, on extrait les caractéristiques (MFCC), on trouve les phonèmes, puis les mots, on décode et on nettoie le texte."
+        },
+        {
+          "question": "Quel est l'ordre de la synthèse vocale ?",
+          "options": [
+            "Prosodie, synthèse, normalisation, analyse linguistique",
+            "Analyse linguistique, normalisation, synthèse, prosodie",
+            "Synthèse, prosodie, analyse linguistique, normalisation",
+            "Normalisation du texte, analyse linguistique, prosodie, synthèse"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On réécrit le texte en mots, on trouve les phonèmes (G2P), on calcule la prosodie, puis on produit le son."
+        },
+        {
+          "question": "Quel est l'ordre du pipeline OCR ?",
+          "options": [
+            "Prétraitement, acquisition, reconnaissance, détection des zones, sortie",
+            "Acquisition, détection des zones, prétraitement, sortie, reconnaissance",
+            "Acquisition, prétraitement, détection des zones de texte, reconnaissance des caractères, sortie",
+            "Détection des zones, acquisition, prétraitement, reconnaissance, sortie"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On reçoit l'image, on l'améliore, on trouve où est le texte, on reconnaît les caractères, puis on produit le texte."
+        },
+        {
+          "question": "Dans l'extraction d'informations, qu'est-ce qui vient en premier ?",
+          "options": [
+            "L'OCR, puis l'extraction de champs",
+            "L'extraction de champs, puis l'OCR",
+            "L'intégration aux systèmes, puis l'OCR",
+            "La normalisation, puis l'OCR"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Il faut d'abord lire le texte (OCR) avant de savoir à quel champ il correspond."
+        },
+        {
+          "question": "Quel est l'ordre du pipeline d'indexation RAG ?",
+          "options": [
+            "Créer l'index, extraire, embeddings, découper",
+            "Embeddings, découper, extraire, créer l'index",
+            "Découper, créer l'index, extraire, embeddings",
+            "Extraire le texte, découper en chunks, créer les embeddings, créer l'index"
+          ],
+          "correctAnswer": 3,
+          "explanation": "On ne peut pas créer d'embeddings sans chunks, ni d'index sans embeddings."
+        },
+        {
+          "question": "Quel est l'ordre d'exécution d'une requête RAG ?",
+          "options": [
+            "Réponse, recherche, prompt, ajout du contexte",
+            "Prompt de l'utilisateur, recherche dans l'index, ajout du contexte au prompt, réponse ancrée",
+            "Recherche, réponse, prompt, ajout du contexte",
+            "Ajout du contexte, prompt, réponse, recherche"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Récupérer, augmenter le prompt, puis générer."
+        },
+        {
+          "question": "Quel est l'ordre du code Content Understanding ?",
+          "options": [
+            "poller.result(), begin_analyze, créer le client, lire contents",
+            "Lire contents, créer le client, begin_analyze, poller.result()",
+            "Créer le client, begin_analyze, poller.result(), lire contents",
+            "begin_analyze, lire contents, créer le client, poller.result()"
+          ],
+          "correctAnswer": 2,
+          "explanation": "On crée le client, on lance l'analyse, on attend le résultat, puis on lit markdown et fields."
+        },
+        {
+          "question": "Quelle est la première étape pour connecter Foundry IQ à un agent ?",
+          "options": [
+            "Écrire les instructions de l'agent",
+            "Tester dans le playground",
+            "Ajouter l'outil MCP",
+            "Créer ou connecter un service Azure AI Search"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Foundry IQ repose sur Azure AI Search : on le connecte, puis on crée la base de connaissances, l'agent, l'outil MCP, les instructions, et on teste."
+        },
+        {
+          "question": "Quel est l'ordre des couches d'un CNN de classification ?",
+          "options": [
+            "Filtres, pooling, aplatissement, réseau entièrement connecté, sortie softmax",
+            "Pooling, filtres, sortie softmax, aplatissement, réseau entièrement connecté",
+            "Aplatissement, filtres, pooling, sortie softmax, réseau entièrement connecté",
+            "Sortie softmax, réseau entièrement connecté, aplatissement, pooling, filtres"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Les filtres extraient les caractéristiques, le pooling les réduit, l'aplatissement les met en une dimension, puis le réseau prédit."
+        }
+      ]
+    }
+  ]
+}

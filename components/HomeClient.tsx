@@ -8,6 +8,7 @@ import CertTabs, { useCert } from "@/components/CertTabs";
 import ModuleCard from "@/components/ModuleCard";
 import Lexique from "@/components/Lexique";
 import Roadmap from "@/components/Roadmap";
+import { unitSteps } from "@/lib/path";
 
 const categoryMeta: Record<string, { color: string; bg: string; border: string; icon: string; desc: string }> = {
   "React": { color: "text-cyan-700", bg: "bg-cyan-50", border: "border-cyan-100", icon: "⚛️", desc: "Hooks, patterns et bonnes pratiques" },
@@ -30,6 +31,15 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
 
   const planModules = learningPaths.flatMap((lp) => lp.modules);
   const planDone = planModules.filter((pm) => pm.site && moduleDone(bySlug.get(pm.site))).length;
+
+  // Première unité non validée, dans l'ordre de révision
+  const steps = unitSteps(modules, cert);
+  const resume = steps.find((st) => !isDone(progress[st.slug]));
+  const resumeLabel = (() => {
+    if (!resume) return null;
+    const i = pairs?.findIndex((p) => p.sites.includes(resume.moduleSlug)) ?? -1;
+    return i >= 0 && pairs ? (pairs[i].badge ?? `Paire ${i + 1}`) : null;
+  })();
 
   const lpBySite = new Map(learningPaths.flatMap((lp) => lp.modules.map((pm) => [pm.site, lp] as const)));
 
@@ -75,6 +85,43 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
         <div className="absolute -bottom-6 -right-4 w-28 h-28 bg-white/5 rounded-full" />
       </div>
 
+      {/* Reprendre où j'en étais */}
+      {steps.length > 0 && (
+        <div className="bg-white border-2 border-indigo-100 rounded-2xl p-5 mb-6 shadow-sm">
+          {resume ? (
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex-1 min-w-56">
+                <p className="text-xs font-semibold text-indigo-600 uppercase tracking-widest">Reprendre où j&apos;en étais</p>
+                <p className="font-bold text-slate-800 mt-1 leading-snug">{resume.title}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{resumeLabel ? `${resumeLabel} · ` : ""}{resume.moduleTitle}</p>
+              </div>
+              <div className="flex gap-2">
+                <Link href={`/unit/${resume.slug}`} className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">📖 Lire la fiche</Link>
+                <Link href={`/quiz/${resume.slug}`} className="bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">🧠 Quiz</Link>
+              </div>
+            </div>
+          ) : (
+            <p className="font-semibold text-emerald-700">🏆 Toutes les unités sont validées. Passe au Practice Assessment officiel !</p>
+          )}
+          <p className="text-xs text-slate-400 mt-3">Une unité est validée quand tu as au moins 70 % à son quiz.</p>
+        </div>
+      )}
+
+      {/* Sommaire des paires */}
+      {pairs && (
+        <nav className="flex flex-wrap gap-2 mb-8">
+          {pairs.map((pair, i) => {
+            const mods = pair.sites.map((sl) => bySlug.get(sl)).filter((m) => m !== undefined);
+            const done = mods.length > 0 && mods.every((m) => moduleDone(m));
+            return (
+              <a key={pair.title} href={`#paire-${i + 1}`} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${done ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700"}`}>
+                {done ? "✓ " : ""}{pair.badge ?? i + 1} · {pair.title}
+              </a>
+            );
+          })}
+        </nav>
+      )}
+
       {/* Main layout: modules + lexique */}
       <div className="flex flex-col lg:flex-row gap-8">
 
@@ -85,9 +132,9 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
           const pairModules = pair.sites.map((slug) => bySlug.get(slug)).filter((m) => m !== undefined);
           const pairDone = pairModules.filter((m) => moduleDone(m)).length;
           return (
-            <section key={pair.title} className="mb-10">
+            <section key={pair.title} id={`paire-${i + 1}`} className="mb-10 scroll-mt-20">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 rounded-xl border mb-4 bg-indigo-50 border-indigo-100">
-                <span className="text-xs font-bold bg-indigo-600 text-white px-2 py-1 rounded-lg shrink-0">Paire {i + 1}</span>
+                <span className="text-xs font-bold bg-indigo-600 text-white px-2 py-1 rounded-lg shrink-0">{pair.badge ?? `Paire ${i + 1}`}</span>
                 <div className="flex-1 min-w-48">
                   <h2 className="font-bold text-sm text-indigo-700 leading-snug">{pair.title}</h2>
                   <p className="text-xs text-slate-400">{pairDone}/{pairModules.length} modules validés</p>

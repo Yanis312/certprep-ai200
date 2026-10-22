@@ -33,6 +33,8 @@ export type Week = {
 /** Modules à réviser ensemble : le concept, puis sa mise en pratique */
 export type Pair = {
   title: string;
+  /** étiquette affichée à la place de « Paire N » */
+  badge?: string;
   /** slugs des modules sur ce site, dans l'ordre de révision */
   sites: string[];
 };
