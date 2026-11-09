@@ -53,7 +53,7 @@ const pairs: Pair[] = [
 const weeks: Week[] = [
   {
     id: "P1",
-    dates: "11 – 23 oct.",
+    dates: "9 – 12 nov.",
     title: "Paires 1 à 4 : le concept, puis le service Azure",
     lps: [],
     tasks: [
@@ -67,7 +67,7 @@ const weeks: Week[] = [
   },
   {
     id: "P2",
-    dates: "24 – 27 oct.",
+    dates: "13 – 16 nov.",
     title: "Paires 5 à 7, puis premier test officiel",
     lps: [],
     tasks: [
@@ -81,7 +81,7 @@ const weeks: Week[] = [
   },
   {
     id: "F1",
-    dates: "28 – 30 oct.",
+    dates: "17 – 20 nov.",
     title: "Entraînement final : code Python et étapes",
     lps: [],
     tasks: [
@@ -91,22 +91,25 @@ const weeks: Week[] = [
       "Remets dans l'ordre : toutes les séquences (fiche + quiz à 80 %)",
       "Refaire les quiz des modules notés comme faibles au Practice Assessment",
       "Deuxième Practice Assessment officiel : viser 80 % ou plus",
+      "Les thèmes du Practice Assessment officiel (fiche + quiz à 80 %)",
+      "Examen blanc AI-901 complet sur le site, puis lire la correction de chaque erreur",
     ],
     focus: "Les deux points qui surprennent le plus à l'examen : la lecture de code Python et les questions où il faut remettre des étapes dans l'ordre.",
   },
   {
     id: "F2",
-    dates: "31 oct. – 2 nov.",
+    dates: "21 – 24 nov.",
     title: "Derniers réglages et examen",
     lps: [],
     tasks: [
-      "Practice Assessment encore une fois : 80 % ou plus deux fois de suite",
+      "Refaire l'examen blanc AI-901 : viser 800/1000 ou plus",
+      "Practice Assessment officiel : 80 % ou plus deux fois de suite",
       "Essayer le bac à sable officiel (aka.ms/examdemo) pour connaître l'interface",
       "Regarder la vidéo de Tim Warner « AI-901 Exam Review » (12 min)",
       "Supprimer les ressources Azure créées pendant les labs",
-      "Réserver l'examen avec un compte Microsoft personnel, puis le passer",
+      "Réserver l'examen avec ton compte Microsoft personnel, puis le passer",
     ],
-    focus: "45 minutes pour 40 à 60 questions à choix : moins d'une minute par question. Marque les questions difficiles et reviens-y à la fin, sauf les séries Oui / Non.",
+    focus: "45 minutes pour 40 à 60 questions à choix : moins d'une minute par question. Relis chaque ligne d'une série Oui / Non avant de cliquer, et marque les questions difficiles pour y revenir.",
   },
 ];
 
@@ -134,7 +137,7 @@ export const ai901: Cert = {
     1: { label: "Concepts et capacités de l'IA", weight: "40–45 %", color: "bg-sky-100 text-sky-700 border-sky-200" },
     2: { label: "Mettre en œuvre avec Microsoft Foundry", weight: "55–60 %", color: "bg-violet-100 text-violet-700 border-violet-200" },
   },
-  planSubtitle: "Du 11 octobre au 2 novembre 2026 · paires concept (LP1) + Azure (LP2), puis entraînement final et examen",
+  planSubtitle: "Du 9 au 24 novembre 2026 · une paire par jour, puis entraînement final, examen blanc et examen",
   learningPaths,
   pairs,
   weeks,
