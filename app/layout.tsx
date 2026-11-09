@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import KeepData from "@/components/KeepData";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -26,11 +27,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Accueil</Link>
               <Link href="/plan" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Plan</Link>
               <Link href="/examen" className="px-3 py-1.5 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all font-semibold">Examen blanc</Link>
+              <Link href="/sauvegarde" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium" title="Sauvegarder ta progression">💾<span className="hidden sm:inline"> Sauvegarde</span></Link>
             </div>
           </div>
         </nav>
 
         {/* Content */}
+        <KeepData />
         <main className="flex-1">{children}</main>
 
         {/* Footer */}

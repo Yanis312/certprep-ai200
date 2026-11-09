@@ -9,6 +9,7 @@ import ModuleCard from "@/components/ModuleCard";
 import Lexique from "@/components/Lexique";
 import Roadmap from "@/components/Roadmap";
 import { unitSteps } from "@/lib/path";
+import BackupReminder from "@/components/BackupReminder";
 
 const categoryMeta: Record<string, { color: string; bg: string; border: string; icon: string; desc: string }> = {
   "React": { color: "text-cyan-700", bg: "bg-cyan-50", border: "border-cyan-100", icon: "⚛️", desc: "Hooks, patterns et bonnes pratiques" },
@@ -87,6 +88,8 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full" />
         <div className="absolute -bottom-6 -right-4 w-28 h-28 bg-white/5 rounded-full" />
       </div>
+
+      <BackupReminder />
 
       {/* Reprendre où j'en étais */}
       {steps.length > 0 && (
