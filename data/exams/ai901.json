@@ -709,6 +709,177 @@
       ],
       "answer": 1,
       "explanation": "Le segment après /api/projects/ est le projet ; contoso-ai est la ressource Foundry ; /openai/responses est l'API appelée."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une application de contrôle d'accès doit reconnaître quel employé, parmi les 300 enregistrés, se présente devant la caméra. Quelle opération de Face utiliser ?",
+      "options": [
+        "La vérification, un visage contre un seul",
+        "L'identification, un visage contre plusieurs",
+        "La détection d'objets avec cadres englobants",
+        "La génération d'une légende avec score de confiance"
+      ],
+      "answer": 1,
+      "explanation": "Chercher qui est la personne parmi un groupe, c'est l'identification (1:N). La vérification répond seulement à « est-ce la même personne ? » (1:1)."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un site de photos veut associer à chaque image des mots-clés comme « plage », « coucher de soleil », « personnes », pour faciliter la recherche. Quelle fonctionnalité utiliser ?",
+      "options": [
+        "Les tags (étiquettes) d'image",
+        "La segmentation sémantique",
+        "La reconnaissance optique de caractères",
+        "La détection de langue"
+      ],
+      "answer": 0,
+      "explanation": "Les tags décrivent le contenu d'une image avec des mots-clés, chacun avec un score de confiance."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une entreprise veut rechercher et indexer des milliers de documents et d'images numérisés pour en extraire de l'information interrogeable. De quelle charge de travail s'agit-il ?",
+      "options": [
+        "Vision par ordinateur",
+        "Knowledge mining",
+        "Analyse de sentiment",
+        "Génération d'images"
+      ],
+      "answer": 1,
+      "explanation": "Indexer et interroger un grand volume de contenus relève du knowledge mining, avec Azure AI Search. La vision extrait de l'information d'une image mais n'indexe pas un corpus."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un assistant vocal de restaurant doit comprendre que « Je voudrais réserver pour quatre ce soir » exprime une demande de réservation, et en extraire le nombre de personnes. Quelle capacité utiliser ?",
+      "options": [
+        "La détection de langue",
+        "L'extraction de phrases clés",
+        "La compréhension du langage conversationnel (CLU), avec intentions et entités",
+        "La traduction de texte"
+      ],
+      "answer": 2,
+      "explanation": "CLU identifie l'intention (réserver) et les entités (quatre personnes, ce soir)."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Pour une analyse de fréquence des mots d'un rapport, que fait-on avant de compter les occurrences ?",
+      "options": [
+        "On traduit le texte en anglais",
+        "On retire les mots vides",
+        "On génère un résumé",
+        "On détecte les données personnelles"
+      ],
+      "answer": 1,
+      "explanation": "Sans retirer les mots vides (« le », « de », « the »), ce sont eux qui arriveraient en tête du comptage."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos de la détection de langue d'Azure Language :",
+      "statements": [
+        {
+          "text": "Elle renvoie le nom de la langue, son code ISO 639-1 et un score de confiance.",
+          "answer": true
+        },
+        {
+          "text": "Pour un texte dont la langue ne peut pas être déterminée, elle renvoie « (Unknown) » avec un score NaN.",
+          "answer": true
+        },
+        {
+          "text": "Elle renvoie aussi le sentiment du texte.",
+          "answer": false
+        }
+      ],
+      "explanation": "Le sentiment est une autre fonction d'Azure Language ; la détection de langue ne renvoie que la langue et sa confiance."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Ce code doit transcrire un enregistrement de 20 minutes, mais il s'arrête après la première phrase. Pourquoi ?",
+      "code": "speech_config = speechsdk.SpeechConfig(subscription=key, region=region)\naudio_config = speechsdk.audio.AudioConfig(filename=\"reunion.wav\")\nrecognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)\nresult = recognizer.recognize_once_async().get()",
+      "options": [
+        "La clé et la région devraient être dans AudioConfig",
+        "recognize_once_async ne traite qu'un seul énoncé ; il faut la reconnaissance continue",
+        "Le fichier WAV doit d'abord être encodé en base64",
+        "Il faut un SpeechSynthesizer au lieu d'un SpeechRecognizer"
+      ],
+      "answer": 1,
+      "explanation": "recognize_once_async s'arrête au premier silence. Pour un long enregistrement, on utilise start_continuous_recognition() avec les événements recognized."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux savoir que « Seattle » dans un texte désigne bien la ville, avec un lien vers sa page de référence. Quelle méthode de TextAnalyticsClient appeler ?",
+      "options": [
+        "recognize_entities",
+        "recognize_linked_entities",
+        "recognize_pii_entities",
+        "detect_language"
+      ],
+      "answer": 1,
+      "explanation": "recognize_linked_entities relie l'entité à une base de connaissances. recognize_entities donne la catégorie (lieu), sans lien."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Un centre d'appels veut, pour chaque enregistrement, la transcription séparée entre agent et client, un résumé et le sentiment, avec le moins de configuration possible. Que choisir ?",
+      "options": [
+        "Azure Speech avec recognize_once_async",
+        "Content Understanding avec l'analyseur prebuilt-callCenter",
+        "Azure Language avec l'extraction de phrases clés",
+        "Un modèle Whisper seul"
+      ],
+      "answer": 1,
+      "explanation": "prebuilt-callCenter produit transcription par rôle, résumé et sentiment. Whisper ou Speech ne donnent que la transcription."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos de l'analyse vidéo avec Content Understanding :",
+      "statements": [
+        {
+          "text": "transcriptPhrases donne ce qui est dit, par locuteur, avec horodatage.",
+          "answer": true
+        },
+        {
+          "text": "cameraShotTimesMs donne les horodatages des images clés.",
+          "answer": false
+        },
+        {
+          "text": "Le réglage enableOcr sert à lire le texte des documents, pas à analyser l'audio.",
+          "answer": true
+        }
+      ],
+      "explanation": "cameraShotTimesMs marque les changements de plan ; ce sont keyFrameTimesMs qui donnent les images clés."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux tester rapidement plusieurs prompts sur un modèle que tu viens de déployer, sans écrire de code. Où vas-tu dans le portail Foundry ?",
+      "options": [
+        "Le Chat playground",
+        "Le catalogue de modèles",
+        "La page des quotas",
+        "Le portail Azure, page Abonnements"
+      ],
+      "answer": 0,
+      "explanation": "Le Chat playground permet d'envoyer des prompts au modèle déployé et de régler instructions et paramètres sans code."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux envoyer un fichier WAV à un modèle audio et recevoir une réponse à la fois écrite et parlée. Que fais-tu ?",
+      "options": [
+        "Tu envoies l'URL du fichier dans un contenu input_image",
+        "Tu encodes le WAV en base64 dans un contenu input_audio et tu demandes les modalités texte et audio",
+        "Tu transcris d'abord le fichier avec DALL-E",
+        "Tu envoies le fichier à un modèle d'embedding"
+      ],
+      "answer": 1,
+      "explanation": "Un modèle audio reçoit l'audio en base64 (input_audio) ; les modalités [\"text\", \"audio\"] demandent une réponse écrite et parlée."
     }
   ]
 }

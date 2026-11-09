@@ -1,7 +1,7 @@
 {
   "slug": "ai901-entrainement",
   "title": "Entraînement examen — code Python et étapes",
-  "description": "Lire du code Python SDK (clients, responses.create, agents, Speech, Language, Content Understanding) et remettre les étapes dans l'ordre",
+  "description": "Lire du code Python SDK, remettre les étapes dans l'ordre, et les thèmes du Practice Assessment officiel",
   "category": "AI-901",
   "order": 15,
   "units": [
@@ -430,6 +430,124 @@
           ],
           "correctAnswer": 0,
           "explanation": "Les filtres extraient les caractéristiques, le pooling les réduit, l'aplatissement les met en une dimension, puis le réseau prédit."
+        }
+      ]
+    },
+    {
+      "slug": "ai901-x-practice",
+      "title": "Les thèmes du Practice Assessment officiel",
+      "order": 5,
+      "isLab": false,
+      "questions": [
+        {
+          "question": "Une banque compare le selfie d'un client à la photo de sa carte d'identité pour confirmer qu'il s'agit de la même personne. Quelle opération de Face est utilisée ?",
+          "options": [
+            "L'identification (un visage contre plusieurs)",
+            "La vérification (un visage contre un seul)",
+            "La détection d'objets",
+            "La segmentation sémantique"
+          ],
+          "correctAnswer": 1,
+          "explanation": "La vérification compare un visage à un seul autre (1:1). L'identification cherche une personne parmi plusieurs (1:N)."
+        },
+        {
+          "question": "Que renvoie la détection de langue quand elle ne peut pas déterminer la langue d'un texte ?",
+          "options": [
+            "« English » avec un score de 0",
+            "Une erreur HTTP 400",
+            "« (Unknown) » avec un score NaN",
+            "La langue la plus proche avec un score de 0,5"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Une langue indéterminée renvoie « (Unknown) » et un score NaN ; sinon le score va de 0 à 1."
+        },
+        {
+          "question": "Quelle méthode relie l'entité « Paris » à un article d'une base de connaissances comme Wikipédia ?",
+          "options": [
+            "recognize_entities",
+            "recognize_linked_entities",
+            "recognize_pii_entities",
+            "extract_key_phrases"
+          ],
+          "correctAnswer": 1,
+          "explanation": "recognize_linked_entities désambiguïse l'entité et la relie à une base de connaissances. recognize_entities donne seulement la catégorie."
+        },
+        {
+          "question": "Que contient le schéma d'un modèle CLU ?",
+          "options": [
+            "Les intentions et les entités",
+            "Les énoncés d'entraînement uniquement",
+            "Les voix de synthèse",
+            "Les clés d'API"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Le schéma définit les intentions et les entités ; les énoncés (utterances) servent à entraîner le modèle."
+        },
+        {
+          "question": "Dans le Speech SDK, où se placent la clé et la région de la ressource ?",
+          "options": [
+            "Dans AudioConfig",
+            "Dans SpeechRecognizer",
+            "Dans le résultat de recognize_once_async",
+            "Dans SpeechConfig"
+          ],
+          "correctAnswer": 3,
+          "explanation": "SpeechConfig contient la clé, la région ou l'endpoint, la langue et la voix ; AudioConfig ne contient que la source audio."
+        },
+        {
+          "question": "Que fait recognize_once_async() ?",
+          "options": [
+            "Il écoute en continu jusqu'à l'arrêt",
+            "Il reconnaît un seul énoncé, jusqu'à un silence, puis s'arrête",
+            "Il lit un texte à voix haute",
+            "Il traduit l'audio en texte d'une autre langue"
+          ],
+          "correctAnswer": 1,
+          "explanation": "recognize_once_async traite un seul énoncé. Pour un enregistrement long, on utilise start_continuous_recognition()."
+        },
+        {
+          "question": "Quel modèle choisir pour transcrire des fichiers audio ?",
+          "options": [
+            "DALL-E",
+            "Un modèle d'embedding",
+            "Whisper",
+            "Un modèle de génération d'images"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Whisper est un modèle de reconnaissance vocale. DALL-E génère des images ; un embedding vectorise du texte."
+        },
+        {
+          "question": "Quel analyseur préconstruit de Content Understanding donne la transcription par rôle, le résumé et le sentiment d'un appel ?",
+          "options": [
+            "prebuilt-invoice",
+            "prebuilt-callCenter",
+            "prebuilt-documentAnalyzer",
+            "prebuilt-imageAnalyzer"
+          ],
+          "correctAnswer": 1,
+          "explanation": "prebuilt-callCenter est fait pour les enregistrements d'appels, presque sans configuration."
+        },
+        {
+          "question": "Dans l'analyse vidéo de Content Understanding, quelle propriété donne les horodatages des changements de plan ?",
+          "options": [
+            "transcriptPhrases",
+            "keyFrameTimesMs",
+            "cameraShotTimesMs",
+            "enableOcr"
+          ],
+          "correctAnswer": 2,
+          "explanation": "cameraShotTimesMs marque les changements de plan ; keyFrameTimesMs les images clés ; transcriptPhrases la parole par locuteur."
+        },
+        {
+          "question": "Une légende générée par Azure AI Vision est accompagnée de quoi ?",
+          "options": [
+            "D'un cadre englobant",
+            "D'un masque de pixels",
+            "D'un score de confiance",
+            "D'un code ISO 639-1"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Chaque légende a un score de confiance. Le cadre englobant accompagne la détection d'objets."
         }
       ]
     }
