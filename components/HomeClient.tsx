@@ -60,6 +60,9 @@ export default function HomeClient({ modules }: { modules: ModuleSummary[] }) {
             <Link href="/plan" className="inline-flex items-center gap-2 bg-white text-indigo-700 hover:bg-indigo-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors">
               📅 Mon plan de révision →
             </Link>
+            <Link href="/examen" className="inline-flex items-center gap-2 bg-white text-indigo-700 hover:bg-indigo-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors">
+              📝 Examen blanc {cert.code} →
+            </Link>
             {cert.overviewHref && (
               <Link href={cert.overviewHref} className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors border border-white/20">
                 🗺️ Comprendre pourquoi tout est lié →

@@ -1,0 +1,714 @@
+{
+  "code": "AI-901",
+  "title": "Azure AI Fundamentals",
+  "realExam": "45 minutes pour 40 à 60 questions, sans accès à Microsoft Learn. Des questions courtes, des extraits de code Python à lire et des questions où il faut remettre des étapes dans l'ordre. Quand tu hésites, marque la question et avance.",
+  "domains": {
+    "1": "Identifier les concepts et capacités de l'IA (40–45 %)",
+    "2": "Mettre en œuvre des solutions d'IA avec Microsoft Foundry (55–60 %)"
+  },
+  "questions": [
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une banque utilise un modèle pour approuver les demandes de prêt. Un audit montre que, à profil financier équivalent, les demandes d'un groupe d'âge sont plus souvent refusées. Quel principe d'IA responsable est en jeu ?",
+      "options": [
+        "Fiabilité et sécurité",
+        "Équité",
+        "Inclusivité",
+        "Transparence"
+      ],
+      "answer": 1,
+      "explanation": "Traiter différemment des personnes dans une situation équivalente est un problème d'équité. L'inclusivité concerne l'accès de tous à la solution (handicap, langue), pas le biais des décisions."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une assurance doit pouvoir expliquer à un client pourquoi le modèle a refusé sa réclamation et quelles données ont été utilisées. Quel principe d'IA responsable cette exigence illustre-t-elle ?",
+      "options": [
+        "Responsabilité",
+        "Confidentialité et sécurité",
+        "Transparence",
+        "Équité"
+      ],
+      "answer": 2,
+      "explanation": "Rendre compréhensible le fonctionnement du système et ses décisions relève de la transparence. La responsabilité désigne qui répond du système (gouvernance, supervision humaine)."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une entreprise crée un comité qui valide chaque nouveau modèle avant sa mise en production et désigne une personne qui répond de ses décisions. Quel principe est appliqué ?",
+      "options": [
+        "Responsabilité",
+        "Transparence",
+        "Fiabilité et sécurité",
+        "Inclusivité"
+      ],
+      "answer": 0,
+      "explanation": "La responsabilité (accountability) : des humains et une gouvernance répondent du système d'IA et de ses effets."
+    },
+    {
+      "type": "yesno",
+      "domain": "1",
+      "q": "Indique si chaque mesure correspond bien au principe d'IA responsable cité.",
+      "statements": [
+        {
+          "text": "Proposer une saisie au clavier en plus de la commande vocale relève de l'inclusivité.",
+          "answer": true
+        },
+        {
+          "text": "Tester un modèle de diagnostic médical sur des cas rares avant sa mise en production relève de la fiabilité et de la sécurité.",
+          "answer": true
+        },
+        {
+          "text": "Chiffrer les données personnelles utilisées pour l'entraînement relève de la transparence.",
+          "answer": false
+        }
+      ],
+      "explanation": "Le chiffrement des données personnelles relève de la confidentialité et de la sécurité. Les deux autres affirmations sont exactes."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Comment un grand modèle de langage produit-il une réponse ?",
+      "options": [
+        "Il cherche la réponse la plus proche dans une base de questions enregistrées",
+        "Il classe le prompt dans une catégorie, puis renvoie le modèle de réponse de cette catégorie",
+        "Il prédit le token suivant le plus probable, de façon répétée, à partir du contexte",
+        "Il recopie le document d'entraînement le plus semblable au prompt"
+      ],
+      "answer": 2,
+      "explanation": "Un LLM génère une complétion token par token, en prédisant à chaque fois le token suivant d'après le prompt et ce qu'il a déjà produit."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Dans un modèle de langage, que sont les embeddings ?",
+      "options": [
+        "Les identifiants numériques attribués à chaque token du vocabulaire",
+        "Des vecteurs dont les valeurs représentent le sens des tokens",
+        "Les paramètres ajustés lors du fine-tuning",
+        "Les instructions du message système"
+      ],
+      "answer": 1,
+      "explanation": "Un embedding est un vecteur à plusieurs dimensions qui capture les caractéristiques sémantiques d'un token. L'identifiant du token n'est qu'un numéro, sans notion de sens."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Dans l'architecture transformer, quel mécanisme permet au modèle de tenir compte des autres tokens de la phrase pour interpréter un mot ?",
+      "options": [
+        "La tokenisation",
+        "La normalisation du texte",
+        "L'attention",
+        "Le décodage par faisceau (beam search)"
+      ],
+      "answer": 2,
+      "explanation": "L'attention calcule l'influence des tokens voisins sur chaque token, ce qui donne des embeddings contextualisés."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un assistant de support donne des réponses très différentes à la même question d'un utilisateur à l'autre. Tu veux des réponses plus stables et prévisibles. Que modifies-tu ?",
+      "options": [
+        "Tu augmentes max_output_tokens",
+        "Tu baisses la température",
+        "Tu augmentes la limite de tokens par minute (TPM)",
+        "Tu passes à un modèle d'embedding"
+      ],
+      "answer": 1,
+      "explanation": "La température règle la part d'aléatoire. Plus elle est basse, plus les réponses sont prévisibles. max_output_tokens limite la longueur, le TPM la capacité."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une application doit recevoir, dans une même requête, la photo d'un compteur électrique et la question « Quelle est la consommation affichée ? ». Quel type de modèle déployer ?",
+      "options": [
+        "Un modèle d'embedding qui convertit la photo et la question en vecteurs",
+        "Un modèle de reconnaissance vocale couplé à un modèle de texte",
+        "Un modèle multimodal qui accepte texte et image",
+        "Un petit modèle de langage texte, déployé en local"
+      ],
+      "answer": 2,
+      "explanation": "Un modèle multimodal accepte plusieurs types d'entrée, ici une image et du texte, dans le même prompt."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une application doit fonctionner sur un appareil sans connexion, avec peu de mémoire, pour résumer de courtes notes. Quel choix est le plus adapté ?",
+      "options": [
+        "Un grand modèle de langage en déploiement standard dans le cloud",
+        "Un petit modèle de langage (SLM)",
+        "Un modèle de génération d'images",
+        "Un déploiement à débit provisionné"
+      ],
+      "answer": 1,
+      "explanation": "Un petit modèle de langage demande moins de ressources et peut tourner localement, ce qui convient à un appareil hors ligne et à une tâche simple."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Les appels d'une application renvoient des erreurs de limitation (throttling) aux heures de pointe. Quel paramètre du déploiement est en cause ?",
+      "options": [
+        "La température du déploiement",
+        "La version du modèle déployé",
+        "La limite de tokens par minute (TPM)",
+        "La longueur du message système"
+      ],
+      "answer": 2,
+      "explanation": "Le quota d'un déploiement se règle en tokens par minute. Le dépasser provoque du throttling."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un service client veut savoir, pour chaque avis client, s'il est positif, neutre ou négatif. Quelle technique d'analyse de texte utiliser ?",
+      "options": [
+        "Extraction de phrases clés",
+        "Reconnaissance d'entités nommées",
+        "Analyse de sentiment",
+        "Résumé"
+      ],
+      "answer": 2,
+      "explanation": "L'analyse de sentiment classe un texte en positif, neutre ou négatif."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un journal veut repérer automatiquement les personnes, les villes et les organisations citées dans ses articles. Quelle technique utiliser ?",
+      "options": [
+        "Reconnaissance d'entités nommées",
+        "Extraction de phrases clés",
+        "Détection de langue",
+        "Analyse de sentiment"
+      ],
+      "answer": 0,
+      "explanation": "La reconnaissance d'entités nommées (NER) identifie des éléments typés : personnes, lieux, organisations, dates. Les phrases clés donnent les sujets principaux, sans type."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Quelle technique détermine l'importance d'un mot dans un document précis, par rapport à une collection de documents ?",
+      "options": [
+        "Bag-of-words",
+        "TF-IDF",
+        "Word2Vec",
+        "Lemmatisation"
+      ],
+      "answer": 1,
+      "explanation": "TF-IDF multiplie la fréquence du mot dans le document par sa rareté dans la collection. Un mot présent partout obtient un score nul."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Dans un système de reconnaissance vocale, quel composant choisit entre « their » et « there », qui se prononcent de la même façon ?",
+      "options": [
+        "Le modèle acoustique",
+        "Le prétraitement MFCC",
+        "Le modèle de langage",
+        "Le vocodeur"
+      ],
+      "answer": 2,
+      "explanation": "Le modèle acoustique trouve les sons ; c'est le modèle de langage qui choisit les mots les plus plausibles d'après le contexte."
+    },
+    {
+      "type": "order",
+      "domain": "1",
+      "q": "Remets dans l'ordre les étapes de la reconnaissance vocale.",
+      "items": [
+        "Capture audio",
+        "Prétraitement (extraction des caractéristiques MFCC)",
+        "Modèle acoustique (phonèmes)",
+        "Modèle de langage (mots plausibles)",
+        "Décodage",
+        "Post-traitement (ponctuation, majuscules)"
+      ],
+      "explanation": "On capte le son, on extrait les caractéristiques, on trouve les phonèmes, puis les mots, on choisit la meilleure phrase et on nettoie le texte."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une voix de synthèse prononce correctement chaque mot mais semble plate et robotique. Quelle étape de la synthèse vocale améliorer ?",
+      "options": [
+        "La normalisation du texte",
+        "La conversion graphème-phonème (G2P)",
+        "La génération de la prosodie",
+        "La capture audio"
+      ],
+      "answer": 2,
+      "explanation": "La prosodie (hauteur, durée, pauses, accentuation) donne une intonation et une cadence naturelles."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un magasin veut compter les produits sur une étagère et connaître la position de chacun dans la photo. Quelle tâche de vision utiliser ?",
+      "options": [
+        "Classification d'image",
+        "Détection d'objets",
+        "Segmentation sémantique",
+        "Reconnaissance optique de caractères (OCR)"
+      ],
+      "answer": 1,
+      "explanation": "La détection d'objets renvoie chaque objet avec son cadre englobant. La classification donne une seule étiquette pour toute l'image."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un outil médical doit délimiter au pixel près la zone d'une lésion sur une image. Quelle tâche de vision convient ?",
+      "options": [
+        "Détection d'objets",
+        "Classification d'image",
+        "Segmentation sémantique",
+        "Analyse contextuelle d'image"
+      ],
+      "answer": 2,
+      "explanation": "La segmentation sémantique classe chaque pixel, ce qui donne un contour précis. La détection d'objets ne donne qu'un rectangle."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Quelle description correspond à un vision transformer (ViT) ?",
+      "options": [
+        "Un réseau qui applique des noyaux de convolution pour produire des cartes de caractéristiques",
+        "Un modèle qui découpe l'image en patchs et utilise l'attention pour créer des embeddings contextuels",
+        "Un modèle qui génère une image en retirant le bruit de pixels aléatoires",
+        "Un algorithme qui convertit le texte d'une image en caractères"
+      ],
+      "answer": 1,
+      "explanation": "Le ViT applique l'attention à des patchs d'image. Les noyaux de convolution décrivent un CNN, le retrait du bruit la diffusion, la dernière option l'OCR."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Comment fonctionne un modèle de génération d'images par diffusion ?",
+      "options": [
+        "Il assemble des morceaux d'images d'entraînement qui correspondent aux mots du prompt",
+        "Il part de pixels aléatoires et retire le bruit étape par étape, guidé par le prompt",
+        "Il applique des filtres de convolution à une image existante jusqu'au style demandé",
+        "Il classe le prompt dans une catégorie puis renvoie l'image la plus proche de sa base"
+      ],
+      "answer": 1,
+      "explanation": "La diffusion part du bruit et le retire de façon itérative, en comparant l'image au prompt à chaque étape."
+    },
+    {
+      "type": "yesno",
+      "domain": "1",
+      "q": "Une entreprise veut automatiser le traitement de factures scannées.",
+      "statements": [
+        {
+          "text": "L'OCR identifie à lui seul quel montant correspond au total de la facture.",
+          "answer": false
+        },
+        {
+          "text": "L'extraction de champs s'appuie sur la sortie de l'OCR, y compris la position du texte.",
+          "answer": true
+        },
+        {
+          "text": "La validation croisée peut vérifier que la somme des lignes est égale au total.",
+          "answer": true
+        }
+      ],
+      "explanation": "L'OCR dit quel texte existe ; c'est l'extraction de champs qui dit qu'une valeur est le total. Elle utilise le texte et sa position, puis valide la cohérence entre champs."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un agent RH doit répondre à partir des politiques internes de l'entreprise, qui changent chaque mois. Quelle approche choisir ?",
+      "options": [
+        "Réentraîner (fine-tuner) le modèle chaque mois avec les nouvelles politiques",
+        "Baisser la température pour que le modèle invente moins et reste factuel",
+        "Récupérer les passages utiles des politiques et les ajouter au prompt (RAG)",
+        "Déployer un modèle plus grand, entraîné sur davantage de données publiques"
+      ],
+      "answer": 2,
+      "explanation": "Le RAG fournit la connaissance au moment de la requête : il suffit de mettre à jour les documents et l'index, sans réentraîner le modèle."
+    },
+    {
+      "type": "multi",
+      "domain": "1",
+      "q": "Quels sont deux avantages du RAG ?",
+      "options": [
+        "Les réponses peuvent s'appuyer sur des informations récentes sans réentraîner le modèle",
+        "Les réponses peuvent citer les sources utilisées",
+        "Il garantit l'absence totale de réponses fausses",
+        "Il réduit la taille du modèle de langage",
+        "Il supprime le besoin de contrôler l'accès aux documents"
+      ],
+      "answer": [
+        0,
+        1
+      ],
+      "explanation": "Le RAG ancre la réponse dans des sources à jour et permet de les citer. Il réduit les réponses non fondées sans les éliminer, et le contrôle d'accès reste indispensable."
+    },
+    {
+      "type": "order",
+      "domain": "1",
+      "q": "Remets dans l'ordre les étapes de préparation des données (indexation) d'une solution RAG.",
+      "items": [
+        "Extraire le texte des documents",
+        "Découper le texte en chunks",
+        "Créer les embeddings",
+        "Créer l'index de recherche"
+      ],
+      "explanation": "On ne peut pas créer d'embeddings sans chunks, ni construire l'index sans embeddings."
+    },
+    {
+      "type": "order",
+      "domain": "2",
+      "q": "Remets dans l'ordre la hiérarchie Azure, du niveau le plus large au plus précis.",
+      "items": [
+        "Tenant",
+        "Abonnement",
+        "Groupe de ressources",
+        "Ressource"
+      ],
+      "explanation": "Le tenant porte l'identité de l'organisation, l'abonnement la facturation, le groupe de ressources regroupe des ressources liées."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Deux équipes veulent partager les mêmes capacités Foundry, tout en ayant chacune un espace séparé pour leurs agents et leurs évaluations. Que crées-tu ?",
+      "options": [
+        "Deux tenants",
+        "Une ressource Foundry et deux projets Foundry",
+        "Deux abonnements et un projet",
+        "Un projet Foundry et deux déploiements"
+      ],
+      "answer": 1,
+      "explanation": "La ressource Foundry fournit les capacités de la plateforme ; chaque projet est un espace de travail à l'intérieur de cette ressource."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Le modèle gpt-4.1-mini a été déployé sous le nom « support-chat ». Que faut-il passer au paramètre model ?",
+      "code": "response = client.responses.create(\n    model=\"???\",\n    input=\"Résume ce ticket en une phrase.\"\n)",
+      "options": [
+        "\"gpt-4.1-mini\"",
+        "\"support-chat\"",
+        "L'URL de l'endpoint",
+        "\"responses\""
+      ],
+      "answer": 1,
+      "explanation": "Le paramètre model reçoit le nom du déploiement. Avec le nom du modèle, l'appel échoue si aucun déploiement ne porte ce nom."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Quelle expression affiche le texte généré par le modèle ?",
+      "code": "response = client.responses.create(model=deployment, input=\"Bonjour\")\nprint(???)",
+      "options": [
+        "response.output_text",
+        "response.choices[0].message.content",
+        "response.input",
+        "response.model"
+      ],
+      "answer": 0,
+      "explanation": "Avec l'API Responses, le texte généré se lit dans response.output_text. choices[0].message.content est la syntaxe de l'ancienne API Chat Completions."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux que l'assistant réponde toujours en français, avec trois puces au maximum, quelle que soit la question de l'utilisateur. Où places-tu cette consigne ?",
+      "options": [
+        "Dans le message de rôle system",
+        "Dans chaque message de rôle user",
+        "Dans le paramètre max_output_tokens",
+        "Dans le nom du déploiement"
+      ],
+      "answer": 0,
+      "explanation": "Le message système définit le comportement, le ton et le format pour toute la conversation. Le message utilisateur porte la question."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Lequel de ces prompts a le plus de chances de produire une réponse utile ?",
+      "options": [
+        "« Parle-moi de notre produit et de tout ce qui a changé récemment, en détail. »",
+        "« Donne toutes les informations possibles sur la version 2.1, sans oublier aucun détail technique. »",
+        "« Tu es conseiller client. Résume en 3 puces, pour un client non technique, les nouveautés de la version 2.1 ci-dessous. »",
+        "« Résume la version 2.1. Le format et la longueur n'ont pas d'importance. »"
+      ],
+      "answer": 2,
+      "explanation": "Un bon prompt donne un rôle, une tâche précise, un public, un format attendu et le contexte nécessaire."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos des agents dans Microsoft Foundry :",
+      "statements": [
+        {
+          "text": "Un agent combine un modèle déployé, des instructions et des outils.",
+          "answer": true
+        },
+        {
+          "text": "On peut créer et tester un agent dans le portail Foundry sans écrire de code.",
+          "answer": true
+        },
+        {
+          "text": "Envoyer un e-mail est un exemple d'outil de connaissance.",
+          "answer": false
+        }
+      ],
+      "explanation": "Envoyer un e-mail est un outil d'action. Les outils de connaissance donnent accès à l'information (recherche, base de données)."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux obtenir une réponse de l'agent existant « hr-bot » depuis ton code. Quel appel est correct ?",
+      "options": [
+        "openai_client.responses.create(model=\"hr-bot\", input=[{\"role\": \"user\", \"content\": \"...\"}])",
+        "openai_client.responses.create(input=[...], extra_body={\"agent\": {\"name\": \"hr-bot\", \"type\": \"agent_reference\"}})",
+        "project_client.agents.get(agent_name=\"hr-bot\").run(input=[{\"role\": \"user\", \"content\": \"...\"}])",
+        "openai_client.responses.create(model=\"gpt-4.1\", input=[...], extra_body={\"agent\": \"hr-bot\"})"
+      ],
+      "answer": 1,
+      "explanation": "Un agent s'appelle sans paramètre model, avec une référence d'agent dans extra_body. Le modèle, les instructions et les outils sont déjà configurés dans l'agent."
+    },
+    {
+      "type": "multi",
+      "domain": "2",
+      "q": "Ton application récupère un agent avec AIProjectClient et s'authentifie avec DefaultAzureCredential. Quels deux paquets installer ?",
+      "options": [
+        "azure-ai-projects",
+        "azure-identity",
+        "azure-ai-textanalytics",
+        "azure-cognitiveservices-speech",
+        "azure-ai-contentunderstanding"
+      ],
+      "answer": [
+        0,
+        1
+      ],
+      "explanation": "AIProjectClient vient de azure-ai-projects, DefaultAzureCredential de azure-identity."
+    },
+    {
+      "type": "order",
+      "domain": "2",
+      "q": "Remets dans l'ordre les étapes du code qui interroge un agent existant.",
+      "items": [
+        "Créer AIProjectClient avec l'endpoint du projet et DefaultAzureCredential",
+        "Récupérer l'agent avec project_client.agents.get(...)",
+        "Obtenir un client OpenAI avec project_client.get_openai_client()",
+        "Appeler responses.create(...) avec la référence d'agent",
+        "Lire response.output_text"
+      ],
+      "explanation": "On se connecte au projet, on récupère l'agent, on obtient le client OpenAI du projet, on envoie la requête, puis on lit la réponse."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu dois masquer les noms, numéros de téléphone et adresses dans des messages clients avant de les stocker. Quelle méthode de TextAnalyticsClient appeler ?",
+      "options": [
+        "detect_language",
+        "recognize_entities",
+        "recognize_pii_entities",
+        "extract_key_phrases"
+      ],
+      "answer": 2,
+      "explanation": "recognize_pii_entities repère les données personnelles et renvoie redacted_text, le texte masqué. recognize_entities trouve des entités sans les masquer."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Quelle propriété donne le code à deux lettres de la langue détectée (par exemple « es ») ?",
+      "code": "result = client.detect_language([text])[0]\nprint(???)",
+      "options": [
+        "result.primary_language.name",
+        "result.primary_language.iso6391_name",
+        "result.primary_language.confidence_score",
+        "result.redacted_text"
+      ],
+      "answer": 1,
+      "explanation": "iso6391_name donne le code ISO à deux lettres ; name donne le nom complet (« Spanish »)."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Pourquoi le code écrit-il client.detect_language([text])[0] ?",
+      "options": [
+        "Parce que [0] sélectionne la langue principale parmi plusieurs langues détectées",
+        "Parce que la méthode reçoit une liste de documents et renvoie une liste de résultats",
+        "Parce que [0] désigne l'anglais par défaut",
+        "Parce que la méthode ne lit que le premier mot du texte"
+      ],
+      "answer": 1,
+      "explanation": "Les méthodes d'Azure Language traitent des lots : une liste de documents en entrée, une liste de résultats en sortie. [0] prend le résultat du premier document."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux transcrire en continu ce que dit l'utilisateur dans son micro. Quelle combinaison utiliser ?",
+      "options": [
+        "AudioOutputConfig(use_default_speaker=True) et SpeechSynthesizer",
+        "AudioConfig(use_default_microphone=True) et SpeechRecognizer",
+        "AudioConfig(use_default_microphone=True) et SpeechSynthesizer",
+        "TextAnalyticsClient et detect_language"
+      ],
+      "answer": 1,
+      "explanation": "La reconnaissance vocale utilise une entrée audio (le micro) et un SpeechRecognizer. AudioOutputConfig et SpeechSynthesizer servent à la synthèse."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Dans ce code, quel gestionnaire reçoit la phrase finale, une fois que l'utilisateur a fini de parler ?",
+      "code": "speech_recognizer.recognizing.connect(handler_a)\nspeech_recognizer.recognized.connect(handler_b)\nspeech_recognizer.start_continuous_recognition()",
+      "options": [
+        "handler_a",
+        "handler_b",
+        "Les deux reçoivent uniquement la phrase finale",
+        "Aucun : il faut appeler stop_continuous_recognition()"
+      ],
+      "answer": 1,
+      "explanation": "L'événement recognizing envoie des résultats partiels pendant la parole ; recognized envoie le résultat final de la phrase."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Ce code doit lire un texte à voix haute, mais aucun son ne sort. Quelle ligne corriger ?",
+      "code": "speech_config = speechsdk.SpeechConfig(subscription=key, endpoint=endpoint)\naudio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)\nsynth = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)\nresult = synth.speak_text_async(text).get()",
+      "options": [
+        "La ligne speech_config : il faut d'abord définir speech_synthesis_voice_name",
+        "La ligne audio_config : il faut AudioOutputConfig(use_default_speaker=True)",
+        "La dernière ligne : il faut speak_ssml_async(text).get() à la place",
+        "La ligne synth : il faut remplacer SpeechSynthesizer par SpeechRecognizer"
+      ],
+      "answer": 1,
+      "explanation": "La synthèse a besoin d'une sortie audio vers le haut-parleur. Le micro est une entrée."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Une application de cuisine doit tenir une conversation vocale en temps réel, où l'utilisateur peut couper la parole à l'assistant. Quelle solution Foundry est faite pour cela ?",
+      "options": [
+        "Voice Live",
+        "Azure Translator",
+        "Content Understanding avec un analyseur audio",
+        "Un modèle d'embedding"
+      ],
+      "answer": 0,
+      "explanation": "Voice Live gère des conversations vocales en temps réel, sur plusieurs tours, avec gestion des interruptions et suppression du bruit."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Quel type de contenu ajouter au message pour envoyer une photo au modèle avec la question ?",
+      "code": "input=[{\"role\": \"user\", \"content\": [\n    {\"type\": \"input_text\", \"text\": \"Quel est ce composant ?\"},\n    {\"type\": \"???\", \"image_url\": image_url}\n]}]",
+      "options": [
+        "output_image",
+        "image_generation",
+        "input_image",
+        "input_file"
+      ],
+      "answer": 2,
+      "explanation": "Une image en entrée se passe avec un contenu de type input_image. image_generation est l'outil qui produit une image en sortie."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Après une génération d'image, pourquoi le code appelle-t-il base64.b64decode(...) avant d'écrire le fichier PNG ?",
+      "options": [
+        "Pour compresser l'image avant de l'écrire sur le disque",
+        "Parce que l'image est renvoyée sous forme de texte encodé en base64",
+        "Pour retirer le filigrane ajouté par le service de génération",
+        "Pour convertir l'image du format WebP vers le format PNG"
+      ],
+      "answer": 1,
+      "explanation": "Le service renvoie l'image encodée en base64 ; il faut la décoder pour obtenir les octets du fichier."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Quel élément permet au modèle de produire une image dans un appel responses.create ?",
+      "options": [
+        "input=[{\"type\": \"input_image\", \"image_url\": url}]",
+        "tools=[{\"type\": \"image_generation\"}]",
+        "text={\"format\": {\"type\": \"image\"}}",
+        "max_output_tokens=4096 avec un prompt qui décrit l'image"
+      ],
+      "answer": 1,
+      "explanation": "L'outil image_generation donne au modèle la capacité de générer une image. On peut aussi utiliser client.images.generate(...)."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Une comptabilité veut extraire le fournisseur, la date et le total de milliers de factures PDF, sous forme de champs structurés. Quelle solution utiliser ?",
+      "options": [
+        "Azure Language avec la reconnaissance d'entités nommées (NER)",
+        "Azure Content Understanding avec l'analyseur prebuilt-invoice",
+        "Un modèle multimodal à qui on envoie chaque PDF comme image",
+        "Azure AI Search avec la recherche hybride sur les PDF"
+      ],
+      "answer": 1,
+      "explanation": "Content Understanding extrait des champs structurés de documents ; l'analyseur préconstruit prebuilt-invoice est fait pour les factures."
+    },
+    {
+      "type": "order",
+      "domain": "2",
+      "q": "Remets dans l'ordre le code d'une analyse avec Content Understanding.",
+      "items": [
+        "Créer ContentUnderstandingClient avec l'endpoint et la clé",
+        "Appeler client.begin_analyze(analyzer_id=..., inputs=...)",
+        "Attendre le résultat avec poller.result()",
+        "Parcourir result.contents pour lire markdown et fields"
+      ],
+      "explanation": "begin_analyze lance une opération longue ; poller.result() attend la fin ; on lit ensuite le markdown et les champs."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Une entreprise reçoit des messages vocaux. Elle veut la transcription ET des champs comme le nom de l'appelant et le motif de l'appel. Quelle solution répond aux deux besoins ?",
+      "options": [
+        "Azure Speech avec SpeechRecognizer uniquement",
+        "Content Understanding avec un analyseur audio",
+        "Azure Translator",
+        "Un modèle de génération d'images"
+      ],
+      "answer": 1,
+      "explanation": "Content Understanding analyse l'audio et renvoie la transcription (markdown) et des champs extraits. Speech seul ne donne que la transcription."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos de Microsoft Foundry IQ :",
+      "statements": [
+        {
+          "text": "Foundry IQ repose sur une ressource Azure AI Search.",
+          "answer": true
+        },
+        {
+          "text": "Une base de connaissances est exposée à un agent comme un outil MCP.",
+          "answer": true
+        },
+        {
+          "text": "Il faut mettre toutes les sources de l'entreprise dans une seule base de connaissances pour de meilleurs résultats.",
+          "answer": false
+        }
+      ],
+      "explanation": "Mettre des contenus sans rapport ou contradictoires dans une même base rend la récupération moins précise. Une base doit représenter un domaine métier."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Un agent est connecté à une base de connaissances mais répond souvent sans l'utiliser. Que faut-il faire en premier ?",
+      "options": [
+        "Augmenter la température pour que l'agent explore davantage ses outils",
+        "Écrire des instructions : quand chercher dans la base, comment l'utiliser et la citer",
+        "Déployer un modèle plus grand, capable de comprendre seul quand chercher",
+        "Retirer les autres outils pour que l'agent n'ait plus que la base"
+      ],
+      "answer": 1,
+      "explanation": "Connecter une base ne garantit pas que l'agent s'en serve : il faut des instructions explicites sur la récupération, l'usage de la preuve et les citations."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Dans l'URL suivante, quel est le nom du projet Foundry ?\nhttps://contoso-ai.services.ai.azure.com/api/projects/support-rh/openai/responses",
+      "options": [
+        "contoso-ai",
+        "support-rh",
+        "openai",
+        "responses"
+      ],
+      "answer": 1,
+      "explanation": "Le segment après /api/projects/ est le projet ; contoso-ai est la ressource Foundry ; /openai/responses est l'API appelée."
+    }
+  ]
+}

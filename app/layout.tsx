@@ -25,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-1 text-sm">
               <Link href="/" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Accueil</Link>
               <Link href="/plan" className="px-3 py-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all font-medium">Plan</Link>
+              <Link href="/examen" className="px-3 py-1.5 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all font-semibold">Examen blanc</Link>
             </div>
           </div>
         </nav>

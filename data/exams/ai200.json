@@ -1,0 +1,841 @@
+{
+  "code": "AI-200",
+  "title": "Azure AI Cloud Developer",
+  "realExam": "Examen de niveau Associate : 700/1000 pour réussir, une étude de cas probable en fin d'examen, et Microsoft Learn consultable pendant l'épreuve (à utiliser seulement pour vérifier un détail). Les questions demandent souvent de lire ou compléter du code Python, de l'Azure CLI, du JSON, du SQL ou du KQL.",
+  "domains": {
+    "1": "Développer des solutions conteneurisées (20–25 %)",
+    "2": "Développer des solutions d'IA avec les services de données (25–30 %)",
+    "3": "Se connecter aux services Azure et les consommer (20–25 %)",
+    "4": "Sécuriser, surveiller et dépanner (20–25 %)"
+  },
+  "cases": {
+    "fabrikam": {
+      "title": "Fabrikam Retail",
+      "text": "Fabrikam Retail ajoute un assistant IA à sa boutique en ligne.\n\nArchitecture prévue\n· Une API Python, empaquetée en image de conteneur stockée dans Azure Container Registry, s'exécute sur Azure Container Apps.\n· Le catalogue de 2 millions de produits est dans Azure Cosmos DB for NoSQL. Chaque produit a un embedding de 1536 dimensions.\n· Un service « worker » sur Container Apps traite les commandes déposées dans une file Azure Service Bus.\n\nExigences\n· L'assistant doit trouver des produits par similarité de sens avec la question du client.\n· Beaucoup de clients posent les mêmes questions : les réponses générées doivent être mises en cache pendant une heure dans Azure Managed Redis.\n· Quand une commande est passée, le service de stock et le service d'e-mails doivent chacun recevoir l'événement et le traiter indépendamment.\n· Le worker ne doit consommer aucune ressource quand la file est vide, et doit monter en charge quand des messages s'accumulent.\n· Aucun secret ne doit se trouver dans l'image ni dans le code. Les secrets sont dans Azure Key Vault.\n· L'équipe veut suivre la latence d'une requête de bout en bout : API, Cosmos DB, puis modèle de langage."
+    }
+  },
+  "questions": [
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Ton poste n'a pas Docker. Tu veux construire l'image à partir du Dockerfile du dossier courant et la pousser dans le registre « contosoreg ». Quelle commande utiliser ?",
+      "options": [
+        "docker build -t contosoreg.azurecr.io/api:v1 . && docker push contosoreg.azurecr.io/api:v1",
+        "az acr build --registry contosoreg --image api:v1 .",
+        "az acr import --name contosoreg --source api:v1",
+        "az acr login --name contosoreg --image api:v1"
+      ],
+      "answer": 1,
+      "explanation": "az acr build envoie le contexte de build à ACR, qui construit l'image dans le cloud et la stocke dans le registre. Les commandes docker exigent Docker en local."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Tu veux que ton image applicative soit reconstruite automatiquement chaque fois que son image de base reçoit un correctif de sécurité. Que configures-tu ?",
+      "options": [
+        "Un webhook ACR sur l'événement push du dépôt",
+        "Une ACR Task déclenchée par la mise à jour de l'image de base",
+        "Une stratégie Azure Policy qui impose la dernière image de base",
+        "La réplication géographique du registre dans deux régions"
+      ],
+      "answer": 1,
+      "explanation": "Une ACR Task peut se déclencher sur un commit, une planification ou la mise à jour de l'image de base. Un webhook notifie seulement d'un push, il ne construit rien."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Ton registre doit être répliqué dans deux régions et accessible par un point de terminaison privé. Quel niveau de service d'Azure Container Registry faut-il ?",
+      "options": [
+        "Basic",
+        "Standard",
+        "Premium",
+        "N'importe quel niveau"
+      ],
+      "answer": 2,
+      "explanation": "La réplication géographique et Private Link sont réservés au niveau Premium."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Une application conteneurisée sur App Service lit le mot de passe de la base dans la variable d'environnement DB_PASSWORD. Le secret est dans Key Vault. Comment le fournir sans le copier dans la configuration ?",
+      "options": [
+        "Paramètre DB_PASSWORD contenant la valeur du secret copiée depuis Key Vault",
+        "Paramètre DB_PASSWORD = @Microsoft.KeyVault(SecretUri=...) et rôle Key Vault Secrets User pour l'identité managée",
+        "Ligne ENV DB_PASSWORD dans le Dockerfile, avec la valeur du secret",
+        "Paramètre DB_PASSWORD = @Microsoft.KeyVault(SecretUri=...) et rôle Reader sur le coffre pour l'identité managée"
+      ],
+      "answer": 1,
+      "explanation": "Une référence Key Vault dans un paramètre d'application est résolue par App Service grâce à l'identité managée. Le rôle Reader ne permet pas de lire la valeur des secrets."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Sur Azure Container Apps, tu veux envoyer 80 % du trafic à la version actuelle et 20 % à une nouvelle version pour la tester. Que configures-tu ?",
+      "options": [
+        "Le mode de révision unique, avec deux réplicas de la nouvelle version",
+        "Le mode de révisions multiples, avec des poids de 80 et 20",
+        "Deux environnements Container Apps, chacun avec son entrée réseau",
+        "Une règle de mise à l'échelle HTTP à 20 requêtes simultanées"
+      ],
+      "answer": 1,
+      "explanation": "Le fractionnement du trafic entre révisions exige le mode de révisions multiples, avec un poids par révision."
+    },
+    {
+      "type": "yesno",
+      "domain": "1",
+      "q": "Sur Azure Container Apps, la modification suivante crée-t-elle une nouvelle révision ?",
+      "statements": [
+        {
+          "text": "Changer l'image du conteneur.",
+          "answer": true
+        },
+        {
+          "text": "Changer la valeur d'un secret de l'application.",
+          "answer": false
+        },
+        {
+          "text": "Modifier une règle de mise à l'échelle.",
+          "answer": true
+        }
+      ],
+      "explanation": "Les changements du modèle de révision (image, variables d'environnement, règles de mise à l'échelle) créent une révision. Les secrets, l'entrée réseau et les registres sont au niveau de l'application et n'en créent pas."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un worker sur Container Apps lit la file Service Bus « orders ». Il doit monter en charge selon le nombre de messages en attente. Quelle règle de mise à l'échelle utiliser ?",
+      "options": [
+        "Une règle HTTP sur le nombre de requêtes simultanées par réplica",
+        "Une règle KEDA azure-servicebus avec queueName et messageCount",
+        "Une règle CPU qui ajoute un réplica au-delà de 70 % d'utilisation",
+        "Une règle TCP sur le nombre de connexions ouvertes par réplica"
+      ],
+      "answer": 1,
+      "explanation": "Container Apps utilise les scalers KEDA ; le scaler azure-servicebus suit la longueur de la file."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un service sur Container Apps ne reçoit aucun trafic la nuit. Tu veux qu'il ne consomme aucune ressource de calcul pendant ces heures. Que règles-tu ?",
+      "options": [
+        "Le nombre minimal de réplicas à 0",
+        "Le nombre maximal de réplicas à 0",
+        "Le mode de révision unique",
+        "La désactivation de l'entrée réseau"
+      ],
+      "answer": 0,
+      "explanation": "Avec un minimum de 0 réplica, l'application descend à zéro quand il n'y a rien à traiter et remonte quand la règle de mise à l'échelle se déclenche. Un maximum de 0 l'arrêterait en permanence."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Dans un manifeste AKS, quel objet expose les pods d'un Deployment sur Internet avec une adresse IP publique ?",
+      "options": [
+        "Un Service de type ClusterIP",
+        "Un Service de type LoadBalancer",
+        "Un ConfigMap",
+        "Un PersistentVolumeClaim"
+      ],
+      "answer": 1,
+      "explanation": "Un Service LoadBalancer obtient une adresse IP publique d'Azure. ClusterIP n'est joignable que depuis l'intérieur du cluster."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Après un déploiement sur AKS, les pods restent en ImagePullBackOff. L'image est dans Azure Container Registry et son nom est correct. Quelle est la correction la plus probable ?",
+      "options": [
+        "az aks update --name aks-prod --resource-group rg-prod --attach-acr contosoreg",
+        "az aks scale --name aks-prod --resource-group rg-prod --node-count 5",
+        "kubectl expose deployment api --type=LoadBalancer --port=80",
+        "kubectl rollout restart deployment api --namespace default"
+      ],
+      "answer": 0,
+      "explanation": "--attach-acr donne à l'identité du cluster le rôle AcrPull sur le registre, ce qui permet de tirer l'image."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Un pod AKS ne démarre pas. Tu veux voir les événements du pod : échec de planification, erreur de téléchargement d'image, sonde en échec. Quelle commande utiliser ?",
+      "options": [
+        "kubectl get nodes",
+        "kubectl describe pod <nom-du-pod>",
+        "kubectl apply -f deployment.yaml",
+        "kubectl scale deployment api --replicas=3"
+      ],
+      "answer": 1,
+      "explanation": "kubectl describe pod affiche l'état détaillé et la section Events. kubectl logs montre la sortie de l'application une fois le conteneur démarré."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "q": "Tu veux suivre en direct les journaux de la console d'une application Container Apps depuis ton terminal. Quelle commande utiliser ?",
+      "options": [
+        "az containerapp logs show --name api --resource-group rg-prod --follow",
+        "kubectl logs deployment/api --follow --namespace default",
+        "az monitor activity-log list --resource-group rg-prod --offset 1h",
+        "az acr task logs --registry contosoreg --name api"
+      ],
+      "answer": 0,
+      "explanation": "az containerapp logs show --follow diffuse les journaux du conteneur. Le journal d'activité ne contient que les opérations de gestion."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu connais l'id et la clé de partition d'un document Cosmos DB. Quelle opération coûte le moins de RU pour le lire ?",
+      "options": [
+        "container.query_items(\"SELECT * FROM c WHERE c.id = @id\", enable_cross_partition_query=True)",
+        "container.read_item(item=doc_id, partition_key=pk)",
+        "container.read_all_items() puis un filtre en Python",
+        "container.query_items(\"SELECT * FROM c\")"
+      ],
+      "answer": 1,
+      "explanation": "Une lecture ponctuelle (point read) avec id et clé de partition est l'opération la moins coûteuse. Une requête, surtout transpartition, coûte davantage."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Un utilisateur doit toujours relire ses propres écritures, mais l'application veut le meilleur compromis latence-coût pour les autres lectures. Quel niveau de cohérence Cosmos DB choisir ?",
+      "options": [
+        "Forte (strong)",
+        "Session",
+        "Préfixe cohérent",
+        "Éventuelle (eventual)"
+      ],
+      "answer": 1,
+      "explanation": "Le niveau Session garantit la lecture de ses propres écritures dans une session ; c'est le niveau par défaut et le plus utilisé."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos des niveaux de cohérence d'Azure Cosmos DB :",
+      "statements": [
+        {
+          "text": "La cohérence forte garantit qu'une lecture renvoie toujours la dernière écriture validée.",
+          "answer": true
+        },
+        {
+          "text": "La cohérence éventuelle garantit l'ordre des écritures.",
+          "answer": false
+        },
+        {
+          "text": "Session est le niveau de cohérence par défaut d'un compte.",
+          "answer": true
+        }
+      ],
+      "explanation": "La cohérence éventuelle ne garantit pas l'ordre ; c'est le préfixe cohérent qui garantit qu'on ne voit jamais les écritures dans le désordre."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Un conteneur reçoit énormément d'écritures, mais les requêtes ne filtrent que sur /category et /price. Comment réduire le coût en RU des écritures ?",
+      "options": [
+        "Passer le compte au niveau de cohérence forte pour les écritures",
+        "Exclure /* de l'indexation et n'inclure que /category/? et /price/?",
+        "Augmenter le débit provisionné du conteneur en RU/s",
+        "Ajouter un index composite qui couvre toutes les propriétés"
+      ],
+      "answer": 1,
+      "explanation": "Par défaut, Cosmos DB indexe toutes les propriétés, ce qui alourdit chaque écriture. N'indexer que les chemins utilisés réduit le coût des écritures."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "La requête « SELECT * FROM c ORDER BY c.category ASC, c.price DESC » échoue. Que faut-il ajouter ?",
+      "options": [
+        "Un index de plage (range) sur category",
+        "Un index composite (category ASC, price DESC)",
+        "Une nouvelle clé de partition /category",
+        "Un index spatial sur les deux propriétés"
+      ],
+      "answer": 1,
+      "explanation": "Un ORDER BY sur plusieurs propriétés exige un index composite dont les chemins et les sens correspondent à la requête."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Quelle fonction faut-il à la place de ??? pour trouver les 5 produits les plus proches de l'embedding de la question ?",
+      "code": "SELECT TOP 5 c.id, c.name, ???(c.embedding, @queryVector) AS score\nFROM c\nORDER BY ???(c.embedding, @queryVector)",
+      "options": [
+        "VectorDistance",
+        "ST_DISTANCE",
+        "ARRAY_CONTAINS",
+        "CONTAINS"
+      ],
+      "answer": 0,
+      "explanation": "VectorDistance calcule la similarité entre deux vecteurs selon la fonction de distance définie dans la stratégie vectorielle du conteneur. ST_DISTANCE est une fonction géospatiale."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Un conteneur Cosmos DB stocke des millions d'embeddings de 1536 dimensions. Tu veux une recherche vectorielle rapide à grande échelle. Quel type d'index vectoriel choisir ?",
+      "options": [
+        "flat",
+        "diskANN",
+        "range",
+        "spatial"
+      ],
+      "answer": 1,
+      "explanation": "diskANN est conçu pour la recherche approximative rapide sur de gros volumes. L'index flat est limité en dimensions (505) et fait une recherche exhaustive."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu implémentes le processeur de flux de modifications (change feed processor) de Cosmos DB. En plus du conteneur surveillé et du gestionnaire de modifications, de quoi as-tu besoin ?",
+      "options": [
+        "D'un conteneur de baux (lease container)",
+        "D'une file Service Bus pour les modifications",
+        "D'un index composite sur la propriété _ts",
+        "D'un compte en cohérence forte"
+      ],
+      "answer": 0,
+      "explanation": "Le conteneur de baux stocke la progression de lecture et répartit le travail entre les instances du processeur."
+    },
+    {
+      "type": "yesno",
+      "domain": "2",
+      "q": "À propos du flux de modifications (change feed) de Cosmos DB en mode « dernière version » :",
+      "statements": [
+        {
+          "text": "Il contient les insertions et les mises à jour.",
+          "answer": true
+        },
+        {
+          "text": "Il contient les suppressions de documents.",
+          "answer": false
+        },
+        {
+          "text": "Pour suivre les suppressions, on peut marquer le document comme supprimé (suppression logique) puis le laisser expirer avec une durée de vie (TTL).",
+          "answer": true
+        }
+      ],
+      "explanation": "En mode dernière version, les suppressions n'apparaissent pas. La suppression logique avec TTL est la méthode classique pour les capter."
+    },
+    {
+      "type": "order",
+      "domain": "2",
+      "q": "Remets dans l'ordre les étapes pour utiliser pgvector sur Azure Database for PostgreSQL (serveur flexible).",
+      "items": [
+        "Autoriser l'extension vector dans le paramètre serveur azure.extensions",
+        "Exécuter CREATE EXTENSION vector;",
+        "Créer une colonne de type vector(1536)",
+        "Insérer les embeddings",
+        "Créer un index HNSW ou IVFFlat sur la colonne"
+      ],
+      "explanation": "Sur Azure, une extension doit être autorisée dans azure.extensions avant d'être créée. L'index IVFFlat se construit après le chargement des données."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Avec pgvector, quel opérateur calcule la distance cosinus ?",
+      "code": "SELECT id, title\nFROM documents\nORDER BY embedding ??? %s\nLIMIT 5;",
+      "options": [
+        "<->",
+        "<=>",
+        "<#>",
+        "@>"
+      ],
+      "answer": 1,
+      "explanation": "<=> est la distance cosinus, <-> la distance euclidienne (L2), <#> le produit scalaire négatif. @> est un opérateur de contenance."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu dois créer l'index vectoriel sur une table encore vide, qui sera remplie au fil de l'eau. Quel type d'index pgvector est le plus adapté ?",
+      "options": [
+        "IVFFlat",
+        "HNSW",
+        "B-tree",
+        "GIN"
+      ],
+      "answer": 1,
+      "explanation": "IVFFlat calcule ses listes à partir des données présentes : il faut le créer après le chargement. HNSW peut être créé sur une table vide et offre un bon compromis vitesse-précision."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Pour un RAG, tu veux les 5 passages les plus proches de la question, mais uniquement parmi les documents de la catégorie « RH ». Quelle requête est correcte ?",
+      "options": [
+        "SELECT content FROM chunks ORDER BY embedding <=> %s LIMIT 5 WHERE category = 'RH';",
+        "SELECT content FROM chunks WHERE category = 'RH' ORDER BY embedding <=> %s LIMIT 5;",
+        "SELECT content FROM chunks WHERE embedding = %s AND category = 'RH' LIMIT 5;",
+        "SELECT TOP 5 content FROM chunks WHERE category = 'RH' ORDER BY VectorDistance(embedding, %s);"
+      ],
+      "answer": 1,
+      "explanation": "Le filtre de métadonnées va dans WHERE, le tri par distance dans ORDER BY, puis LIMIT. La dernière option utilise la syntaxe de Cosmos DB, pas de PostgreSQL."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Des Azure Functions ouvrent des milliers de connexions courtes vers Azure Database for PostgreSQL et épuisent le nombre maximal de connexions. Que fais-tu ?",
+      "options": [
+        "Activer le PgBouncer intégré et se connecter sur le port 6432",
+        "Augmenter la taille du stockage du serveur flexible",
+        "Créer un index HNSW sur la colonne d'embeddings",
+        "Activer la haute disponibilité redondante interzone"
+      ],
+      "answer": 0,
+      "explanation": "PgBouncer mutualise les connexions ; sur le serveur flexible, il est intégré et écoute sur le port 6432."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Dans PostgreSQL, quels types de colonnes choisir pour stocker un embedding de 1536 dimensions et des métadonnées JSON interrogeables ?",
+      "options": [
+        "real[] (tableau) et json",
+        "vector(1536) et jsonb",
+        "text (JSON sérialisé) et text",
+        "bytea et hstore"
+      ],
+      "answer": 1,
+      "explanation": "vector(1536) est le type de pgvector ; jsonb stocke le JSON sous forme binaire, indexable et rapide à interroger."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux mettre en cache une réponse générée dans Azure Managed Redis, avec une expiration automatique après une heure. Quelle commande utiliser ?",
+      "options": [
+        "SET answer:42 \"...\" EX 3600",
+        "SET answer:42 \"...\" PX 3600",
+        "HSET answer:42 ttl 3600",
+        "EXPIRE answer:42"
+      ],
+      "answer": 0,
+      "explanation": "EX donne une durée en secondes (3600 = 1 heure). PX est en millisecondes, et EXPIRE sans durée est invalide."
+    },
+    {
+      "type": "multi",
+      "domain": "2",
+      "q": "Ton API applique le modèle cache-aside avec Redis pour les fiches produit. Quelles sont les deux pratiques correctes ?",
+      "options": [
+        "En cas d'absence dans le cache, lire la base de données puis écrire le résultat dans le cache avec une durée de vie",
+        "Quand un produit est modifié en base, supprimer sa clé du cache",
+        "Écrire dans le cache sans durée de vie pour éviter tout appel à la base",
+        "Lire toujours la base d'abord, puis le cache",
+        "Stocker les mots de passe des utilisateurs dans le cache"
+      ],
+      "answer": [
+        0,
+        1
+      ],
+      "explanation": "Cache-aside : on lit le cache, et en cas d'absence on lit la base et on remplit le cache avec un TTL. L'invalidation à la modification évite de servir une donnée périmée."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "q": "Tu veux faire de la recherche par similarité vectorielle dans Azure Managed Redis. Quelle commande crée l'index avec un champ VECTOR ?",
+      "options": [
+        "FT.CREATE",
+        "FT.SEARCH",
+        "HSET",
+        "CREATE INDEX"
+      ],
+      "answer": 0,
+      "explanation": "FT.CREATE crée l'index (dont un champ VECTOR, par exemple HNSW) ; FT.SEARCH l'interroge avec une requête KNN."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Chaque commande doit être traitée par le service de facturation ET par le service d'expédition, chacun à son rythme. Que crées-tu dans Azure Service Bus ?",
+      "options": [
+        "Une file d'attente avec deux consommateurs",
+        "Une rubrique (topic) avec deux abonnements",
+        "Deux espaces de noms",
+        "Une file avec sessions"
+      ],
+      "answer": 1,
+      "explanation": "Une rubrique copie chaque message dans chacun de ses abonnements. Avec une file, chaque message n'est traité que par un seul consommateur."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "L'abonnement « europe » d'une rubrique ne doit recevoir que les messages dont la propriété region vaut « EU ». Que configures-tu ?",
+      "options": [
+        "Un filtre SQL (ou de corrélation) region = 'EU' sur l'abonnement",
+        "Une session dont l'identifiant vaut EU sur l'abonnement",
+        "Une file de lettres mortes dédiée aux messages EU",
+        "Une durée de vie de 1 heure sur les messages hors EU"
+      ],
+      "answer": 0,
+      "explanation": "Les règles de filtre d'un abonnement sélectionnent les messages selon leurs propriétés."
+    },
+    {
+      "type": "yesno",
+      "domain": "3",
+      "q": "À propos de la file de lettres mortes (dead-letter queue) de Service Bus :",
+      "statements": [
+        {
+          "text": "Un message y est déplacé quand son nombre de livraisons dépasse MaxDeliveryCount (10 par défaut).",
+          "answer": true
+        },
+        {
+          "text": "Les messages de la file de lettres mortes sont supprimés automatiquement après 10 minutes.",
+          "answer": false
+        },
+        {
+          "text": "Une application peut déplacer elle-même un message vers la file de lettres mortes.",
+          "answer": true
+        }
+      ],
+      "explanation": "Les messages restent dans la file de lettres mortes jusqu'à ce qu'on les traite. Une application peut aussi les y envoyer explicitement (dead_letter_message)."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Tu veux lire les messages en lettres mortes de la file « orders » en Python. Quel paramètre ajoutes-tu ?",
+      "code": "receiver = client.get_queue_receiver(\n    queue_name=\"orders\",\n    ???\n)",
+      "options": [
+        "sub_queue=ServiceBusSubQueue.DEAD_LETTER",
+        "receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE",
+        "session_id=\"deadletter\"",
+        "max_wait_time=0"
+      ],
+      "answer": 0,
+      "explanation": "La file de lettres mortes est une sous-file ($deadletterqueue) ; on y accède avec sub_queue=ServiceBusSubQueue.DEAD_LETTER."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Les messages d'un même client doivent être traités dans l'ordre d'arrivée, mais les clients différents peuvent être traités en parallèle. Quelle fonctionnalité de Service Bus utiliser ?",
+      "options": [
+        "Les sessions, avec l'identifiant du client comme SessionId",
+        "La détection des doublons, avec l'identifiant du client",
+        "Des messages planifiés, un par client et par minute",
+        "Le mode ReceiveAndDelete, avec une seule instance"
+      ],
+      "answer": 0,
+      "explanation": "Les sessions garantissent un traitement ordonné (FIFO) par identifiant de session, tout en permettant le parallélisme entre sessions."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Une Azure Function doit être déclenchée par Event Grid seulement quand un fichier .pdf est créé dans le conteneur « claims » d'un compte de stockage. Que configures-tu sur l'abonnement aux événements ?",
+      "options": [
+        "Type BlobCreated, sujet qui commence par …/containers/claims/ et se termine par .pdf",
+        "Type BlobCreated, sans filtre : la fonction ignore elle-même les fichiers non PDF",
+        "Type BlobDeleted, avec un filtre « le sujet se termine par » .pdf",
+        "Type BlobCreated, avec un filtre « le sujet commence par » .pdf"
+      ],
+      "answer": 0,
+      "explanation": "On filtre à la source par type d'événement et par sujet. Ne pas filtrer déclencherait inutilement la fonction pour chaque fichier."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Un webhook abonné à Event Grid est en panne pendant deux jours. Tu ne veux perdre aucun événement. Que configures-tu ?",
+      "options": [
+        "Une destination de lettres mortes (conteneur Blob) sur l'abonnement",
+        "Une durée de vie des messages plus longue dans Service Bus",
+        "Un second abonnement aux événements vers la même URL",
+        "La désactivation de la stratégie de nouvelle tentative"
+      ],
+      "answer": 0,
+      "explanation": "Event Grid réessaie pendant 24 heures au maximum par défaut. Au-delà, sans destination de lettres mortes, l'événement est abandonné."
+    },
+    {
+      "type": "yesno",
+      "domain": "3",
+      "q": "Le service cité convient-il au scénario ?",
+      "statements": [
+        {
+          "text": "Azure Event Hubs pour ingérer des millions d'événements de télémétrie par seconde.",
+          "answer": true
+        },
+        {
+          "text": "Azure Event Grid pour réagir à la création d'un blob.",
+          "answer": true
+        },
+        {
+          "text": "Azure Event Grid pour une file de commandes qui doivent être traitées exactement dans l'ordre, avec verrouillage des messages.",
+          "answer": false
+        }
+      ],
+      "explanation": "Le traitement ordonné avec verrouillage (peek-lock) et sessions relève de Service Bus. Event Grid distribue des événements discrets en mode push."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Dans ce code de fonction Python (modèle v2), que représente le paramètre connection ?",
+      "code": "@app.service_bus_queue_trigger(arg_name=\"msg\",\n                               queue_name=\"orders\",\n                               connection=\"SB_CONN\")\ndef process_order(msg: func.ServiceBusMessage):\n    ...",
+      "options": [
+        "La chaîne de connexion Service Bus elle-même, écrite dans le code",
+        "Le nom du paramètre d'application qui contient la connexion",
+        "Le nom complet de l'espace de noms (contoso.servicebus.windows.net)",
+        "Le nom de la file de lettres mortes associée à orders"
+      ],
+      "answer": 1,
+      "explanation": "Les liaisons lisent la connexion dans les paramètres d'application ; SB_CONN est le nom de ce paramètre, pas la valeur."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "q": "Une fonction sur le plan Consumption échoue car son traitement dure 25 minutes. Que fais-tu ?",
+      "options": [
+        "Tu règles functionTimeout à 00:30:00 dans host.json en restant sur le plan Consumption",
+        "Tu passes la fonction sur le plan Premium (ou Dedicated)",
+        "Tu augmentes le nombre maximal d'instances",
+        "Tu actives Application Insights"
+      ],
+      "answer": 1,
+      "explanation": "Sur le plan Consumption, la durée d'exécution est limitée à 10 minutes au maximum. Le plan Premium permet des exécutions plus longues."
+    },
+    {
+      "type": "yesno",
+      "domain": "3",
+      "q": "À propos du déploiement d'une Function App :",
+      "statements": [
+        {
+          "text": "Le fichier local.settings.json est publié dans Azure avec le code.",
+          "answer": false
+        },
+        {
+          "text": "Les paramètres utilisés en production doivent être définis dans les paramètres d'application de la Function App.",
+          "answer": true
+        },
+        {
+          "text": "Une fonction HTTP avec le niveau d'autorisation function exige une clé, passée dans le paramètre code ou l'en-tête x-functions-key.",
+          "answer": true
+        }
+      ],
+      "explanation": "local.settings.json sert uniquement en local et n'est pas publié. En production, on utilise les paramètres d'application."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Une application doit seulement lire la valeur des secrets d'un coffre Key Vault qui utilise le contrôle d'accès Azure RBAC. Quel rôle attribuer à son identité managée ?",
+      "options": [
+        "Reader",
+        "Key Vault Secrets Officer",
+        "Key Vault Secrets User",
+        "Key Vault Crypto User"
+      ],
+      "answer": 2,
+      "explanation": "Key Vault Secrets User permet de lire les valeurs des secrets. Reader ne donne accès qu'aux métadonnées ; Secrets Officer permet aussi de créer et supprimer, ce qui dépasse le besoin."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Quelle expression récupère la valeur du secret DbPassword ?",
+      "code": "from azure.identity import DefaultAzureCredential\nfrom azure.keyvault.secrets import SecretClient\n\nclient = SecretClient(vault_url=\"https://kv-contoso.vault.azure.net\",\n                      credential=DefaultAzureCredential())\npassword = ???",
+      "options": [
+        "client.get_secret(\"DbPassword\").value",
+        "client.get_secret(\"DbPassword\")",
+        "client.list_properties_of_secrets(\"DbPassword\")",
+        "client.get_secret(\"DbPassword\").properties.version"
+      ],
+      "answer": 0,
+      "explanation": "get_secret renvoie un objet KeyVaultSecret ; sa propriété value contient la valeur. Sans version précisée, c'est la version actuelle qui est renvoyée."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Tu veux faire tourner automatiquement un secret Key Vault peu avant son expiration. Quelle architecture utiliser ?",
+      "options": [
+        "Event Grid (SecretNearExpiry) qui déclenche une fonction de rotation",
+        "Un minuteur dans l'application qui modifie le secret chaque nuit",
+        "La suppression réversible, qui recrée le secret à expiration",
+        "Une alerte Azure Monitor qui envoie un e-mail à l'équipe"
+      ],
+      "answer": 0,
+      "explanation": "Key Vault publie l'événement SecretNearExpiry dans Event Grid ; une fonction peut générer la nouvelle valeur et créer une nouvelle version du secret."
+    },
+    {
+      "type": "yesno",
+      "domain": "4",
+      "q": "À propos de la protection des secrets dans Key Vault :",
+      "statements": [
+        {
+          "text": "Avec la suppression réversible (soft delete), un secret supprimé par erreur peut être récupéré pendant la période de rétention.",
+          "answer": true
+        },
+        {
+          "text": "La protection contre le vidage (purge protection) empêche la suppression définitive d'un secret avant la fin de la période de rétention.",
+          "answer": true
+        },
+        {
+          "text": "Mettre à jour un secret écrase la valeur précédente sans garder d'historique.",
+          "answer": false
+        }
+      ],
+      "explanation": "Chaque mise à jour crée une nouvelle version ; les versions précédentes restent accessibles."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "La même clé de configuration ApiUrl doit avoir une valeur différente en développement et en production, dans un seul magasin Azure App Configuration. Qu'utilises-tu ?",
+      "options": [
+        "Des étiquettes (labels) dev et prod sur la clé",
+        "Deux coffres Key Vault, un par environnement",
+        "Des indicateurs de fonctionnalité (feature flags)",
+        "Deux clés distinctes, ApiUrlDev et ApiUrlProd"
+      ],
+      "answer": 0,
+      "explanation": "Les étiquettes permettent plusieurs valeurs pour une même clé ; l'application charge l'étiquette de son environnement."
+    },
+    {
+      "type": "multi",
+      "domain": "4",
+      "q": "Une application charge sa configuration depuis App Configuration, qui contient une référence Key Vault pour le mot de passe de la base. De quels deux accès son identité managée a-t-elle besoin ?",
+      "options": [
+        "Le rôle App Configuration Data Reader sur le magasin App Configuration",
+        "Le rôle Key Vault Secrets User sur le coffre",
+        "Le rôle Owner sur l'abonnement",
+        "Le rôle Key Vault Crypto Officer sur le coffre",
+        "Aucun : App Configuration lit le secret à la place de l'application"
+      ],
+      "answer": [
+        0,
+        1
+      ],
+      "explanation": "App Configuration ne stocke que l'URI du secret : c'est l'application qui lit le secret dans Key Vault, avec sa propre identité."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Tu veux que l'application recharge sa configuration quand tu modifies plusieurs clés dans App Configuration, mais une seule fois, une fois toutes les modifications terminées. Que fais-tu ?",
+      "options": [
+        "Tu surveilles une clé sentinelle, que tu modifies en dernier",
+        "Tu redémarres l'application à chaque modification",
+        "Tu supprimes les étiquettes",
+        "Tu stockes la configuration dans Key Vault"
+      ],
+      "answer": 0,
+      "explanation": "La clé sentinelle déclenche le rechargement de toute la configuration ; on la modifie après toutes les autres clés."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Quelle ligne active l'envoi des traces, métriques et journaux OpenTelemetry vers Application Insights dans une application Python ?",
+      "options": [
+        "configure_azure_monitor(connection_string=os.environ[\"APPLICATIONINSIGHTS_CONNECTION_STRING\"])",
+        "logging.basicConfig(level=logging.INFO, filename=\"/var/log/app/telemetry.log\")",
+        "tracer.start_as_current_span(\"application-insights-export\")",
+        "os.environ[\"OTEL_TRACES_EXPORTER\"] = \"none\""
+      ],
+      "answer": 0,
+      "explanation": "configure_azure_monitor, du paquet azure-monitor-opentelemetry, configure la distribution OpenTelemetry d'Azure Monitor. start_as_current_span crée une étendue mais n'exporte rien seul."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Grâce à quel mécanisme une trace distribuée relie-t-elle l'appel de l'API à l'appel du service en aval, dans une autre application ?",
+      "options": [
+        "La propagation du contexte de trace (en-tête W3C traceparent)",
+        "Un identifiant de corrélation stocké dans Key Vault et lu par chaque service",
+        "Le même nom de groupe de ressources pour les deux applications",
+        "Une requête KQL qui joint les tables des deux services par horodatage"
+      ],
+      "answer": 0,
+      "explanation": "Le contexte de trace (identifiant de trace et d'étendue parente) voyage dans l'en-tête traceparent ; le service en aval rattache ses étendues à la même trace."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Quelle requête KQL compte les requêtes en échec de la dernière heure, par code de réponse ?",
+      "options": [
+        "requests | where timestamp > ago(1h) and success == false | summarize count() by resultCode",
+        "SELECT resultCode, COUNT(*) FROM requests WHERE success = 0 GROUP BY resultCode",
+        "requests | summarize count() by resultCode | where success == false and timestamp > ago(1h)",
+        "requests | where timestamp > ago(1h) and success = false | count by resultCode"
+      ],
+      "answer": 0,
+      "explanation": "On filtre avec where avant d'agréger. Après summarize, les colonnes success et timestamp n'existent plus ; la deuxième option est du SQL et la quatrième utilise = au lieu de ==."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "q": "Tu veux un graphique du 95e centile de la durée des requêtes, par tranches de 5 minutes. Quelle requête KQL utiliser ?",
+      "options": [
+        "requests | summarize percentile(duration, 95) by bin(timestamp, 5m) | render timechart",
+        "requests | top 95 by duration desc | render timechart",
+        "requests | summarize avg(duration) by bin(timestamp, 5m) | render timechart",
+        "requests | where duration > 95 | summarize count() by bin(timestamp, 5m)"
+      ],
+      "answer": 0,
+      "explanation": "percentile(duration, 95) calcule le 95e centile ; bin(timestamp, 5m) regroupe par tranches de 5 minutes ; render timechart trace la courbe."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "case": "fabrikam",
+      "q": "Comment l'assistant doit-il trouver les produits proches de la question du client ?",
+      "options": [
+        "Stratégie vectorielle, index diskANN, ORDER BY VectorDistance(...)",
+        "Une requête avec CONTAINS(c.description, @question) et un index de plage",
+        "Un index vectoriel flat et une requête ORDER BY c.embedding DESC",
+        "Le flux de modifications, pour comparer chaque produit à la question"
+      ],
+      "answer": 0,
+      "explanation": "La recherche par similarité de sens se fait sur les embeddings avec VectorDistance ; avec 2 millions de vecteurs de 1536 dimensions, diskANN est l'index adapté. CONTAINS cherche un texte exact."
+    },
+    {
+      "type": "single",
+      "domain": "2",
+      "case": "fabrikam",
+      "q": "Comment implémenter la mise en cache des réponses ?",
+      "options": [
+        "Lire Redis ; si absent, générer puis SET <clé> <réponse> EX 3600",
+        "Écrire chaque réponse dans Redis sans expiration, puis la lire",
+        "Écrire les réponses dans le conteneur de baux de Cosmos DB",
+        "Lire Redis seulement après avoir généré une nouvelle réponse"
+      ],
+      "answer": 0,
+      "explanation": "C'est le modèle cache-aside, avec une durée de vie d'une heure (3600 secondes) comme l'exige le scénario."
+    },
+    {
+      "type": "single",
+      "domain": "3",
+      "case": "fabrikam",
+      "q": "Comment distribuer l'événement « commande passée » aux services de stock et d'e-mails ?",
+      "options": [
+        "Une file Service Bus lue par les deux services",
+        "Une rubrique Service Bus avec un abonnement pour le stock et un pour les e-mails",
+        "Une clé Redis partagée",
+        "Un appel HTTP direct du service de stock vers le service d'e-mails"
+      ],
+      "answer": 1,
+      "explanation": "Chaque abonnement reçoit sa propre copie du message : les deux services traitent l'événement indépendamment. Une file ne livre chaque message qu'à un seul consommateur."
+    },
+    {
+      "type": "single",
+      "domain": "1",
+      "case": "fabrikam",
+      "q": "Comment configurer la mise à l'échelle du worker ?",
+      "options": [
+        "Une règle azure-servicebus avec un minimum de 0 réplica",
+        "Une règle HTTP avec un minimum de 3 réplicas",
+        "Une règle CPU à 70 % avec un minimum de 1 réplica",
+        "Une règle azure-servicebus avec un minimum de 1 réplica"
+      ],
+      "answer": 0,
+      "explanation": "Le scaler Service Bus suit la longueur de la file, et le minimum à 0 garantit qu'aucune ressource n'est consommée quand la file est vide."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "case": "fabrikam",
+      "q": "Comment fournir les secrets à l'API sur Container Apps ?",
+      "options": [
+        "Les écrire dans le Dockerfile avec ENV, au moment de la construction",
+        "Des secrets Container Apps qui référencent Key Vault via l'identité managée",
+        "Les mettre dans un fichier .env copié dans l'image au moment du build",
+        "Les passer en argument --build-arg de la commande az acr build"
+      ],
+      "answer": 1,
+      "explanation": "Container Apps peut référencer un secret Key Vault avec une identité managée ; le secret n'apparaît ni dans l'image ni dans le code."
+    },
+    {
+      "type": "single",
+      "domain": "4",
+      "case": "fabrikam",
+      "q": "Comment répondre à l'exigence de suivi de bout en bout ?",
+      "options": [
+        "L'instrumentation OpenTelemetry (Azure Monitor) et les traces dans Application Insights",
+        "Activer seulement les journaux de diagnostic de Cosmos DB dans Log Analytics",
+        "Lire le journal d'activité de l'abonnement après chaque incident signalé",
+        "Ajouter des print() avec l'heure dans chaque service et comparer les journaux"
+      ],
+      "answer": 0,
+      "explanation": "Le traçage distribué relie dans une même trace l'appel à l'API, la requête Cosmos DB et l'appel au modèle, avec la durée de chaque étape."
+    }
+  ]
+}
