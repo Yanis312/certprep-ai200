@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import type { ModuleSummary } from "@/lib/types";
-import { isDone, resetAll, useProgress, useTasksDone } from "@/lib/progress";
+import { isDone, pctOf, resetAll, useProgress, useTasksDone } from "@/lib/progress";
 import CertTabs, { useCert } from "@/components/CertTabs";
+import type { Task } from "@/data/certs/types";
 
 export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
   const progress = useProgress();
@@ -12,7 +13,29 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
   const { exam, domains, learningPaths, method, weeks } = cert;
 
   const taskId = (weekId: string, i: number) => `${cert.code}:${weekId}-${i}`;
-  const weekChecked = (w: (typeof weeks)[number]) => w.tasks.filter((_, i) => tasksDone.includes(taskId(w.id, i))).length;
+
+  // Une tâche reliée à des modules ou des unités est faite toute seule quand leurs quiz sont validés
+  const allUnits = modules.flatMap((m) => m.units);
+  const unitsOf = (t: Task) => {
+    if (typeof t === "string") return [];
+    const fromModules = (t.modules ?? []).flatMap((sl) => modules.find((m) => m.slug === sl)?.units ?? []);
+    const fromUnits = (t.units ?? []).flatMap((sl) => allUnits.filter((u) => u.slug === sl));
+    return [...fromModules, ...fromUnits];
+  };
+  const autoDone = (t: Task) => {
+    const us = unitsOf(t);
+    return us.length > 0 && us.every((u) => isDone(progress[u.slug]));
+  };
+  const isTaskDone = (weekId: string, i: number, t: Task) => tasksDone.includes(taskId(weekId, i)) || autoDone(t);
+  const weekChecked = (w: (typeof weeks)[number]) => w.tasks.filter((t, i) => isTaskDone(w.id, i, t)).length;
+  // La première tâche pas encore faite : c'est là que tu en es
+  const here = (() => {
+    for (const w of weeks) {
+      const i = w.tasks.findIndex((t, k) => !isTaskDone(w.id, k, t));
+      if (i >= 0) return taskId(w.id, i);
+    }
+    return null;
+  })();
   const totalTasks = weeks.reduce((a, w) => a + w.tasks.length, 0);
   const checkedTasks = weeks.reduce((a, w) => a + weekChecked(w), 0);
   const weeksDone = weeks.filter((w) => weekChecked(w) === w.tasks.length).length;
@@ -92,6 +115,12 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
         </ol>
       </section>
 
+      {here && (
+        <a href="#ici" className="flex items-center justify-between gap-3 mb-6 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3.5 rounded-2xl font-semibold text-sm transition-colors">
+          <span>📍 Aller à l&apos;étape où tu en es</span><span>↓</span>
+        </a>
+      )}
+
       {/* Semaines */}
       <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Semaine par semaine</h2>
       <div className="space-y-4">
@@ -120,18 +149,61 @@ export default function PlanClient({ modules }: { modules: ModuleSummary[] }) {
                 <ul className="space-y-1">
                   {w.tasks.map((t, i) => {
                     const id = taskId(w.id, i);
-                    const isChecked = tasksDone.includes(id);
+                    const auto = autoDone(t);
+                    const isChecked = tasksDone.includes(id) || auto;
+                    const isHere = id === here;
+                    const text = typeof t === "string" ? t : t.text;
+                    const obj = typeof t === "string" ? null : t;
                     return (
-                      <li key={id}>
-                        <label className="flex items-start gap-3 text-sm px-2 py-2 -mx-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                      <li key={id} id={isHere ? "ici" : undefined} className={`scroll-mt-24 rounded-xl ${isHere ? "bg-indigo-50 border border-indigo-200 px-2 -mx-2" : ""}`}>
+                        <div className="flex items-start gap-3 text-sm px-2 py-2 -mx-2">
                           <input
                             type="checkbox"
                             checked={isChecked}
+                            disabled={auto}
                             onChange={() => toggleTask(id)}
-                            className="mt-0.5 w-4 h-4 shrink-0 accent-emerald-500 cursor-pointer"
+                            className="mt-0.5 w-4 h-4 shrink-0 accent-emerald-500 cursor-pointer disabled:cursor-default"
+                            aria-label={text}
                           />
-                          <span className={isChecked ? "text-slate-400 line-through" : "text-slate-700"}>{t}</span>
-                        </label>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className={isChecked ? "text-slate-400 line-through" : "text-slate-700"}>{text}</span>
+                              {isHere && <span className="text-xs font-bold text-indigo-700 bg-white border border-indigo-200 px-2 py-0.5 rounded-full">📍 Tu es ici</span>}
+                              {auto && <span className="text-xs text-emerald-600 font-medium">quiz validés</span>}
+                            </div>
+                            {obj && (
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {(obj.modules ?? []).map((sl) => {
+                                  const m = modules.find((mm) => mm.slug === sl);
+                                  if (!m) return null;
+                                  const done = m.units.filter((u) => isDone(progress[u.slug])).length;
+                                  const full = done === m.units.length;
+                                  return (
+                                    <Link key={sl} href={`/module/${sl}`} className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-colors ${full ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-white border-slate-200 text-indigo-700 hover:border-indigo-300"}`}>
+                                      {full ? "✓ " : ""}{m.title} · {done}/{m.units.length}
+                                    </Link>
+                                  );
+                                })}
+                                {(obj.units ?? []).map((sl) => {
+                                  const pct = pctOf(progress[sl]);
+                                  const ok = isDone(progress[sl]);
+                                  const tone = ok ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-white border-slate-200 hover:border-indigo-300";
+                                  return (
+                                    <span key={sl} className="flex gap-1.5">
+                                      <Link href={`/unit/${sl}`} className={`text-xs px-2.5 py-1 rounded-lg border font-medium ${tone} ${ok ? "" : "text-indigo-700"}`}>📖 Fiche</Link>
+                                      <Link href={`/quiz/${sl}`} className={`text-xs px-2.5 py-1 rounded-lg border font-medium ${tone} ${ok ? "" : "text-violet-700"}`}>
+                                        🧠 Quiz{pct !== null ? ` · ${pct} %` : ""}
+                                      </Link>
+                                    </span>
+                                  );
+                                })}
+                                {obj.href && (obj.href.startsWith("/")
+                                  ? <Link href={obj.href} className="text-xs px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700">{obj.hrefLabel ?? "Ouvrir →"}</Link>
+                                  : <a href={obj.href} target="_blank" rel="noreferrer" className="text-xs px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-indigo-700 font-medium hover:border-indigo-300">{obj.hrefLabel ?? "Ouvrir ↗"}</a>)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </li>
                     );
                   })}

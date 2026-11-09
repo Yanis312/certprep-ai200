@@ -21,12 +21,26 @@ export type LearningPath = {
   modules: PlanModule[];
 };
 
+/** Une tâche du plan : un simple texte, ou un texte relié aux pages qui permettent de la faire */
+export type Task =
+  | string
+  | {
+      text: string;
+      /** modules du site : la tâche est faite quand toutes leurs unités sont validées */
+      modules?: string[];
+      /** unités du site, même principe */
+      units?: string[];
+      /** lien vers une page du site (commence par /) ou un site externe */
+      href?: string;
+      hrefLabel?: string;
+    };
+
 export type Week = {
   id: string;
   dates: string;
   title: string;
   lps: string[];
-  tasks: string[];
+  tasks: Task[];
   focus: string;
 };
 
